@@ -1,0 +1,5 @@
+# contst.js 정렬이 깨져서 추가
+**/consts.js
+kube-deployment.yml
+kube-dev-deployment.yml
+bitbucket-pipelines.yml
