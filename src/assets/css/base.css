@@ -29,13 +29,3 @@ body {
     font-weight: normal;
 }
 
-/* 컴포넌트 확인 */
-select {
-    background: url(/src/assets/images/form-select-icon.svg) no-repeat calc(100% - 8px);
-    line-height: 1;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: none;
-}
-

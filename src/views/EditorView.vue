@@ -16,10 +16,8 @@ const previewCanvasRef = ref(null)
 </script>
 
 <template>
-  <div class="flex h-full pt-[50px] bg-[#1e1e1e] h-screen overflow-hidden">
-    <Header>
-      <!-- <button @click="toggleYay">참고{{ yay }}</button> -->
-    </Header>
+  <div class="flex h-full pt-[50px] bg-[#1e1e1e] overflow-hidden">
+    <Header />
     <div class="w-[75%] relative border-r border-[#333333]">
       <!-- Main editor area -->
       <div
@@ -33,16 +31,16 @@ const previewCanvasRef = ref(null)
         <ObjectToolBar class="absolute transform -translate-x-1/2 bottom-4 left-1/2" />
       </div>
     </div>
-    <div class="w-[25%] bg-[#252526]"> <!-- Side panel -->
+    <div class="w-[25%] bg-[#252526]">
+      <!-- Side panel -->
       <div class="h-8 bg-[#2D2D2D] flex items-center px-4 border-b border-[#333333]">
         <span class="text-[#CCCCCC] text-sm">Animation Controls</span>
       </div>
-      <div class="p-4 overflow-x-clip overflow-y-auto h-[calc(100vh-66px)]">
+      <div class="p-6 px-8 overflow-x-clip overflow-y-auto h-[calc(100vh-66px)]">
         <AnimationController />
       </div>
     </div>
   </div>
-  
 </template>
 
 <style>
@@ -64,6 +62,4 @@ const previewCanvasRef = ref(null)
 ::-webkit-scrollbar-thumb:hover {
   background: #666;
 }
-
-
 </style>

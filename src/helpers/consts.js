@@ -1,3 +1,40 @@
+export const TRIGGER_CONFIG = {
+  triggers: {
+    label: '트리거',
+    value:[
+      {label: '클릭', value: 'click'},
+      {label: '더블클릭', value: 'doubleClick'},
+      {label: '마우스 다운', value: 'mouseDown'},
+      {label: '마우스 업', value: 'mouseUp'},
+    ]
+  },
+  targetObjects: {
+    label: '트리거 타겟 객체',
+    value: [],
+  },
+  actions: {
+    label: '액션',
+    value: {
+      type: '', // 'move', 'url', 'opacity', 'scale'
+      params: {
+        // For move
+        x: 0,
+        y: 0,
+        // For url
+        url: '',
+        // For opacity
+        opacity: 1,
+        // For scale
+        scale: 1,
+      },
+    },
+  },
+  actionTarget: {
+    label: '액션 타겟',
+    value: '',
+  },
+}
+
 export const ANIMATION_TYPE = [
   {
     id: 1,
@@ -28,3 +65,4 @@ export const EASING_OPTIONS = [
   { value: 'ease-out', label: 'Ease Out' },
   { value: 'ease-in-out', label: 'Ease In Out' },
 ]
+

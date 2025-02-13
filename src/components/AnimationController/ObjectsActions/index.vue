@@ -14,6 +14,6 @@ import AnimationProperty from './AnimationProperty.vue'
   <div class="flex flex-col gap-6">
     <!-- <ObjectProperty /> -->
     <AnimationTrigger />
-    <!-- <AnimationProperty /> -->
+    <AnimationProperty />
   </div>
 </template>
