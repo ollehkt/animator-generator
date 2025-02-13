@@ -2,17 +2,12 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
-import { ANIMATION_TYPE, EASING_OPTIONS } from '@/helpers/consts'
 
 export const useControllerStore = defineStore('controller', () => {
   // const state
   const objectStore = useObjectStore()
   const { selectedObject, objects } = storeToRefs(objectStore)
 
-  // constants
-  const animationType = ref(ANIMATION_TYPE)
-  const easingOptions = ref(EASING_OPTIONS)
-  
   // state
   const activeTab = ref({
     // 객체속성
@@ -20,7 +15,9 @@ export const useControllerStore = defineStore('controller', () => {
     label: 'Object',
   })
 
-  const selectedAnimationType = ref('translate')
+  // 액션 타입(페이지이동, 좌표로 이동...)
+  const selectedActionType = ref('translate')
+
   const animations = ref([])
   const targetPOS = ref({
     x: 0,
@@ -39,6 +36,10 @@ export const useControllerStore = defineStore('controller', () => {
     loop: false,
   })
 
+  const setActionType = (type) => {
+    selectedActionType.value = type
+  }
+
   const play = () => {
     if (!selectedObject.value && objects.value.length > 0) {
       selectedObject.value = objects.value[0]
@@ -53,7 +54,7 @@ export const useControllerStore = defineStore('controller', () => {
       y: Number(selectedObject.value.y) || 0,
       scale: 1,
       rotate: 0,
-      opacity: 1
+      opacity: 1,
     }
 
     let startTime = Date.now()
@@ -71,7 +72,7 @@ export const useControllerStore = defineStore('controller', () => {
         progress = Math.min(progress, 1)
       }
 
-      switch (selectedAnimationType.value) {
+      switch (selectedActionType.value) {
         case 'translate':
           handleTranslateAnimation(element, progress)
           break
@@ -119,7 +120,7 @@ export const useControllerStore = defineStore('controller', () => {
     const { scaleStart, scaleEnd } = animationConfig.value
     const currentScale = scaleStart + (scaleEnd - scaleStart) * progress
     updateTransform(element, { scale: currentScale })
-    
+
     // Make sure x and y are not being modified during scale animation
     selectedObject.value.x = Number(selectedObject.value.x) || 0
     selectedObject.value.y = Number(selectedObject.value.y) || 0
@@ -159,30 +160,6 @@ export const useControllerStore = defineStore('controller', () => {
       element.dataset.rotate = newTransform.rotate
     }
   }
-  // const updateTransform = (element, newTransform) => {
-  //   const transforms = {
-  //     translate: element.dataset.translate || '0px, 0px',
-  //     scale: element.dataset.scale || '1',
-  //     rotate: element.dataset.rotate || '0deg',
-  //   }
-
-  //   // Update only the provided transform
-  //   if (newTransform.translate) {
-  //     transforms.translate = newTransform.translate
-  //     element.dataset.translate = newTransform.translate
-  //   }
-  //   if (newTransform.scale) {
-  //     transforms.scale = newTransform.scale
-  //     element.dataset.scale = newTransform.scale
-  //   }
-  //   if (newTransform.rotate) {
-  //     transforms.rotate = newTransform.rotate
-  //     element.dataset.rotate = newTransform.rotate
-  //   }
-
-  //   // Apply all transforms together
-  //   element.style.transform = `translate(${transforms.translate}) scale(${transforms.scale}) rotate(${transforms.rotate})`
-  // }
 
   const removeAnimation = (animationId) => {
     const index = animations.value.findIndex((anim) => anim.id === animationId)
@@ -195,11 +172,11 @@ export const useControllerStore = defineStore('controller', () => {
     // Reset position
     selectedObject.value.x = initialState.x
     selectedObject.value.y = initialState.y
-    
+
     // Reset all transforms and opacity
     element.style.transform = ''
     element.style.opacity = initialState.opacity
-    
+
     // Clear all dataset values
     element.dataset.translate = `${initialState.x}px, ${initialState.y}px`
     element.dataset.scale = '1'
@@ -207,14 +184,14 @@ export const useControllerStore = defineStore('controller', () => {
   }
 
   return {
-    animationType,
-    easingOptions,
-    selectedAnimationType,
+    selectedActionType,
     activeTab,
     animations,
     targetPOS,
     animationConfig,
+    setActionType,
     play,
     removeAnimation,
+    
   }
 })

@@ -12,22 +12,15 @@ export const TRIGGER_CONFIG = {
     label: '트리거 타겟 객체',
     value: [],
   },
+
   actions: {
     label: '액션',
-    value: {
-      type: '', // 'move', 'url', 'opacity', 'scale'
-      params: {
-        // For move
-        x: 0,
-        y: 0,
-        // For url
-        url: '',
-        // For opacity
-        opacity: 1,
-        // For scale
-        scale: 1,
-      },
-    },
+    value:[
+      {label: '이동', value: 'translate'},
+      {label: '회전', value: 'rotate'},
+      {label: '확대/축소', value: 'scale'},
+      {label: '투명도', value: 'opacity'},
+    ]
   },
   actionTarget: {
     label: '액션 타겟',

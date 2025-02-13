@@ -42,16 +42,10 @@ const toggleLoop = () => {
 </script>
 
 <template>
-  <div class="overflow-hidden text-gray-200 bg-gray-800 border border-gray-700 rounded-lg">
-    <div class="p-3 bg-gray-700 border-b border-gray-600">
-      <h3 class="m-0 text-sm font-medium">애니메이션 설정</h3>
-    </div>
+  <div class="overflow-hidden text-gray-200 bg-gray-800 rounded-lg">
     <div class="flex flex-col gap-3 p-4 mt-2">
-      <!-- Show x, y inputs for translate and rotate -->
       <template v-if="selectedActionType === 'translate' || selectedActionType === 'rotate'">
         <div class="flex flex-col">
-          <h4 class="mb-1">도착지점 좌표 마크</h4>
-          <button @click="makeMarker" class="p-2 border rounded">클릭</button>
           <div class="flex gap-2">
             <p class="flex flex-col w-1/2">
               <label class="mb-1">X</label>

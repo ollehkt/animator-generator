@@ -4,32 +4,46 @@ import { useControllerStore, useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { TRIGGER_CONFIG } from '@/helpers/consts'
 
+import AnimationPropertySetting from './AnimationPropertySetting.vue'
+
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
 const { objects } = storeToRefs(objectStore)
 
 const triggerConfig = ref(TRIGGER_CONFIG)
 const computedTriggerConfig = computed(() => {
-  console.log('objects value:', objects.value)
   return {
     ...triggerConfig.value,
     targetObjects: {
       label: triggerConfig.value.targetObjects.label,
       value: objects.value,
     },
+    actionTarget: {
+      label: triggerConfig.value.actionTarget.label,
+      value: objects.value,
+    },
   }
 })
+
+const setActionType = (key, value) => {
+  if(key !== 'actions') return
+  controllerStore.setActionType(value)
+}
 </script>
 <template>
   <div class="overflow-hidden text-gray-200 bg-gray-800 border border-gray-700 rounded-lg">
     <div class="p-2 bg-gray-700 border-b border-gray-600">
       <h3 class="m-0 text-xs font-medium">트리거 설정</h3>
     </div>
+    <!-- 기본 설정 -->
     <div class="p-4 space-y-4">
       <template v-for="(value, key, index) in computedTriggerConfig" :key="key">
         <p class="flex flex-col gap-2">
           <label class="pl-1 text-xs text-gray-400">{{ value.label }}</label>
-          <select name="" id="" class="h-10 indent-2 border border-[#333] rounded bg-[#252526]">
+          <select 
+            class="h-10 indent-2 border border-[#333] rounded bg-[#252526]"
+            @change="(e) => setActionType(key, e.target.value)"
+          >
             <template v-if="Array.isArray(value.value)">
               <option v-for="item in value.value" :key="item.value" :value="item.value">
                 {{ item.label || item.name }}
@@ -44,5 +58,7 @@ const computedTriggerConfig = computed(() => {
         </p>
       </template>
     </div>
+    <!-- 액션 선택 후 각각 설정 -->
+    <AnimationPropertySetting />
   </div>
 </template>

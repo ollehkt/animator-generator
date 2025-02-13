@@ -4,7 +4,6 @@ import { storeToRefs } from 'pinia'
 
 import ObjectProperty from './ObjectProperty.vue'
 import AnimationTrigger from './AnimationTrigger.vue'
-import AnimationProperty from './AnimationProperty.vue'
 
 
 
@@ -14,6 +13,6 @@ import AnimationProperty from './AnimationProperty.vue'
   <div class="flex flex-col gap-6">
     <!-- <ObjectProperty /> -->
     <AnimationTrigger />
-    <AnimationProperty />
+    <!-- <AnimationPropertySetting /> -->
   </div>
 </template>
