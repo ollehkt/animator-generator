@@ -250,50 +250,6 @@ onUnmounted(() => {
           </template>
         </g>
       </template>
-
-      <template v-for="object in cloneObjects" :key="object.id">
-        <g :id="object.id">
-          <!-- Main circle -->
-          <circle
-            v-if="object.type === 'circle'"
-            :cx="object.x"
-            :cy="object.y"
-            :r="object.radius"
-            :fill="object.fillStyle"
-            @mousedown="(e) => startDrag(e, object)"
-            @click="(e) => handleClick(e, object)"
-            :class="{ 'cursor-move': true }"
-          />
-          <!-- Control handles -->
-          <template v-if="selectedObject === object">
-            <!-- Selection border -->
-            <circle
-              :cx="object.x"
-              :cy="object.y"
-              :r="object.radius + 2"
-              fill="none"
-              stroke="#4a9eff"
-              stroke-width="1"
-              stroke-dasharray="4 2"
-            />
-
-            <!-- Resize handles -->
-            <rect
-              v-if="object.type === 'circle'"
-              v-for="(pos, index) in getHandlePositions(object)"
-              :key="index"
-              :x="pos.x - HANDLE_SIZE / 2"
-              :y="pos.y - HANDLE_SIZE / 2"
-              :width="HANDLE_SIZE"
-              :height="HANDLE_SIZE"
-              fill="white"
-              stroke="#4a9eff"
-              stroke-width="1"
-              class="handle"
-            />
-          </template>
-        </g>
-      </template>
     </svg>
   </div>
 </template>

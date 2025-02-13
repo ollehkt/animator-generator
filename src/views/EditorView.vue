@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import Header from '@/components/Header.vue'
-import PreviewCanvas from '@/components/PreviewCanvas.vue'
+import Viewport from '@/components/Viewport/index.vue'
 import AnimationController from '@/components/AnimationController/index.vue'
 import ObjectToolBar from '@/components/ObjectToolBar.vue'
 
@@ -12,7 +12,7 @@ const { yay } = storeToRefs(objectStore)
 const toggleYay = () => {
   objectStore.yay = !objectStore.yay // Or use an action if defined in your store
 }
-const previewCanvasRef = ref(null)
+const viewportRef = ref(null)
 </script>
 
 <template>
@@ -27,7 +27,7 @@ const previewCanvasRef = ref(null)
       </div>
       <div class="h-full pt-8">
         <!-- Content area below tab -->
-        <PreviewCanvas ref="previewCanvasRef" class="bg-[#2D2D2D]" />
+        <Viewport ref="viewportRef" class="bg-[#2D2D2D]" />
         <ObjectToolBar class="absolute transform -translate-x-1/2 bottom-4 left-1/2" />
       </div>
     </div>

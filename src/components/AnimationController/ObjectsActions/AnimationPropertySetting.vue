@@ -141,5 +141,9 @@ const toggleLoop = () => {
 input,
 select {
   background-color: #252526;
+  height: 40px;
+  text-indent: 10px;
+  border: 1px solid #333;
+  border-radius: 0.25rem;
 }
 </style>
