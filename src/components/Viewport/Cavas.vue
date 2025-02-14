@@ -17,13 +17,6 @@ const props = defineProps({
     default: '#ffffff',
   },
 })
-const objectStore = useObjectStore()
-const controllerStore = useControllerStore()
-const { objects, selectedObject, objectStartFrom, cloneObjects } = storeToRefs(objectStore)
-
-const svgRef = ref(null)
-const isDragging = ref(false)
-const dragOffset = ref({ x: 0, y: 0 })
 
 const HANDLE_SIZE = 8 // Size of control handles
 const HANDLE_POSITIONS = [
@@ -36,6 +29,14 @@ const HANDLE_POSITIONS = [
   { x: -1, y: 1 }, // Bottom-left
   { x: -1, y: 0 }, // Middle-left
 ]
+
+const objectStore = useObjectStore()
+const controllerStore = useControllerStore()
+const { objects, selectedObject, objectStartFrom, cloneObjects } = storeToRefs(objectStore)
+
+const svgRef = ref(null)
+const isDragging = ref(false)
+const dragOffset = ref({ x: 0, y: 0 })
 
 const MOVE_DEBOUNCE = 5 // milliseconds
 let lastMoveTime = 0
@@ -90,7 +91,6 @@ const onDrag = (event) => {
 }
 
 const endDrag = () => {
-  // console.log('endDrag')
   isDragging.value = false
   if (!selectedObject.value) return
   if (selectedObject.value && !selectedObject.value.isClone) {
@@ -101,10 +101,10 @@ const endDrag = () => {
     x: selectedObject.value.x,
     y: 180,
   }
-  // console.log('controllerStore.targetPOS', controllerStore.targetPOS)
 }
 
 const determineOutsideDirection = (object) => {
+  // object 가 캔버스 상하좌우 어디에 있는지 확인함
   if (!svgRef.value || !object) return null
 
   const svgBounds = svgRef.value.getBoundingClientRect()
@@ -131,17 +131,35 @@ const determineOutsideDirection = (object) => {
   return 'inside' // Object is inside SVG
 }
 
-const clearObjects = () => {
-  objects.value = []
-}
-
 const getHandlePositions = (object) => {
   if (!object) return []
 
-  return HANDLE_POSITIONS.map((pos) => ({
-    x: object.x + pos.x * (object.radius + HANDLE_SIZE),
-    y: object.y + pos.y * (object.radius + HANDLE_SIZE),
-  }))
+  if (object.type === 'circle') {
+    return HANDLE_POSITIONS.map((pos) => ({
+      x: object.x + pos.x * (object.radius + HANDLE_SIZE),
+      y: object.y + pos.y * (object.radius + HANDLE_SIZE),
+    }))
+  }
+
+  if (object.type === 'image') {
+    const width = Number(object.width) || 0
+    const height = Number(object.height) || 0
+    const x = Number(object.x) || 0
+    const y = Number(object.y) || 0
+
+    return [
+      { x, y }, // Top-left
+      { x: x + width / 2, y }, // Top-center
+      { x: x + width, y }, // Top-right
+      { x: x + width, y: y + height / 2 }, // Middle-right
+      { x: x + width, y: y + height }, // Bottom-right
+      { x: x + width / 2, y: y + height }, // Bottom-center
+      { x, y: y + height }, // Bottom-left
+      { x, y: y + height / 2 }, // Middle-left
+    ]
+  }
+
+  return []
 }
 </script>
 <template>
@@ -158,10 +176,12 @@ const getHandlePositions = (object) => {
     class="shadow-sm svg-canvas"
   >
     <!-- Add grid pattern definition -->
+    <rect x="0" y="0" :width="width" :height="height" :fill="backgroundColor" />
+    <rect x="0" y="0" :width="width" :height="height" fill="url(#grid)" />
+
     <defs>
       <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
         <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#ddd" stroke-width="0.5" />
-        <!-- Add smaller grid lines -->
         <path
           d="M 10 0 L 10 50 M 20 0 L 20 50 M 30 0 L 30 50 M 40 0 L 40 50 M 0 10 L 50 10 M 0 20 L 50 20 M 0 30 L 50 30 M 0 40 L 50 40"
           fill="none"
@@ -170,10 +190,6 @@ const getHandlePositions = (object) => {
         />
       </pattern>
     </defs>
-
-    <!-- Background with grid -->
-    <rect x="0" y="0" :width="width" :height="height" :fill="backgroundColor" />
-    <rect x="0" y="0" :width="width" :height="height" fill="url(#grid)" />
 
     <!-- Objects -->
     <template v-for="object in objects" :key="object.id">
@@ -229,9 +245,36 @@ const getHandlePositions = (object) => {
             stroke-dasharray="4 2"
           />
 
+          <rect
+            v-if="object.type === 'image' || object.type === 'text'"
+            :x="Number(object.x) - 2"
+            :y="
+              object.type === 'text'
+                ? Number(object.y) - Number(object.height) + 1
+                : Number(object.y) - 2
+            "
+            :width="Number(object.width) + 4"
+            :height="Number(object.height) + 4"
+            fill="none"
+            stroke="#4a9eff"
+            stroke-width="1"
+            stroke-dasharray="4 2"
+          />
+
+          <!-- <rect
+            v-if="object.type === 'image' || object.type === 'text'"
+            :x="Number(object.x) - 2"
+            :y="Number(object.y) - 2"
+            :width="Number(object.width) + 4"
+            :height="Number(object.height) + 4"
+            fill="none"
+            stroke="#4a9eff"
+            stroke-width="1"
+            stroke-dasharray="4 2"
+          /> -->
+
           <!-- Resize handles -->
           <rect
-            v-if="object.type === 'circle'"
             v-for="(pos, index) in getHandlePositions(object)"
             :key="index"
             :x="pos.x - HANDLE_SIZE / 2"

@@ -11,7 +11,10 @@ const { activeTab } = storeToRefs(controllerStore)
 // })
 </script>
 <template>
-  <div class="flex flex-col gap-2 overflow-y-auto">
+  <div class="h-8 bg-[#2D2D2D] flex items-center px-4 border-b border-[#333333]">
+    <span class="text-[#CCCCCC] text-sm">Animation Controls</span>
+  </div>
+  <div class="flex flex-col gap-2 p-6 px-8 overflow-y-auto">
     <ObjectsActions />
     <!-- <component :is="targetComponent" /> -->
   </div>

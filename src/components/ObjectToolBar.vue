@@ -20,7 +20,7 @@ const handleObjectType = (type) => {
     },
     text: () => {
       addText()
-    }
+    },
   }
   return action[type]()
 }
@@ -72,6 +72,8 @@ const addText = () => {
     type: 'text',
     x: 100,
     y: 100,
+    width: 128,
+    height: 19,
     text: '텍스트를 입력하세요',
   })
 }
@@ -96,8 +98,8 @@ const handlePlay = () => {
       </button>
     </div>
     <div>
-      <button 
-        @click="handlePlay" 
+      <button
+        @click="handlePlay"
         class="min-w-[84px] px-4 py-2 text-sm text-white transition-colors duration-200 bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500"
       >
         재생

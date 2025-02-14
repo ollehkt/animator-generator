@@ -15,14 +15,14 @@ const { selectedObject } = storeToRefs(objectStore)
     <div class="p-4 space-y-4">
       <div class="flex items-center gap-2">
         <label class="block text-xs text-gray-400">선택 요소</label>
-        <p>{{ selectedObject?.name || '선택된 요소가 없습니다.' }}</p>
+        <p class="text-sm">{{ selectedObject?.name || '선택된 요소가 없습니다.' }}</p>
       </div>
 
       <div class="space-y-1">
         <label class="block text-xs text-gray-400">캔버스 기준 좌표</label>
         <div class="flex gap-4">
-          <span>x: {{ Math.round(selectedObject?.x) || '-' }}</span>
-          <span>y: {{ Math.round(selectedObject?.y) || '-' }}</span>
+          <span>X: {{ Math.round(selectedObject?.x) || '-' }}</span>
+          <span>Y: {{ Math.round(selectedObject?.y) || '-' }}</span>
         </div>
       </div>
     </div>

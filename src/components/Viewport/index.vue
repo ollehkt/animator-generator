@@ -79,7 +79,7 @@ onUnmounted(() => {
     class="bg-[#2D2D2D] relative flex items-center justify-center w-full h-full overflow-auto"
   >
     <ZoomControls :zoom="zoom" :updateZoom="updateZoom" />
-    <!-- <p class="absolute top-2 right-2 z-50 text-[#CCCCCC] text-xs bg-[#333333] px-2 py-1 rounded-md">{{ Math.round(zoom * 100) }}%</p> -->
+
     <div
       class="transform-origin-center"
       :style="{
@@ -87,6 +87,7 @@ onUnmounted(() => {
         transition: 'transform 0.1s ease-out',
       }"
     >
+      <span>🚩<em class="text-xs not-italic">(0, 0)</em></span>
       <Canvas :width="720" :height="452" />
     </div>
   </div>

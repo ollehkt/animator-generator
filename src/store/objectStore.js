@@ -22,26 +22,24 @@ export const useObjectStore = defineStore('object', () => {
   // Actions
   const addObject = (object, isClone = false) => {
     const { fullId, shortId } = generateUniqueId()
+    
     const newObject = {
       id: fullId,
       name: `${object.type}-${shortId}`,
       type: object.type || 'circle',
-      x: object.x || 0,
-      y: object.y || 0,
-      radius: object.radius || 50,
-      fillStyle: object.fillStyle || '#000000',
-      animations: [],
-      ...(object.imageUrl && { imageUrl: object.imageUrl }),
-      ...(object.text && { text: object.text }),
+      ...object,
+      // x: object.x || 0,
+      // y: object.y || 0,
+      // radius: object.radius || 50,
+      // fillStyle: object.fillStyle || '#000000',
+      // animations: [],
+      // ...(object.imageUrl && { imageUrl: object.imageUrl }),
+      
+      // ...(object.text && { text: object.text }),
     }
 
-    if (isClone) {
-      newObject.fillStyle = '#E9D5FF'
-      newObject.isClone = true
-      cloneObjects.value.push(newObject)
-    } else {
-      objects.value.push(newObject)
-    }
+
+    objects.value.push(newObject)
     return newObject.id
   }
 
@@ -53,6 +51,9 @@ export const useObjectStore = defineStore('object', () => {
     initSelectedObject()
   }
 
+  /**
+   * @param {string} objectId
+   */
   const selectObject = (objectId) => {
     const object = objects.value.find((obj) => obj.id === objectId)
     selectedObject.value = object || null
@@ -69,7 +70,7 @@ export const useObjectStore = defineStore('object', () => {
   return {
     // State
     objects,
-    cloneObjects,
+    // cloneObjects,
     selectedObject,
     objectStartFrom,
 
