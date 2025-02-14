@@ -41,6 +41,8 @@ export const useControllerStore = defineStore('controller', () => {
   }
 
   const play = () => {
+    if (objects.value.length === 0) return
+
     if (!selectedObject.value && objects.value.length > 0) {
       selectedObject.value = objects.value[0]
     }
@@ -192,6 +194,5 @@ export const useControllerStore = defineStore('controller', () => {
     setActionType,
     play,
     removeAnimation,
-    
   }
 })

@@ -69,14 +69,14 @@ const handlePlay = () => {
 </script>
 <template>
   <div
-    class="absolute flex justify-between gap-8 p-4 px-6 -translate-x-1/2 rounded-lg shadow-lg bg-slate-800 bottom-8 left-1/2"
+    class="absolute flex justify-between gap-10 p-4 px-6 -translate-x-1/2 rounded-lg shadow-lg bg-slate-800 bottom-8 left-1/2 w-fit"
   >
     <input ref="fileInput" type="file" class="hidden" @change="handleFileChange" />
     <div class="flex gap-4">
       <button
         v-for="object in objectType"
         :key="object.id"
-        class="px-4 py-2 text-white transition-colors duration-200 rounded-md shadow-sm bg-slate-700 hover:bg-slate-600"
+        class="w-[84px] px-4 py-2 text-sm text-white transition-colors duration-200 rounded-md shadow-sm bg-slate-700 hover:bg-slate-600"
         @click="handleObjectType(object.type)"
       >
         {{ object.name }}
@@ -85,7 +85,7 @@ const handlePlay = () => {
     <div>
       <button 
         @click="handlePlay" 
-        class="px-4 py-2 text-white transition-colors duration-200 bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500"
+        class="min-w-[84px] px-4 py-2 text-sm text-white transition-colors duration-200 bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500"
       >
         재생
       </button>

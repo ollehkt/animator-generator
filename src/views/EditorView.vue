@@ -8,10 +8,6 @@ import AnimationController from '@/components/AnimationController/index.vue'
 import ObjectToolBar from '@/components/ObjectToolBar.vue'
 
 const objectStore = useObjectStore()
-const { yay } = storeToRefs(objectStore)
-const toggleYay = () => {
-  objectStore.yay = !objectStore.yay // Or use an action if defined in your store
-}
 const viewportRef = ref(null)
 </script>
 
