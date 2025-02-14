@@ -36,12 +36,12 @@ const setActionType = (key, value) => {
       <h3 class="m-0 text-xs font-medium">트리거 설정</h3>
     </div>
     <!-- 기본 설정 -->
-    <div class="p-4 space-y-4">
+    <div class="p-4 pb-0 space-y-2">
       <template v-for="(value, key, index) in computedTriggerConfig" :key="key">
         <p class="flex flex-col gap-2">
           <label class="pl-1 text-xs text-gray-400">{{ value.label }}</label>
           <select 
-            class="h-10 indent-2 border border-[#333] rounded bg-[#252526]"
+            class="select-dark"
             @change="(e) => setActionType(key, e.target.value)"
           >
             <template v-if="Array.isArray(value.value)">

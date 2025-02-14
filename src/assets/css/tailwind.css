@@ -1,17 +1,17 @@
 /* @import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT/fonts/variable/woff2/SUIT-Variable.css'); */
-@import url("https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css");
+@import url('https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary-color: #805EE8;
-  --primary-accent-color: #532EC1;
-  --secondary-color: #E8E0FF;
-  --light-gray-color: #F5F5F5;
-  --middle-gray-color: #E6E6E6;
-  --accent-gray-color: #DBDBDB;
+  --primary-color: #805ee8;
+  --primary-accent-color: #532ec1;
+  --secondary-color: #e8e0ff;
+  --light-gray-color: #f5f5f5;
+  --middle-gray-color: #e6e6e6;
+  --accent-gray-color: #dbdbdb;
 }
 
 @layer base {
@@ -24,14 +24,13 @@
 }
 
 @layer components {
+  .input-dark {
+    @apply text-xs p-2 !h-8 bg-[#252526] border border-[#333] rounded text-white pl-3 outline-none;
+  }
+  .select-dark {
+    @apply text-xs p-2 !h-8 outline-none bg-[#252526] border border-[#333] rounded text-white pl-3;
+  }
   .btn-primary {
     @apply bg-[var(--primary-color)] rounded-[10px] transition-all duration-200 px-6 h-10 text-white hover:bg-[var(--primary-accent-color)];
-  }
-  .btn-grey {
-    @apply bg-[var(--light-gray-color)] rounded-[10px] transition-all duration-200 px-6 h-10 hover:bg-[var(--accent-gray-color)];
-  }
-
-  .btn-white {
-    @apply bg-white rounded-[10px] transition-all duration-200 px-6 h-10 border-[var(--primary-color)] border text-[var(--primary-color)] hover:bg-[var(--secondary-color)] hover:text-[var(--primary-accent-color)] hover:border-[var(--primary-accent-color)];
   }
 }
