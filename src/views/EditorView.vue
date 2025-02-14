@@ -23,7 +23,7 @@ const viewportRef = ref(null)
       </div>
       <div class="h-full pt-8">
         <!-- Content area below tab -->
-        <Viewport ref="viewportRef" class="bg-[#2D2D2D]" />
+        <Viewport ref="viewportRef"/>
         <ObjectToolBar class="absolute transform -translate-x-1/2 bottom-4 left-1/2" />
       </div>
     </div>
@@ -41,8 +41,8 @@ const viewportRef = ref(null)
 
 <style>
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
 }
 
 ::-webkit-scrollbar-track {
@@ -57,5 +57,8 @@ const viewportRef = ref(null)
 
 ::-webkit-scrollbar-thumb:hover {
   background: #666;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 </style>
