@@ -16,7 +16,7 @@ const { isEditingTrigger } = storeToRefs(controllerStore)
 </script>
 <template>
   <div class="flex flex-col gap-6">
-    <ObjectProperty />
+    <!-- <ObjectProperty /> -->
     <ActionList v-if="!isEditingTrigger" />
     <AnimationTrigger v-if="isEditingTrigger" />
   </div>

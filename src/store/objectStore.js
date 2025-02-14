@@ -55,6 +55,7 @@ export const useObjectStore = defineStore('object', () => {
    * @param {string} objectId
    */
   const selectObject = (objectId) => {
+    selectedObject.value = null
     const object = objects.value.find((obj) => obj.id === objectId)
     selectedObject.value = object || null
   }
