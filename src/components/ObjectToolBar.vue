@@ -18,10 +18,14 @@ const handleObjectType = (type) => {
     image: () => {
       uploadImageLocal()
     },
+    text: () => {
+      addText()
+    }
   }
   return action[type]()
 }
 const fileInput = ref(null)
+
 const uploadImageLocal = () => {
   fileInput.value.click()
 }
@@ -60,6 +64,15 @@ const addShape = () => {
     y: 100,
     radius: 30,
     fillStyle: '#825feb',
+  })
+}
+
+const addText = () => {
+  objectStore.addObject({
+    type: 'text',
+    x: 100,
+    y: 100,
+    text: '텍스트를 입력하세요',
   })
 }
 

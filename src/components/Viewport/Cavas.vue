@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useObjectStore, useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
@@ -37,6 +37,9 @@ const HANDLE_POSITIONS = [
   { x: -1, y: 0 }, // Middle-left
 ]
 
+const MOVE_DEBOUNCE = 5 // milliseconds
+let lastMoveTime = 0
+
 const handleClick = (event, object) => {
   if (!object) return
 
@@ -54,12 +57,12 @@ const handleClick = (event, object) => {
 const startDrag = (event, object) => {
   event.stopPropagation()
   isDragging.value = true
+  event.target.setPointerCapture(event.pointerId)
 
   const svgPoint = svgRef.value.createSVGPoint()
   svgPoint.x = event.clientX
   svgPoint.y = event.clientY
 
-  // Transform mouse position to SVG coordinates
   const transformedPoint = svgPoint.matrixTransform(svgRef.value.getScreenCTM().inverse())
 
   dragOffset.value = {
@@ -70,6 +73,10 @@ const startDrag = (event, object) => {
 
 const onDrag = (event) => {
   if (!isDragging.value || !selectedObject.value) return
+
+  const currentTime = Date.now()
+  if (currentTime - lastMoveTime < MOVE_DEBOUNCE) return
+  lastMoveTime = currentTime
 
   const svgPoint = svgRef.value.createSVGPoint()
   svgPoint.x = event.clientX
@@ -136,17 +143,17 @@ const getHandlePositions = (object) => {
     y: object.y + pos.y * (object.radius + HANDLE_SIZE),
   }))
 }
-
-
 </script>
 <template>
   <svg
     ref="svgRef"
     :width="width"
     :height="height"
-    @mousemove="onDrag"
-    @mouseup="endDrag"
-    @mouseleave="endDrag"
+    @dragenter.prevent
+    @dragover.prevent
+    @pointermove.passive="onDrag"
+    @pointerup="endDrag"
+    @pointerleave="endDrag"
     @click="handleClick($event, null)"
     class="shadow-sm svg-canvas"
   >
@@ -178,7 +185,7 @@ const getHandlePositions = (object) => {
           :cy="object.y"
           :r="object.radius"
           :fill="object.fillStyle"
-          @mousedown="(e) => startDrag(e, object)"
+          @pointerdown="(e) => startDrag(e, object)"
           @click="(e) => handleClick(e, object)"
           :class="{ 'cursor-move': true }"
         />
@@ -191,10 +198,22 @@ const getHandlePositions = (object) => {
           :height="Number(object.height) || 100"
           :href="object.imageUrl"
           preserveAspectRatio="xMidYMid meet"
-          @mousedown="(e) => startDrag(e, object)"
+          @pointerdown="(e) => startDrag(e, object)"
           @click="(e) => handleClick(e, object)"
           :class="{ 'cursor-move': true }"
         />
+
+        <text
+          v-if="object.type === 'text'"
+          :x="object.x"
+          :y="object.y"
+          :fill="object.fillStyle"
+          @pointerdown="(e) => startDrag(e, object)"
+          @click="(e) => handleClick(e, object)"
+          :class="{ 'cursor-move': true }"
+        >
+          {{ object.text }}
+        </text>
 
         <!-- Control handles -->
         <template v-if="selectedObject === object">

@@ -32,6 +32,7 @@ export const useObjectStore = defineStore('object', () => {
       fillStyle: object.fillStyle || '#000000',
       animations: [],
       ...(object.imageUrl && { imageUrl: object.imageUrl }),
+      ...(object.text && { text: object.text }),
     }
 
     if (isClone) {

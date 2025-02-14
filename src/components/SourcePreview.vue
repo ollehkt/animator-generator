@@ -9,7 +9,7 @@ const { showSourcePreview } = storeToRefs(controllerStore)
 const code = ref('')
 
 onMounted(() => {
-  code.value = `@keyframes slideIn {
+  code.value = `THIS IS FAKE CODE =>>>>>>>> @keyframes slideIn {
   0% {
     transform: translateX(-100%);
     opacity: 0;
@@ -41,19 +41,27 @@ const closeSourcePreview = () => {
 </script>
 
 <template>
-  <div class="absolute top-[102px] shadow-xl right-6 w-full  max-w-4xl mx-auto  z-[100]">
-    <div class="bg-[#1e1e1e]  rounded-lg shadow-lg overflow-hidden border border-[#333333]">
+  <div class="absolute top-[102px] shadow-xl right-6 w-full max-w-4xl mx-auto z-[100]">
+    <div class="bg-[#1e1e1e] rounded-lg shadow-lg overflow-hidden border border-[#333333]">
       <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2">
-        <div 
-          @click="closeSourcePreview"
-          class="flex gap-2"
-        >
-          <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+        <div @click="closeSourcePreview" class="flex gap-2">
+          <div class="w-3 h-3 rounded-full cursor-pointer bg-[#ff5f56]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="#000"
+              class="w-3 h-3"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </div>
           <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
           <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
         </div>
         <span class="ml-2 text-sm text-gray-400">Code</span>
-        
+
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
