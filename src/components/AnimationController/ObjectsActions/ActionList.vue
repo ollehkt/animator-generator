@@ -18,8 +18,10 @@ const handleAddAction = () => {
     <div class="p-2 bg-gray-700 border-b border-gray-600">
       <h3 class="m-0 text-xs font-medium">애니메이션 목록</h3>
     </div>
-    
-    <div class="p-4">
+    <div v-if="objects.length === 0" class="flex items-center justify-center h-20 m-4 text-sm text-gray-400 border border-gray-700 border-dashed rounded-md">
+      오브젝트가 없습니다.
+    </div>
+    <div v-else class="p-4">
       <button 
         @click="handleAddAction"
         class="justify-center w-full btn-primary"

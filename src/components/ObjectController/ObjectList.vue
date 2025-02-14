@@ -44,5 +44,5 @@ const selectThisObject = (object) => {
       </div>
     </li>
   </ul>
-  <p v-else class="p-6 text-xs text-center text-gray-400">오브젝트가 없습니다.</p>
+  <p v-else class="p-4 mx-3 text-xs text-center text-gray-400 border border-gray-700 border-dashed rounded-md">오브젝트가 없습니다.</p>
 </template>

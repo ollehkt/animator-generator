@@ -81,29 +81,40 @@ const addText = () => {
 const handlePlay = () => {
   controllerStore.play()
 }
+
+const getObjectIcon = (type) => {
+  switch (type) {
+    case 'text':
+      return 'T'
+    case 'image':
+      return 'I'
+    default: // circle, rect, polygon
+      return 'O'
+  }
+}
 </script>
 <template>
   <div
-    class="absolute flex justify-between gap-10 p-4 px-6 -translate-x-1/2 rounded-lg shadow-lg bg-slate-800 bottom-8 left-1/2 w-fit"
+    class="absolute flex justify-between gap-10 p-4 px-6 -translate-x-1/2 border bg-[#333] border-gray-700 rounded-lg shadow-lg bottom-8 left-1/2 w-fit"
   >
     <input ref="fileInput" type="file" class="hidden" @change="handleFileChange" />
     <div class="flex gap-4">
       <button
         v-for="object in objectType"
         :key="object.id"
-        class="w-[84px] px-4 py-2 text-sm text-white transition-colors duration-200 rounded-md shadow-sm bg-slate-700 hover:bg-slate-600"
+        class="!w-8 !h-8 min-w-8  flex gap-2 items-center justify-center font-bold  text-white transition-colors duration-200 rounded-md shadow-sm  bg-[#4F46E5] hover:bg-[#4F46E5]/80"
         @click="handleObjectType(object.type)"
       >
-        {{ object.name }}
+        {{ getObjectIcon(object.type) }}     
       </button>
     </div>
-    <div>
+    <!-- <div>
       <button
         @click="handlePlay"
         class="min-w-[84px] px-4 py-2 text-sm text-white transition-colors duration-200 bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500"
       >
         재생
       </button>
-    </div>
+    </div> -->
   </div>
 </template>

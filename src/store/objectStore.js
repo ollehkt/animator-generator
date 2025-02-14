@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useControllerStore } from '@/store'
+import { storeToRefs } from 'pinia'
 
 export const useObjectStore = defineStore('object', () => {
 
@@ -44,10 +46,14 @@ export const useObjectStore = defineStore('object', () => {
   }
 
   const removeObject = (objectId) => {
+    const controllerStore = useControllerStore()
+    const { isEditingTrigger } = storeToRefs(controllerStore)
+    
     const index = objects.value.findIndex((obj) => obj.id === objectId)
     if (index !== -1) {
       objects.value.splice(index, 1)
     }
+    isEditingTrigger.value = false
     initSelectedObject()
   }
 

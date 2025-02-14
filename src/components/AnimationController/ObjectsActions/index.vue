@@ -1,16 +1,16 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useControllerStore } from '@/store'
+import { useControllerStore, useObjectStore } from '@/store'
 
 import ObjectProperty from './ObjectProperty.vue'
 import ActionList from './ActionList.vue'
 import AnimationTrigger from './AnimationTrigger.vue'
 
 const controllerStore = useControllerStore()
+const objectStore = useObjectStore()
+const { objects } = storeToRefs(objectStore)
 const { isEditingTrigger } = storeToRefs(controllerStore)
-
-
 
 
 </script>

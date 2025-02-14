@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useControllerStore, useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { TRIGGER_CONFIG } from '@/helpers/consts'
@@ -8,7 +8,7 @@ import AnimationPropertySetting from './AnimationPropertySetting.vue'
 
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
-const { objects } = storeToRefs(objectStore)
+const { objects, selectedObject } = storeToRefs(objectStore)
 
 const triggerConfig = ref(TRIGGER_CONFIG)
 const computedTriggerConfig = computed(() => {
@@ -44,6 +44,12 @@ const setActionType = (key, value) => {
 const goToActionList = () => {
   controllerStore.isEditingTrigger = false
 }
+
+onMounted(() => {
+  if (selectedObject.value) {
+    objectStore.selectObject(objects.value[0].id)
+  }
+})
 </script>
 <template>
   <div class="overflow-hidden text-gray-200 bg-gray-800 border border-gray-700 rounded-lg">
@@ -106,5 +112,9 @@ const goToActionList = () => {
     </div>
     <!-- 액션 선택 후 각각 설정 -->
     <AnimationPropertySetting />
+    <div class="p-4">
+      <button class="w-full btn-primary">이 액션을 저장</button>
+      <!-- 객체 및에 animations으로 저장됨 -->
+    </div>
   </div>
 </template>

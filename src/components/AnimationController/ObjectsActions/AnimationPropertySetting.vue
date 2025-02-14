@@ -11,8 +11,8 @@ import ScaleAction from './ScaleAction.vue'
 
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
-
-const { selectedActionType, animationConfig } = storeToRefs(controllerStore)
+const { objects } = storeToRefs(objectStore)
+const { selectedActionType, animationConfig, isEditingTrigger } = storeToRefs(controllerStore)
 const easingOptions = ref(EASING_OPTIONS)
 
 watch(selectedActionType, (newType) => {
@@ -28,10 +28,13 @@ watch(selectedActionType, (newType) => {
     animationConfig.value.scaleEnd = 0
   }
 })
+
+
 </script>
 
 <template>
   <div class="overflow-hidden text-gray-200 bg-gray-800 rounded-lg">
+  
     <div class="flex flex-col p-4 mt-2 gap-y-2">
       <TranslateAction
         v-if="selectedActionType === 'translate' || selectedActionType === 'rotate'"
