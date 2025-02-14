@@ -4,6 +4,7 @@ import { useObjectStore, useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 import Canvas from './Cavas.vue'
+import ZoomControls from './ZoomControls.vue'
 
 const canvasRef = ref(null)
 const objectStore = useObjectStore()
@@ -54,6 +55,10 @@ const handleWheel = (event) => {
   }
 }
 
+const updateZoom = (newZoom) => {
+  zoom.value = newZoom
+}
+
 onMounted(() => {
   window.addEventListener('click', handleGlobalClick)
   window.addEventListener('keydown', handleKeyDown)
@@ -73,7 +78,8 @@ onUnmounted(() => {
     ref="canvasRef"
     class="bg-[#2D2D2D] relative flex items-center justify-center w-full h-full overflow-auto"
   >
-    <p class="absolute top-2 right-2 z-50 text-[#CCCCCC] text-xs bg-[#333333] px-2 py-1 rounded-md">{{ Math.round(zoom * 100) }}%</p>
+    <ZoomControls :zoom="zoom" :updateZoom="updateZoom" />
+    <!-- <p class="absolute top-2 right-2 z-50 text-[#CCCCCC] text-xs bg-[#333333] px-2 py-1 rounded-md">{{ Math.round(zoom * 100) }}%</p> -->
     <div
       class="transform-origin-center"
       :style="{

@@ -21,8 +21,8 @@ const { selectedObject } = storeToRefs(objectStore)
       <div class="space-y-1">
         <label class="block text-xs text-gray-400">캔버스 기준 좌표</label>
         <div class="flex gap-4">
-          <span>x: {{ selectedObject?.x || '-' }}</span>
-          <span>y: {{ selectedObject?.y || '-' }}</span>
+          <span>x: {{ Math.round(selectedObject?.x) || '-' }}</span>
+          <span>y: {{ Math.round(selectedObject?.y) || '-' }}</span>
         </div>
       </div>
     </div>
