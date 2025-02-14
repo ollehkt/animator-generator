@@ -22,8 +22,10 @@ export const TRIGGER_CONFIG = {
     value:[
       {label: '클릭', value: 'click'},
       {label: '더블클릭', value: 'doubleClick'},
-      {label: '마우스 다운', value: 'mouseDown'},
-      {label: '마우스 업', value: 'mouseUp'},
+      {label: '마우스 안으로', value: 'mouseOver'},
+      {label: '마우스 밖으로', value: 'mouseOut'},
+      {label: '누르고 있기', value: 'mouseDown'},
+      {label: '떼기', value: 'mouseUp'},
     ]
   },
   targetObjects: {

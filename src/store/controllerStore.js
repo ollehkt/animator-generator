@@ -9,13 +9,15 @@ export const useControllerStore = defineStore('controller', () => {
   const { selectedObject, objects } = storeToRefs(objectStore)
 
   // state
-  const activeTab = ref({
-    // 객체속성
-    id: 'object',
-    label: 'Object',
-  })
+  // activeTab => 컨트롤러 탭 변경 있었을 경우 사용 현재 없음
+  // const activeTab = ref({ 
+  //   // 객체속성
+  //   id: 'object',
+  //   label: 'Object',
+  // })
 
   // 액션 타입(페이지이동, 좌표로 이동...)
+  const isEditingTrigger = ref(false) // 리스트 || 트리거 설정
   const selectedActionType = ref('translate')
 
   const animations = ref([])
@@ -187,7 +189,8 @@ export const useControllerStore = defineStore('controller', () => {
 
   return {
     selectedActionType,
-    activeTab,
+    isEditingTrigger,
+    // activeTab,
     animations,
     targetPOS,
     animationConfig,
