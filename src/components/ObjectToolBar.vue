@@ -2,10 +2,11 @@
 import { ref } from 'vue'
 import { useObjectStore, useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
-
+import { OBJECT_TYPE } from '@/helpers/consts'
 const objectStore = useObjectStore()
 const controllerStore = useControllerStore()
-const { OBJECT_TYPE } = storeToRefs(objectStore)
+
+const objectType = ref(OBJECT_TYPE)
 
 const emit = defineEmits(['addObject'])
 
@@ -73,7 +74,7 @@ const handlePlay = () => {
     <input ref="fileInput" type="file" class="hidden" @change="handleFileChange" />
     <div class="flex gap-4">
       <button
-        v-for="object in OBJECT_TYPE"
+        v-for="object in objectType"
         :key="object.id"
         class="px-4 py-2 text-white transition-colors duration-200 rounded-md shadow-sm bg-slate-700 hover:bg-slate-600"
         @click="handleObjectType(object.type)"

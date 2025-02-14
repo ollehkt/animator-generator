@@ -145,16 +145,26 @@ const getHandlePositions = (object) => {
   }))
 }
 
+const handleKeyDown = (event) => {
+  if (!selectedObject.value) return
+  
+  if (event.key === 'Backspace') {
+    objectStore.removeObject(selectedObject.value.id)
+  }
+}
+
 defineExpose({
   clearObjects,
 })
 
 onMounted(() => {
   window.addEventListener('click', handleGlobalClick)
+  window.addEventListener('keydown', handleKeyDown)
 })
 
 onUnmounted(() => {
   window.removeEventListener('click', handleGlobalClick)
+  window.removeEventListener('keydown', handleKeyDown)
 })
 </script>
 

@@ -1,3 +1,21 @@
+export const OBJECT_TYPE = [
+  {
+    id: 1,
+    name: '도형',
+    type: 'shape',
+  },
+  {
+    id: 2,
+    name: '이미지',
+    type: 'image',
+  },
+  {
+    id: 3,
+    name: '텍스트',
+    type: 'text',
+  },
+]
+
 export const TRIGGER_CONFIG = {
   triggers: {
     label: '트리거',

@@ -49,23 +49,6 @@ export const useObjectStore = defineStore('object', () => {
   const selectedObject = ref(null)
   const objectStartFrom = ref(null)
 
-  const OBJECT_TYPE = ref([
-    {
-      id: 1,
-      name: '도형',
-      type: 'shape',
-    },
-    {
-      id: 2,
-      name: '이미지',
-      type: 'image',
-    },
-    {
-      id: 3,
-      name: '텍스트',
-      type: 'text',
-    },
-  ])
 
   const generateUniqueId = () => {
     let fullId, shortId
@@ -106,9 +89,8 @@ export const useObjectStore = defineStore('object', () => {
     const index = objects.value.findIndex((obj) => obj.id === objectId)
     if (index !== -1) {
       objects.value.splice(index, 1)
-      // Also remove associated animations
-      animations.value = animations.value.filter((anim) => anim.objectId !== objectId)
     }
+    initSelectedObject()
   }
 
   const selectObject = (objectId) => {
@@ -116,9 +98,10 @@ export const useObjectStore = defineStore('object', () => {
     selectedObject.value = object || null
   }
 
-  const clearSelection = () => {
+  const initSelectedObject = () => {
     selectedObject.value = null
   }
+
 
   const setObjectStartFrom = (startFrom) => {
     objectStartFrom.value = startFrom
@@ -129,7 +112,6 @@ export const useObjectStore = defineStore('object', () => {
     ANIMATION_TYPES,
     DEFAULT_ANIMATION_SETTINGS,
     EASING_FUNCTIONS,
-    OBJECT_TYPE,
 
     // State
     objects,
@@ -142,7 +124,6 @@ export const useObjectStore = defineStore('object', () => {
     addObject,
     removeObject,
     selectObject,
-    clearSelection,
     setObjectStartFrom,
   }
 })
