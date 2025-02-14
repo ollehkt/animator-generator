@@ -1,18 +1,24 @@
 <script setup>
 import { ref } from 'vue'
-import { useObjectStore } from '@/store'
+import { useObjectStore, useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import Header from '@/components/Header.vue'
 import Viewport from '@/components/Viewport/index.vue'
 import AnimationController from '@/components/AnimationController/index.vue'
 import ObjectToolBar from '@/components/ObjectToolBar.vue'
 
+import SourcePreview from '@/components/SourcePreview.vue'
+
 const objectStore = useObjectStore()
+const controllerStore = useControllerStore()
+const { showSourcePreview } = storeToRefs(controllerStore)
+
 const viewportRef = ref(null)
 </script>
 
 <template>
   <div class="flex h-full pt-[50px] bg-[#1e1e1e] overflow-hidden">
+    <SourcePreview v-if="showSourcePreview"/>
     <Header />
     <div class="w-[75%] relative border-r border-[#333333]">
       <!-- Main editor area -->

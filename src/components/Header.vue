@@ -1,11 +1,20 @@
-<script setup></script>
+<script setup>
+import { useControllerStore } from '@/store'
+import { storeToRefs } from 'pinia'
+
+const controllerStore = useControllerStore()
+const { showSourcePreview } = storeToRefs(controllerStore)
+</script>
 <template>
   <header
     class="h-[50px] absolute top-0 left-0 w-full border-b border-[#000] flex items-center justify-end gap-6 px-10"
   >
     <h1 class="mr-auto text1-lg">🍟L🏀O⛱️GO</h1>
     <slot></slot>
-    <button class="text-[#CCCCCC] flex items-center gap-1 text-xs group hover:text-white">
+    <button 
+      @click="showSourcePreview = true"
+      class="text-[#CCCCCC] flex items-center gap-1 text-xs group hover:text-white"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

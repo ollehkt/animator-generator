@@ -8,11 +8,11 @@ const { animationConfig } = storeToRefs(controllerStore)
 <template>
   <div class="flex flex-col gap-2">
     <p class="flex flex-col">
-      <label class="mb-1">Scale Start with</label>
+      <label class="pl-1 mb-1 text-xs text-gray-400">Scale Start with</label>
       <input type="number" v-model="animationConfig.scaleStart" class="input-dark" />
     </p>
     <p class="flex flex-col">
-      <label class="mb-1">Scale End with</label>
+      <label class="pl-1 mb-1 text-xs text-gray-400">Scale End with</label>
       <input type="number" v-model="animationConfig.scaleEnd" class="input-dark" />
     </p>
   </div>

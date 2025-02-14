@@ -17,8 +17,14 @@ export const useControllerStore = defineStore('controller', () => {
   // })
 
   // 액션 타입(페이지이동, 좌표로 이동...)
+  const showSourcePreview = ref(false)
   const isEditingTrigger = ref(false) // 리스트 || 트리거 설정
-  const selectedActionType = ref('translate')
+
+  // 액션리스트에 들어가야 하는 필수 값 
+  const selectedTriggerType = ref()
+  const selectedActionType = ref()
+
+  //==================================
 
   const animations = ref([])
   const targetPOS = ref({
@@ -38,7 +44,15 @@ export const useControllerStore = defineStore('controller', () => {
     loop: false,
   })
 
+  // 트리거 설정 부분
+  const setTriggerType = (type) => {
+    // trigger
+    selectedTriggerType.value = type
+  }
+
+  // 액션 설정 부분
   const setActionType = (type) => {
+    // action
     selectedActionType.value = type
   }
 
@@ -188,12 +202,15 @@ export const useControllerStore = defineStore('controller', () => {
   }
 
   return {
+    showSourcePreview,
+    selectedTriggerType,
     selectedActionType,
     isEditingTrigger,
     // activeTab,
     animations,
     targetPOS,
     animationConfig,
+    setTriggerType,
     setActionType,
     play,
     removeAnimation,
