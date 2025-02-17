@@ -120,13 +120,12 @@ export const useObjectStore = defineStore('object', () => {
     objectStartFrom.value = startFrom
   }
 
-  // 애니메이션이 실제로 적용되는 객체
+  // 애니메이션이 실제로 적용
   const addActionTarget = (object) => {
     actionTargetList.value.push(object)
   }
 
   const removeActionTarget = (index) => {
-    if (actionTargetList.value.length === 1) return
     actionTargetList.value.splice(index, 1)
   }
 

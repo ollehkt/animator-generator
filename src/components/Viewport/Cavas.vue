@@ -357,6 +357,7 @@ const getHandlePositions = (object) => {
             stroke="#4a9eff"
             stroke-width="1"
             class="handle"
+            :data-direction="handleCursors[index].split('-')[0]"
             @pointerdown="(e) => startResize(e, object, index)"
           />
         </template>
@@ -364,3 +365,17 @@ const getHandlePositions = (object) => {
     </template>
   </svg>
 </template>
+
+<style scoped>
+.handle {
+  cursor: default;
+}
+.handle[data-direction="nw"] { cursor: nw-resize; }
+.handle[data-direction="n"]  { cursor: n-resize; }
+.handle[data-direction="ne"] { cursor: ne-resize; }
+.handle[data-direction="e"]  { cursor: e-resize; }
+.handle[data-direction="se"] { cursor: se-resize; }
+.handle[data-direction="s"]  { cursor: s-resize; }
+.handle[data-direction="sw"] { cursor: sw-resize; }
+.handle[data-direction="w"]  { cursor: w-resize; }
+</style>
