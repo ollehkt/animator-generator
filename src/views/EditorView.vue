@@ -38,7 +38,7 @@ const viewportRef = ref(null)
       </div>
     </div>
     <div class="w-[20%] bg-[#252526]">
-      <div class=" overflow-x-clip overflow-y-auto h-[calc(100vh-66px)]">
+      <div class="overflow-x-clip">
         <AnimationController />
       </div>
     </div>

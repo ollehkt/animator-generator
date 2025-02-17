@@ -99,17 +99,35 @@ export const TRIGGER_CONFIG = {
 
   actions: {
     label: '액션',
-    value:[
-      {label: '이동', value: 'translate'},
-      {label: '회전', value: 'rotate'},
-      {label: '확대/축소', value: 'scale'},
-      {label: '투명도', value: 'opacity'},
-    ]
-  },
-  // actionTarget: {
-  //   label: '액션 타겟',
-  //   value: '',
-  // },
+    value:{
+      objectActions: {
+        label: '오브젝트액션',
+        value:[
+          {label: '이동', value: 'translate'},
+          {label: '회전', value: 'rotate'},
+          { label: '확대/축소', value: 'scale' },
+          { label: '투명도', value: 'opacity' },
+        ],
+      },
+      pageActions: {
+        label: '페이지액션',
+        value: [
+          { label: 'URL로 이동', value: 'url' },
+          { label: '페이지 새로고침', value: 'reload' },
+          { label: '페이지 닫기', value: 'close' },
+        ],
+      },
+      mediaActions: {
+        label: '미디어액션',
+        value: [
+          { label: '재생', value: 'play' },
+          { label: '일시정지', value: 'pause' },
+          { label: '음소거', value: 'mute' },
+          { label: '볼륨 조절', value: 'volume' },
+        ],
+      },
+    },
+  }
 }
 
 export const ANIMATION_TYPE = [
