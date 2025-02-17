@@ -3,7 +3,6 @@ import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useControllerStore, useObjectStore } from '@/store'
 
-import ObjectProperty from './ObjectProperty.vue'
 import ActionList from './ActionList.vue'
 import AnimationTrigger from './AnimationTrigger.vue'
 
@@ -16,7 +15,6 @@ const { isEditingTrigger } = storeToRefs(controllerStore)
 </script>
 <template>
   <div class="flex flex-col gap-6">
-    <!-- <ObjectProperty /> -->
     <ActionList v-if="!isEditingTrigger" />
     <AnimationTrigger v-if="isEditingTrigger" />
   </div>

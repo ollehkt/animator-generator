@@ -17,24 +17,25 @@ const MAX_ZOOM = 2 //200%
 
 const handleGlobalClick = (event) => {
   const { target } = event
-  if (canvasRef.value?.contains(event.target)) {
+  if (canvasRef.value?.contains(target)) {
     selectedObject.value = null
   }
 }
 
-const handleClick = (event, object) => {
-  if (!object) return
+// const handleClick = (event, object) => {
+//   console.log
+//   if (!object) return
 
-  if (object) {
-    event.stopPropagation()
-    selectedObject.value = object
-    return
-  }
+//   if (object) {
+//     event.stopPropagation()
+//     selectedObject.value = object
+//     return
+//   }
 
-  if (event.target.tagName === 'rect' || event.target.tagName === 'svg') {
-    selectedObject.value = null
-  }
-}
+//   if (event.target.tagName === 'rect' || event.target.tagName === 'svg') {
+//     selectedObject.value = null
+//   }
+// }
 
 const handleKeyDown = (event) => {
   if (!selectedObject.value) return

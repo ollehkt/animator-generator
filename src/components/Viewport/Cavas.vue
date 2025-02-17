@@ -32,7 +32,7 @@ const HANDLE_POSITIONS = [
 
 const objectStore = useObjectStore()
 const controllerStore = useControllerStore()
-const { objects, selectedObject, objectStartFrom, cloneObjects } = storeToRefs(objectStore)
+const { objects, selectedObject } = storeToRefs(objectStore)
 
 const svgRef = ref(null)
 const isDragging = ref(false)

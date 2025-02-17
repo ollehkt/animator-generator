@@ -1,9 +1,16 @@
 <script setup>
+import { useRouter } from 'vue-router'
 import { useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
+const router = useRouter()
+
 const controllerStore = useControllerStore()
 const { showSourcePreview } = storeToRefs(controllerStore)
+
+const openPreview = () => {
+  window.open('/preview', '_blank')
+}
 </script>
 <template>
   <header
@@ -31,7 +38,10 @@ const { showSourcePreview } = storeToRefs(controllerStore)
       </svg>
       소스코드
     </button>
-    <button class="text-[#CCCCCC] flex items-center gap-1 text-xs group hover:text-white">
+    <button 
+      @click="openPreview"
+      class="text-[#CCCCCC] flex items-center gap-1 text-xs group hover:text-white"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

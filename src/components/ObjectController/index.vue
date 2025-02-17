@@ -7,7 +7,7 @@ import ObjectList from './ObjectList.vue'
 <template>
   <div>
     <div class="h-8 bg-[#1E1E1E] flex items-center px-4 border-b border-[#2A2A2A]">
-      <span class="text-[#E5E5E5] text-sm">Objects</span>
+      <span class="text-[#CCC] text-sm">Objects</span>
     </div>
     <section class="space-y-2">
       <CurrentObject />

@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import {
-  EditorView
+  EditorView,
+  PreviewView,
 } from '@/views'
-import { ref } from 'vue'
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,6 +18,11 @@ export const router = createRouter({
       path: '/',
       name: 'editor',
       component: EditorView,
+    },
+    {
+      path: '/preview',
+      name: 'preview',
+      component: PreviewView,
     },
   ],
 })
