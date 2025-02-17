@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useControllerStore, useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { TRIGGER_CONFIG } from '@/helpers/consts'
@@ -69,6 +69,10 @@ onMounted(() => {
   objectStore.addActionTarget({
     id: objects.value[0].id,
   })
+})
+
+onUnmounted(() => {
+  selectedActionType.value = null
 })
 </script>
 <template>

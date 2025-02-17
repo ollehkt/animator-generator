@@ -154,10 +154,22 @@ export const ANIMATION_TYPE = [
 ]
 
 export const EASING_OPTIONS = [
-  { value: 'linear', label: 'Linear' },
-  { value: 'ease', label: 'Ease' },
-  { value: 'ease-in', label: 'Ease In' },
-  { value: 'ease-out', label: 'Ease Out' },
-  { value: 'ease-in-out', label: 'Ease In Out' },
+{ label: 'Linear', value: 'linear', category: 'Simple' },
+  { label: 'Ease', value: 'ease', category: 'Simple' },
+  
+  // Standard
+  { label: 'Ease In', value: 'ease-in', category: 'Standard' },
+  { label: 'Ease Out', value: 'ease-out', category: 'Standard' },
+  { label: 'Ease In Out', value: 'ease-in-out', category: 'Standard' },
+  
+  // Expo
+  { label: 'Expo In', value: 'cubic-bezier(0.95, 0.05, 0.795, 0.035)', category: 'Expo' },
+  { label: 'Expo Out', value: 'cubic-bezier(0.19, 1, 0.22, 1)', category: 'Expo' },
+  { label: 'Expo In Out', value: 'cubic-bezier(0.87, 0, 0.13, 1)', category: 'Expo' },
+  
+  // Elastic
+  { label: 'Elastic In', value: 'cubic-bezier(0.95, 0.05, 0.795, 0.035)', category: 'Elastic' },
+  { label: 'Elastic Out', value: 'cubic-bezier(0.37, 0, 0.63, 1)', category: 'Elastic' },
+  { label: 'Elastic In Out', value: 'cubic-bezier(0.87, 0, 0.13, 1)', category: 'Elastic' }
 ]
 
