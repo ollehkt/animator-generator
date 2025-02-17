@@ -4,12 +4,13 @@ import { useControllerStore, useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { EASING_OPTIONS } from '@/helpers/consts'
 
-import TranslateAction from './TranslateAction.vue'
-import OpacityAction from './OpacityAction.vue'
+import OpacityAction from '../ObjectActions/OpacityAction.vue'
+import ScaleAction from '../ObjectActions/ScaleAction.vue'
+import TranslateAction from '../ObjectActions/TranslateAction.vue'
 import CommonProperty from './CommonProperty.vue'
-import ScaleAction from './ScaleAction.vue'
 
-import PageAction from './PageAction.vue'
+import PageAction from '../PageAction.vue'
+import MediaAction from '../MediaActions/index.vue'
 
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
@@ -40,7 +41,7 @@ watch(selectedActionType, (newType) => {
     <div class="flex flex-col p-4 mt-2 gap-y-4">
       <PageAction v-if="isPageAction" />
       <TranslateAction
-        v-if="selectedActionType === 'translate' || selectedActionType === 'rotate'"
+        v-if="selectedActionType === 'translate' || selectedActionType === 'rotate' || !selectedActionType"
       />
       <OpacityAction v-if="selectedActionType === 'opacity'" />
       <ScaleAction v-if="selectedActionType === 'scale'" />

@@ -6,7 +6,6 @@ import { storeToRefs } from 'pinia'
 export const useObjectStore = defineStore('object', () => {
   // State
   const objects = ref([])
-  const cloneObjects = ref([]) // marker 값을 위한 복사객체
   const selectedObject = ref(null)
   const actionTargetList = ref([])
   const objectStartFrom = ref(null)

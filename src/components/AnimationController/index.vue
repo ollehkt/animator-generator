@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useControllerStore, useObjectStore } from '@/store'
-import ObjectsActions from './ObjectsActions/index.vue'
+import Default from './Default/index.vue'
 const controllerStore = useControllerStore()
 const { activeTab } = storeToRefs(controllerStore)
 
@@ -15,7 +15,7 @@ const { activeTab } = storeToRefs(controllerStore)
     <span class="text-[#CCCCCC] text-sm">Animation Controls</span>
   </div>
   <div class="flex flex-col gap-2 p-6 overflow-y-auto h-[calc(100vh-82px)]">
-    <ObjectsActions />
+    <Default />
     <!-- <component :is="targetComponent" /> 속성 | 액션 탭이 생길경우 사용-->
   </div>
 </template>
