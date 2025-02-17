@@ -35,7 +35,7 @@ watch(selectedActionType, (newType) => {
 <template>
   <div class="overflow-hidden text-gray-200 bg-gray-800 rounded-lg">
   
-    <div class="flex flex-col p-4 mt-2 gap-y-2">
+    <div class="flex flex-col p-4 mt-2 gap-y-4">
       <TranslateAction
         v-if="selectedActionType === 'translate' || selectedActionType === 'rotate'"
       />

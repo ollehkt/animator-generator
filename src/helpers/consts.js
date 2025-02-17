@@ -42,10 +42,10 @@ export const TRIGGER_CONFIG = {
       {label: '투명도', value: 'opacity'},
     ]
   },
-  actionTarget: {
-    label: '액션 타겟',
-    value: '',
-  },
+  // actionTarget: {
+  //   label: '액션 타겟',
+  //   value: '',
+  // },
 }
 
 export const ANIMATION_TYPE = [

@@ -8,18 +8,15 @@ import AnimationPropertySetting from './AnimationPropertySetting.vue'
 
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
-const { objects, selectedObject } = storeToRefs(objectStore)
+const { objects, selectedObject, actionTargetList } = storeToRefs(objectStore)
 
 const triggerConfig = ref(TRIGGER_CONFIG)
+
 const computedTriggerConfig = computed(() => {
   return {
     ...triggerConfig.value,
     targetObjects: {
       label: triggerConfig.value.targetObjects.label,
-      value: objects.value,
-    },
-    actionTarget: {
-      label: triggerConfig.value.actionTarget.label,
       value: objects.value,
     },
   }
@@ -45,10 +42,24 @@ const goToActionList = () => {
   controllerStore.isEditingTrigger = false
 }
 
+const addActionTarget = () => {
+  objectStore.addActionTarget({
+    id: objects.value[0].id,
+  })
+}
+
+const handleDeleteActionTarget = (index) => {
+  objectStore.removeActionTarget(index)
+}
+
 onMounted(() => {
   if (selectedObject.value) {
     objectStore.selectObject(objects.value[0].id)
   }
+
+  objectStore.addActionTarget({
+    id: objects.value[0].id,
+  })
 })
 </script>
 <template>
@@ -88,7 +99,7 @@ onMounted(() => {
       </button>
     </div>
     <!-- 기본 설정 -->
-    <div class="p-4 pb-0 space-y-2">
+    <div class="p-4 pb-0 space-y-4">
       <template v-for="(value, key, index) in computedTriggerConfig" :key="key">
         <p class="flex flex-col gap-2">
           <label class="pl-1 text-xs text-gray-400">{{ value.label }}</label>
@@ -109,11 +120,58 @@ onMounted(() => {
           </select>
         </p>
       </template>
+
+      <!-- 액션 타겟 분리 -->
+      <div class="space-y-4">
+        <p class="flex flex-col gap-2">
+          <label class="pl-1 text-xs text-gray-400">액션 타겟</label>
+          <div v-for="item in objectStore.actionTargetList" :key="item.id" class="flex gap-2">
+            <select
+              class="w-full select-dark"
+              @change="handleChangeActionTarget(item.id, $event)"
+            >
+              <option v-for="obj in objects" :key="obj.id" :value="obj.id">
+                {{ obj.name }}
+              </option>
+            </select>
+            <button 
+              @click="handleDeleteActionTarget(item.id)" 
+              class="px-2 text-gray-400 rounded hover:text-red-400 hover:bg-gray-700"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-4 h-4"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </p>
+        <button @click="addActionTarget" class="w-full h-6 px-2 ml-auto text-xs btn-primary min-w-fit">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-3 h-3"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+
+          타겟 추가
+        </button>
+      </div>
     </div>
+
     <!-- 액션 선택 후 각각 설정 -->
     <AnimationPropertySetting />
     <div class="p-4">
-      <button class="w-full btn-primary">이 액션을 저장</button>
+      <button class="w-full h-6 px-2 text-xs btn-primary min-w-fit">이 액션을 저장</button>
       <!-- 객체 및에 animations으로 저장됨 -->
     </div>
   </div>
