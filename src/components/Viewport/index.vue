@@ -38,10 +38,40 @@ const handleGlobalClick = (event) => {
 // }
 
 const handleKeyDown = (event) => {
+  // console.log('🔴', event.key)
   if (!selectedObject.value) return
 
   if (event.key === 'Backspace') {
     objectStore.removeObject(selectedObject.value.id)
+    return
+  }
+
+  const moveAmount = 1 // 1px movement
+  switch (event.key) {
+    case 'ArrowLeft':
+      objectStore.updateObjectPosition(selectedObject.value.id, {
+        x: selectedObject.value.x - moveAmount,
+        y: selectedObject.value.y
+      })
+      break
+    case 'ArrowRight':
+      objectStore.updateObjectPosition(selectedObject.value.id, {
+        x: selectedObject.value.x + moveAmount,
+        y: selectedObject.value.y
+      })
+      break
+    case 'ArrowUp':
+      objectStore.updateObjectPosition(selectedObject.value.id, {
+        x: selectedObject.value.x,
+        y: selectedObject.value.y - moveAmount
+      })
+      break
+    case 'ArrowDown':
+      objectStore.updateObjectPosition(selectedObject.value.id, {
+        x: selectedObject.value.x,
+        y: selectedObject.value.y + moveAmount
+      })
+      break
   }
 }
 

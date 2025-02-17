@@ -141,7 +141,7 @@ const getObjectIcon = (type) => {
 </script>
 <template>
   <div
-    class="absolute flex items-center justify-between gap-8 p-4 px-6 -translate-x-1/2 border bg-[#333] border-gray-700 rounded-lg shadow-lg bottom-8 left-1/2 w-fit"
+    class="absolute flex items-center justify-between gap-8 p-4 px-6 -translate-x-1/2 border bg-[#333]/80 backdrop-blur-sm border-gray-700 rounded-lg shadow-lg bottom-6 left-1/2 w-fit"
   >
     <input ref="fileInput" type="file" class="hidden" @change="handleFileChange" />
     <div class="flex gap-4">

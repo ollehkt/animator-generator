@@ -58,6 +58,14 @@ export const useObjectStore = defineStore('object', () => {
     selectedObject.value = object || null
   }
 
+  const updateObjectPosition = (objectId, position) => {
+    const object = objects.value.find((obj) => obj.id === objectId)
+    if (object) {
+      object.x = position.x
+      object.y = position.y
+    }
+  }
+
   const initSelectedObject = () => {
     selectedObject.value = null
   }
@@ -85,6 +93,7 @@ export const useObjectStore = defineStore('object', () => {
     addObject,
     removeObject,
     selectObject,
+    updateObjectPosition,
     initSelectedObject,
     setObjectStartFrom,
     addActionTarget,
