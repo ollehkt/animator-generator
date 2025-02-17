@@ -113,8 +113,8 @@ export const TRIGGER_CONFIG = {
         label: '페이지액션',
         value: [
           { label: 'URL로 이동', value: 'url' },
-          { label: '페이지 새로고침', value: 'reload' },
-          { label: '페이지 닫기', value: 'close' },
+          { label: '페이지로 이동', value: 'forward' },
+          { label: '전페이지로 이동', value: 'back' },
         ],
       },
       mediaActions: {

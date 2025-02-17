@@ -8,6 +8,7 @@ import AnimationPropertySetting from './AnimationPropertySetting.vue'
 
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
+const { selectedActionType } = storeToRefs(controllerStore)
 const { objects, selectedObject, actionTargetList } = storeToRefs(objectStore)
 
 const triggerConfig = ref(TRIGGER_CONFIG)
@@ -20,6 +21,14 @@ const computedTriggerConfig = computed(() => {
       value: objects.value,
     },
   }
+})
+
+const requireActionTarget = computed(() => {
+  if (!selectedActionType.value) return true
+
+  const actionTypesRequiringTarget = ['reload', 'close', 'translate', 'rotate', 'scale', 'opacity']
+
+  return actionTypesRequiringTarget.includes(selectedActionType.value)
 })
 
 const handleChange = (key, event) => {
@@ -99,7 +108,11 @@ onMounted(() => {
             </template>
             <!-- value 객체일 경우 -->
             <template v-else>
-              <optgroup v-for="(group, groupKey) in value.value" :key="groupKey" :label="group.label">
+              <optgroup
+                v-for="(group, groupKey) in value.value"
+                :key="groupKey"
+                :label="group.label"
+              >
                 <option v-for="item in group.value" :key="item.value" :value="item.value">
                   {{ item.label }}
                 </option>
@@ -108,16 +121,16 @@ onMounted(() => {
           </select>
         </p>
       </template>
-
       <!-- 액션 타겟 분리 -->
-      <div class="space-y-4">
-        <p class="flex flex-col gap-2">
+      <div v-if="requireActionTarget" class="space-y-4">
+        <div class="flex flex-col gap-2">
           <label class="pl-1 text-xs text-gray-400">액션 타겟</label>
-          <div v-for="(item, index) in objectStore.actionTargetList" :key="item.id" class="flex gap-2">
-            <select
-              class="w-full select-dark"
-              v-model="item.id"
-            >
+          <div
+            v-for="(item, index) in objectStore.actionTargetList"
+            :key="item.id"
+            class="flex gap-2"
+          >
+            <select class="w-full select-dark" v-model="item.id">
               <option v-for="obj in objects" :key="obj.id" :value="obj.id">
                 {{ obj.name }}
               </option>
@@ -138,8 +151,11 @@ onMounted(() => {
               </svg>
             </button>
           </div>
-        </p>
-        <button @click="addActionTarget" class="w-full h-6 px-2 ml-auto text-xs btn-primary min-w-fit">
+        </div>
+        <button
+          @click="addActionTarget"
+          class="w-full h-6 px-2 ml-auto text-xs btn-primary min-w-fit"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -155,7 +171,6 @@ onMounted(() => {
         </button>
       </div>
     </div>
-
     <!-- 액션 선택 후 각각 설정 -->
     <AnimationPropertySetting />
     <div class="p-4">

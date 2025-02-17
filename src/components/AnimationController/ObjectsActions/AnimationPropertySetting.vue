@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useControllerStore, useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { EASING_OPTIONS } from '@/helpers/consts'
@@ -9,11 +9,15 @@ import OpacityAction from './OpacityAction.vue'
 import CommonProperty from './CommonProperty.vue'
 import ScaleAction from './ScaleAction.vue'
 
+import PageAction from './PageAction.vue'
+
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
-const { objects } = storeToRefs(objectStore)
 const { selectedActionType, animationConfig, isEditingTrigger } = storeToRefs(controllerStore)
-const easingOptions = ref(EASING_OPTIONS)
+
+const isPageAction = computed(() => {
+  return selectedActionType.value === 'url'
+})
 
 watch(selectedActionType, (newType) => {
   // Reset values when animation type changes
@@ -28,14 +32,13 @@ watch(selectedActionType, (newType) => {
     animationConfig.value.scaleEnd = 0
   }
 })
-
-
 </script>
 
 <template>
-  <div class="overflow-hidden text-gray-200 bg-gray-800 rounded-lg">
-  
+  <!-- action 타입에 따라 페이지 액션, 객체 액션, 미디어 액션 선택 -->
+  <div class="overflow-hidden text-gray-200 bg-gray-800">
     <div class="flex flex-col p-4 mt-2 gap-y-4">
+      <PageAction v-if="isPageAction" />
       <TranslateAction
         v-if="selectedActionType === 'translate' || selectedActionType === 'rotate'"
       />
@@ -46,4 +49,3 @@ watch(selectedActionType, (newType) => {
     </div>
   </div>
 </template>
-
