@@ -125,17 +125,17 @@ onMounted(() => {
       <div class="space-y-4">
         <p class="flex flex-col gap-2">
           <label class="pl-1 text-xs text-gray-400">액션 타겟</label>
-          <div v-for="item in objectStore.actionTargetList" :key="item.id" class="flex gap-2">
+          <div v-for="(item, index) in objectStore.actionTargetList" :key="item.id" class="flex gap-2">
             <select
               class="w-full select-dark"
-              @change="handleChangeActionTarget(item.id, $event)"
+              v-model="item.id"
             >
               <option v-for="obj in objects" :key="obj.id" :value="obj.id">
                 {{ obj.name }}
               </option>
             </select>
-            <button 
-              @click="handleDeleteActionTarget(item.id)" 
+            <button
+              @click="handleDeleteActionTarget(index)"
               class="px-2 text-gray-400 rounded hover:text-red-400 hover:bg-gray-700"
             >
               <svg
