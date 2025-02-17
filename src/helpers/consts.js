@@ -1,3 +1,4 @@
+// OBJECT TOOL BAR 
 export const OBJECT_TYPE = [
   {
     id: 1,
@@ -14,6 +15,45 @@ export const OBJECT_TYPE = [
     name: '텍스트',
     type: 'text',
   },
+]
+
+export const OBJECT_ALIGN = [
+  {
+    id: 1,
+    name: 'Left',
+    type: 'left',
+    icon: 'align-left'
+  },
+  {
+    id: 2,
+    name: 'Center',
+    type: 'center',
+    icon: 'align-center'
+  },
+  {
+    id: 3,
+    name: 'Right',
+    type: 'right',
+    icon: 'align-right'
+  },
+  {
+    id: 4,
+    name: 'Top',
+    type: 'top',
+    icon: 'align-top'
+  },
+  {
+    id: 5,
+    name: 'Middle',
+    type: 'middle',
+    icon: 'align-middle'
+  },
+  {
+    id: 6,
+    name: 'Bottom',
+    type: 'bottom',
+    icon: 'align-bottom'
+  }
 ]
 
 export const TRIGGER_CONFIG = {

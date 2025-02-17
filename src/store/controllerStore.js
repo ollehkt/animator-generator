@@ -42,6 +42,7 @@ export const useControllerStore = defineStore('controller', () => {
     duration: 1000,
     easing: 'linear',
     loop: false,
+    delay: 0,
   })
 
   // 트리거 설정 부분

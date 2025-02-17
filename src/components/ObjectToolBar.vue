@@ -2,11 +2,16 @@
 import { ref } from 'vue'
 import { useObjectStore, useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
-import { OBJECT_TYPE } from '@/helpers/consts'
+import { OBJECT_TYPE, OBJECT_ALIGN } from '@/helpers/consts'
+
 const objectStore = useObjectStore()
 const controllerStore = useControllerStore()
+const { selectedObject } = storeToRefs(objectStore)
 
 const objectType = ref(OBJECT_TYPE)
+const objectAlign = ref(OBJECT_ALIGN)
+
+
 
 const emit = defineEmits(['addObject'])
 
@@ -78,8 +83,52 @@ const addText = () => {
   })
 }
 
-const handlePlay = () => {
-  controllerStore.play()
+const handleAlign = (type) => {
+  if (!selectedObject.value) return
+
+  const canvasWidth = 720 // From Canvas.vue props default width
+  const canvasHeight = 452 // From Canvas.vue props default height
+  
+  const object = selectedObject.value
+  let newX = object.x
+  let newY = object.y
+
+  // Calculate object dimensions based on type
+  const objectWidth = object.type === 'circle' 
+    ? (object.radiusX || object.radius) * 2 
+    : object.width
+  
+  const objectHeight = object.type === 'circle'
+    ? (object.radiusY || object.radius) * 2
+    : object.height
+
+  switch (type) {
+    // Horizontal alignment
+    case 'left':
+      newX = objectWidth / 2
+      break
+    case 'center':
+      newX = canvasWidth / 2
+      break
+    case 'right':
+      newX = canvasWidth - objectWidth / 2
+      break
+
+    // Vertical alignment  
+    case 'top':
+      newY = objectHeight / 2
+      break
+    case 'middle':
+      newY = canvasHeight / 2
+      break
+    case 'bottom':
+      newY = canvasHeight - objectHeight / 2
+      break
+  }
+
+  // Update object position
+  selectedObject.value.x = newX
+  selectedObject.value.y = newY
 }
 
 const getObjectIcon = (type) => {
@@ -88,6 +137,35 @@ const getObjectIcon = (type) => {
       return 'T'
     case 'image':
       return 'I'
+    case 'left':
+      return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 4H14M2 8H8M2 12H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>`
+    case 'center':
+      return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 4H14M4 8H12M3 12H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>`
+    case 'right':
+      return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 4H14M8 8H14M5 12H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>`
+    case 'top':
+      return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 4H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="5" y="1" width="6" height="10" stroke="currentColor" stroke-width="1.5" rx="1"/>
+        </svg>`
+    case 'middle':
+      return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 8H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="5" y="3" width="6" height="10" stroke="currentColor" stroke-width="1.5" rx="1"/>
+        </svg>`
+    case 'bottom':
+      return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 12H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="5" y="5" width="6" height="10" stroke="currentColor" stroke-width="1.5" rx="1"/>
+        </svg>`
+
+
     default: // circle, rect, polygon
       return 'O'
   }
@@ -95,26 +173,29 @@ const getObjectIcon = (type) => {
 </script>
 <template>
   <div
-    class="absolute flex justify-between gap-10 p-4 px-6 -translate-x-1/2 border bg-[#333] border-gray-700 rounded-lg shadow-lg bottom-8 left-1/2 w-fit"
+    class="absolute flex items-center justify-between gap-10 p-4 px-6 -translate-x-1/2 border bg-[#333] border-gray-700 rounded-lg shadow-lg bottom-8 left-1/2 w-fit"
   >
     <input ref="fileInput" type="file" class="hidden" @change="handleFileChange" />
     <div class="flex gap-4">
       <button
         v-for="object in objectType"
         :key="object.id"
-        class="!w-8 !h-8 min-w-8  flex gap-2 items-center justify-center font-bold  text-white transition-colors duration-200 rounded-md shadow-sm  bg-[#4F46E5] hover:bg-[#4F46E5]/80"
+        class="!w-8 !h-8 min-w-8 flex gap-2 items-center justify-center font-bold text-white transition-colors duration-200 rounded-md shadow-sm bg-[#4F46E5] hover:bg-[#4F46E5]/80"
         @click="handleObjectType(object.type)"
       >
-        {{ getObjectIcon(object.type) }}     
+        {{ getObjectIcon(object.type) }}
       </button>
     </div>
-    <!-- <div>
+    <p class="w-1 h-6 bg-gray-700 rounded-full"></p>
+    <!-- ALLIGN -->
+    <div class="flex gap-4">
       <button
-        @click="handlePlay"
-        class="min-w-[84px] px-4 py-2 text-sm text-white transition-colors duration-200 bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500"
-      >
-        재생
-      </button>
-    </div> -->
+        v-for="align in objectAlign"
+        :key="align.id"
+        class="w-8 h-8 min-w-8 flex gap-2 items-center justify-center font-bold text-white transition-colors duration-200 rounded-md shadow-sm bg-[#4F46E5] hover:bg-[#4F46E5]/80"
+        @click="handleAlign(align.type)"
+        v-html="getObjectIcon(align.type)"
+      ></button>
+    </div>
   </div>
 </template>
