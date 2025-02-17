@@ -81,52 +81,6 @@ const addText = () => {
   })
 }
 
-const handleAlign = (type) => {
-  if (!selectedObject.value) return
-
-  const canvasWidth = 720 // From Canvas.vue props default width
-  const canvasHeight = 452 // From Canvas.vue props default height
-
-  const object = selectedObject.value
-  let newX = object.x
-  let newY = object.y
-
-  // Calculate object dimensions based on type
-  const objectWidth =
-    object.type === 'circle' ? (object.radiusX || object.radius) * 2 : object.width
-
-  const objectHeight =
-    object.type === 'circle' ? (object.radiusY || object.radius) * 2 : object.height
-
-  switch (type) {
-    // Horizontal alignment
-    case 'left':
-      newX = objectWidth / 2
-      break
-    case 'center':
-      newX = canvasWidth / 2
-      break
-    case 'right':
-      newX = canvasWidth - objectWidth / 2
-      break
-
-    // Vertical alignment
-    case 'top':
-      newY = objectHeight / 2
-      break
-    case 'middle':
-      newY = canvasHeight / 2
-      break
-    case 'bottom':
-      newY = canvasHeight - objectHeight / 2
-      break
-  }
-
-  // Update object position
-  selectedObject.value.x = newX
-  selectedObject.value.y = newY
-}
-
 const getObjectIcon = (type) => {
   switch (type) {
     case 'text':
@@ -153,17 +107,6 @@ const getObjectIcon = (type) => {
       >
         {{ getObjectIcon(object.type) }}
       </button>
-    </div>
-    <p class="hidden w-1 h-6 bg-gray-700 rounded-full"></p>
-    <!-- ALLIGN -->
-    <div class="flex hidden gap-4">
-      <button
-        v-for="align in objectAlign"
-        :key="align.id"
-        class="w-8 h-8 min-w-8 flex gap-2 items-center justify-center font-bold text-white transition-colors duration-200 rounded-md shadow-sm bg-[#4F46E5] hover:bg-[#4F46E5]/80"
-        @click="handleAlign(align.type)"
-        v-html="align.icon"
-      ></button>
     </div>
   </div>
 </template>
