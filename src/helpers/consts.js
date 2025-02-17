@@ -17,42 +17,66 @@ export const OBJECT_TYPE = [
   },
 ]
 
+export const ALIGN_ICONS = {
+  left: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 4H14M2 8H8M2 12H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`,
+  center: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 4H14M4 8H12M3 12H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`,
+  right: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 4H14M8 8H14M5 12H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>`,
+  top: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 4H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="5" y="1" width="6" height="10" stroke="currentColor" stroke-width="1.5" rx="1"/>
+  </svg>`,
+  middle: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 8H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="5" y="3" width="6" height="10" stroke="currentColor" stroke-width="1.5" rx="1"/>
+  </svg>`,
+  bottom: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 12H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="5" y="5" width="6" height="10" stroke="currentColor" stroke-width="1.5" rx="1"/>
+  </svg>`
+}
+
 export const OBJECT_ALIGN = [
   {
     id: 1,
     name: 'Left',
     type: 'left',
-    icon: 'align-left'
+    icon: ALIGN_ICONS.left
   },
   {
     id: 2,
     name: 'Center',
     type: 'center',
-    icon: 'align-center'
+    icon: ALIGN_ICONS.center
   },
   {
     id: 3,
     name: 'Right',
     type: 'right',
-    icon: 'align-right'
+    icon: ALIGN_ICONS.right
   },
   {
     id: 4,
     name: 'Top',
     type: 'top',
-    icon: 'align-top'
+    icon: ALIGN_ICONS.top
   },
   {
     id: 5,
     name: 'Middle',
     type: 'middle',
-    icon: 'align-middle'
+    icon: ALIGN_ICONS.middle
   },
   {
     id: 6,
     name: 'Bottom',
     type: 'bottom',
-    icon: 'align-bottom'
+    icon: ALIGN_ICONS.bottom
   }
 ]
 
