@@ -29,15 +29,8 @@ export const useObjectStore = defineStore('object', () => {
       id: fullId,
       name: `${object.type}-${shortId}`,
       type: object.type || 'circle',
-      ...object,
-      // x: object.x || 0,
-      // y: object.y || 0,
-      // radius: object.radius || 50,
-      // fillStyle: object.fillStyle || '#000000',
-      // animations: [],
-      // ...(object.imageUrl && { imageUrl: object.imageUrl }),
-
-      // ...(object.text && { text: object.text }),
+      animations: [], // tirgger, 타겟 객체, 액션, 액션타겟 정보
+      ...object,      
     }
 
     objects.value.push(newObject)

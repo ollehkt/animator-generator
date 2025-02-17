@@ -36,10 +36,25 @@ const { objects, selectedObject, objectStartFrom, cloneObjects } = storeToRefs(o
 
 const svgRef = ref(null)
 const isDragging = ref(false)
+const isResizing = ref(false)
 const dragOffset = ref({ x: 0, y: 0 })
+const resizeStartDimensions = ref(null)
+const activeHandle = ref(null)
 
 const MOVE_DEBOUNCE = 5 // milliseconds
 let lastMoveTime = 0
+
+// Add cursor styles for each handle
+const handleCursors = [
+  'nw-resize', // Top-left
+  'n-resize',  // Top-center
+  'ne-resize', // Top-right
+  'e-resize',  // Middle-right
+  'se-resize', // Bottom-right
+  's-resize',  // Bottom-center
+  'sw-resize', // Bottom-left
+  'w-resize',  // Middle-left
+]
 
 const handleClick = (event, object) => {
   if (!object) return
@@ -72,8 +87,26 @@ const startDrag = (event, object) => {
   }
 }
 
+const startResize = (event, object, handleIndex) => {
+  event.stopPropagation()
+  isResizing.value = true
+  activeHandle.value = handleIndex
+  event.target.setPointerCapture(event.pointerId)
+
+  resizeStartDimensions.value = {
+    x: object.x,
+    y: object.y,
+    width: object.width,
+    height: object.height,
+    radius: object.radius,
+    radiusX: object.radiusX || object.radius,
+    radiusY: object.radiusY || object.radius
+  }
+}
+
 const onDrag = (event) => {
-  if (!isDragging.value || !selectedObject.value) return
+  if (!isDragging.value && !isResizing.value) return
+  if (!selectedObject.value) return
 
   const currentTime = Date.now()
   if (currentTime - lastMoveTime < MOVE_DEBOUNCE) return
@@ -82,16 +115,64 @@ const onDrag = (event) => {
   const svgPoint = svgRef.value.createSVGPoint()
   svgPoint.x = event.clientX
   svgPoint.y = event.clientY
-
-  // Transform mouse position to SVG coordinates
   const transformedPoint = svgPoint.matrixTransform(svgRef.value.getScreenCTM().inverse())
 
-  selectedObject.value.x = transformedPoint.x - dragOffset.value.x
-  selectedObject.value.y = transformedPoint.y - dragOffset.value.y
+  if (isDragging.value) {
+    selectedObject.value.x = transformedPoint.x - dragOffset.value.x
+    selectedObject.value.y = transformedPoint.y - dragOffset.value.y
+    return
+  }
+
+  if (isResizing.value) {
+    const deltaX = transformedPoint.x - resizeStartDimensions.value.x
+    const deltaY = transformedPoint.y - resizeStartDimensions.value.y
+
+    if (selectedObject.value.type === 'circle') {
+      const dx = transformedPoint.x - selectedObject.value.x
+      const dy = transformedPoint.y - selectedObject.value.y
+      
+      switch (activeHandle.value) {
+        case 0: // Top-left
+        case 4: // Bottom-right
+          selectedObject.value.radiusX = Math.max(10, Math.abs(dx))
+          selectedObject.value.radiusY = Math.max(10, Math.abs(dy))
+          break
+        case 1: // Top-center
+        case 5: // Bottom-center
+          selectedObject.value.radiusY = Math.max(10, Math.abs(dy))
+          break
+        case 3: // Middle-right
+        case 7: // Middle-left
+          selectedObject.value.radiusX = Math.max(10, Math.abs(dx))
+          break
+        default:
+          selectedObject.value.radiusX = Math.max(10, Math.abs(dx))
+          selectedObject.value.radiusY = Math.max(10, Math.abs(dy))
+      }
+    } else {
+      // Handle image and text resizing based on handle position
+      switch (activeHandle.value) {
+        case 0: // Top-left
+          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
+          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
+          selectedObject.value.x = transformedPoint.x
+          selectedObject.value.y = transformedPoint.y
+          break
+        case 2: // Top-right
+          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
+          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
+          selectedObject.value.y = transformedPoint.y
+          break
+        // Add other cases as needed
+      }
+    }
+  }
 }
 
 const endDrag = () => {
   isDragging.value = false
+  isResizing.value = false
+  activeHandle.value = null
   if (!selectedObject.value) return
   if (selectedObject.value && !selectedObject.value.isClone) {
     determineOutsideDirection(selectedObject.value)
@@ -135,17 +216,19 @@ const getHandlePositions = (object) => {
   if (!object) return []
 
   if (object.type === 'circle') {
+    const rx = object.radiusX || object.radius
+    const ry = object.radiusY || object.radius
     return HANDLE_POSITIONS.map((pos) => ({
-      x: object.x + pos.x * (object.radius + HANDLE_SIZE),
-      y: object.y + pos.y * (object.radius + HANDLE_SIZE),
+      x: object.x + pos.x * (rx + HANDLE_SIZE),
+      y: object.y + pos.y * (ry + HANDLE_SIZE),
     }))
   }
 
-  if (object.type === 'image') {
+  if (object.type === 'image' || object.type === 'text') {
     const width = Number(object.width) || 0
     const height = Number(object.height) || 0
     const x = Number(object.x) || 0
-    const y = Number(object.y) || 0
+    const y = object.type === 'text' ? Number(object.y) - height : Number(object.y)
 
     return [
       { x, y }, // Top-left
@@ -194,12 +277,13 @@ const getHandlePositions = (object) => {
     <!-- Objects -->
     <template v-for="object in objects" :key="object.id">
       <g :id="object.id">
-        <!-- Main circle -->
-        <circle
+        <!-- Change circle to ellipse -->
+        <ellipse
           v-if="object.type === 'circle'"
           :cx="object.x"
           :cy="object.y"
-          :r="object.radius"
+          :rx="object.radiusX || object.radius"
+          :ry="object.radiusY || object.radius"
           :fill="object.fillStyle"
           @pointerdown="(e) => startDrag(e, object)"
           @click="(e) => handleClick(e, object)"
@@ -234,11 +318,12 @@ const getHandlePositions = (object) => {
         <!-- Control handles -->
         <template v-if="selectedObject === object">
           <!-- Selection border -->
-          <circle
+          <ellipse
             v-if="object.type === 'circle'"
             :cx="object.x"
             :cy="object.y"
-            :r="object.radius + 2"
+            :rx="(object.radiusX || object.radius) + 2"
+            :ry="(object.radiusY || object.radius) + 2"
             fill="none"
             stroke="#4a9eff"
             stroke-width="1"
@@ -260,19 +345,6 @@ const getHandlePositions = (object) => {
             stroke-width="1"
             stroke-dasharray="4 2"
           />
-
-          <!-- <rect
-            v-if="object.type === 'image' || object.type === 'text'"
-            :x="Number(object.x) - 2"
-            :y="Number(object.y) - 2"
-            :width="Number(object.width) + 4"
-            :height="Number(object.height) + 4"
-            fill="none"
-            stroke="#4a9eff"
-            stroke-width="1"
-            stroke-dasharray="4 2"
-          /> -->
-
           <!-- Resize handles -->
           <rect
             v-for="(pos, index) in getHandlePositions(object)"
@@ -285,6 +357,7 @@ const getHandlePositions = (object) => {
             stroke="#4a9eff"
             stroke-width="1"
             class="handle"
+            @pointerdown="(e) => startResize(e, object, index)"
           />
         </template>
       </g>
