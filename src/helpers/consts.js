@@ -107,6 +107,9 @@ export const TRIGGER_CONFIG = {
           {label: '회전', value: 'rotate'},
           { label: '확대/축소', value: 'scale' },
           { label: '투명도', value: 'opacity' },
+          { label: '크기', value: 'size' },
+          { label: '색', value: 'backgroundColor' },
+          { label: '보이기/숨기기', value: 'visibility' },
         ],
       },
       pageActions: {

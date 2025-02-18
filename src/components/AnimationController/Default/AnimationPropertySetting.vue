@@ -9,8 +9,6 @@ import ObjectAction from '../ObjectActions/index.vue'
 import MediaAction from '../MediaActions/index.vue'
 import CommonProperty from './CommonProperty.vue'
 
-console.log(TRIGGER_CONFIG, '?????')
-
 const controllerStore = useControllerStore()
 const { selectedActionType, animationConfig } = storeToRefs(controllerStore)
 
@@ -49,12 +47,10 @@ watch(selectedActionType, (newType) => {
 
 <template>
   <!-- action 타입에 따라 페이지 액션, 객체 액션, 미디어 액션 선택 -->
-  <div class="overflow-hidden text-gray-200 bg-gray-800">
-    <div class="flex flex-col p-4 mt-2 gap-y-4">
-      <PageAction v-if="isPageAction" />
-      <ObjectAction v-if="isObjectAction" />
-      <MediaAction v-if="isMediaAction" />
-      <CommonProperty />
-    </div>
+  <div class="flex flex-col p-4 mt-4 text-gray-200 bg-gray-800 border-t border-gray-700 gap-y-4">
+    <PageAction v-if="isPageAction" />
+    <ObjectAction v-if="isObjectAction" />
+    <MediaAction v-if="isMediaAction" />
+    <CommonProperty />
   </div>
 </template>

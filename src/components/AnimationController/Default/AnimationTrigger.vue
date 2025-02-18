@@ -133,7 +133,25 @@ onUnmounted(() => {
       <!-- 액션 타겟 분리 -->
       <div v-if="requireActionTarget" class="space-y-4">
         <div class="flex flex-col gap-2">
-          <label class="pl-1 text-xs text-gray-400">액션 타겟</label>
+          <div class="flex items-center justify-between">
+            <label class="pl-1 text-xs text-gray-400">액션 타겟</label>
+            <button
+              @click="addActionTarget"
+              class="flex items-center h-6 gap-1 px-2 text-xs text-gray-400 border border-gray-600 rounded hover:text-primary-400 hover:bg-gray-700"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-3 h-3"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              타겟 추가
+            </button>
+          </div>
           <div
             v-for="(item, index) in objectStore.actionTargetList"
             :key="item.id"
@@ -161,31 +179,14 @@ onUnmounted(() => {
             </button>
           </div>
         </div>
-        <button
-          @click="addActionTarget"
-          class="w-full h-6 px-2 ml-auto text-xs btn-primary min-w-fit"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="w-3 h-3"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-
-          타겟 추가
-        </button>
       </div>
     </div>
     <!-- 액션 선택 후 바뀌는 부분 & Timing -->
     <AnimationPropertySetting />
     <div class="p-4">
-      <button 
-        @click="addThisAnimation"
-        class="w-full h-6 px-2 text-xs btn-primary min-w-fit">이 액션을 저장</button>
+      <button @click="addThisAnimation" class="w-full h-6 px-2 text-xs btn-primary min-w-fit">
+        이 액션을 저장
+      </button>
       <!-- 객체 및에 animations으로 저장됨 -->
     </div>
   </div>

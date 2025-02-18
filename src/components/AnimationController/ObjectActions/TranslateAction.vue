@@ -43,7 +43,7 @@ const objectY = computed({
   <!-- TRANSLATE || ROTATE -->
   <div class="flex flex-col gap-4">
     <div class="flex gap-2">
-      <p class="flex flex-col w-1/2 gap-2">
+        <p class="flex flex-col gap-2 overflow-hidden">
         <label class="pl-1 text-xs text-gray-400">X</label>
         <input 
           type="number" 
@@ -52,7 +52,7 @@ const objectY = computed({
           :disabled="!selectedObject" 
         />
       </p>
-      <p class="flex flex-col w-1/2 gap-2">
+        <p class="flex flex-col gap-2 overflow-hidden">
         <label class="pl-1 text-xs text-gray-400">Y</label>
         <input 
           type="number" 
