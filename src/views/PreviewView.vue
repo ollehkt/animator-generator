@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import Preview from '@/components/Preview/index.vue'
 import ProgressBar from '@/components/Common/ProgressBar.vue'
 const objectStore = useObjectStore()
 const { objects } = storeToRefs(objectStore)
@@ -32,8 +33,6 @@ onMounted(() => {
 <template>
   <div class="flex items-center justify-center min-h-screen bg-[#1E1E1E]">
     <ProgressBar v-if="isLoading" :progress="progress" />
-    <div v-else>
-      <h1>Preview => need json viewer</h1>
-    </div>
+    <Preview v-else />
   </div>
 </template>

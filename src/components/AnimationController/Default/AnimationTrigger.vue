@@ -62,13 +62,14 @@ const handleDeleteActionTarget = (index) => {
 }
 
 onMounted(() => {
-  if (selectedObject.value) {
+  if (!selectedObject.value) {
     objectStore.selectObject(objects.value[0].id)
   }
-
-  objectStore.addActionTarget({
-    id: objects.value[0].id,
-  })
+  if(actionTargetList.value.length === 0) {
+    objectStore.addActionTarget({
+      id: objects.value[0].id,
+    })
+  }
 })
 
 onUnmounted(() => {
@@ -176,7 +177,7 @@ onUnmounted(() => {
       </div>
     </div>
     <!-- 액션 선택 후 각각 설정 -->
-    <AnimationPropertySetting />
+    <AnimationPropertySetting v-if="selectedObject" />
     <div class="p-4">
       <button class="w-full h-6 px-2 text-xs btn-primary min-w-fit">이 액션을 저장</button>
       <!-- 객체 및에 animations으로 저장됨 -->
