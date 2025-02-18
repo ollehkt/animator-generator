@@ -1,9 +1,13 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useObjectStore } from '@/store'
+import { ref, nextTick } from 'vue'
 
 const objectStore = useObjectStore()
 const { objects, selectedObject } = storeToRefs(objectStore)
+
+const editingId = ref(null)
+const inputRef = ref([])
 
 const getObjectIcon = (type) => {
   switch (type) {
@@ -18,6 +22,38 @@ const getObjectIcon = (type) => {
 
 const selectThisObject = (object) => {
   objectStore.selectObject(object.id)
+}
+
+const startEditing = async (object) => {
+  editingId.value = object.id
+  await nextTick()
+  const inputs = Array.isArray(inputRef.value) ? inputRef.value : [inputRef.value]
+  const input = inputs.find((el) => el)
+  input?.focus()
+}
+
+
+const handleNameUpdate = (object, event) => {
+  if (event.key === 'Backspace') {
+    event.stopPropagation()
+    return
+  }
+
+  if (!['Enter', 'Escape'].includes(event.key) && event.type !== 'blur') {
+    return
+  }
+
+  if (event.key === 'Escape') {
+    event.stopPropagation()
+    editingId.value = null
+    return
+  }
+
+  const newName = event.target.value.trim()
+  if (newName && newName !== object.name) {
+    objectStore.updateObjectName(object.id, newName)
+  }
+  editingId.value = null
 }
 </script>
 <template>
@@ -40,9 +76,32 @@ const selectThisObject = (object) => {
         >
           {{ getObjectIcon(object.type) }}
         </p>
-        <span>{{ object.name }}</span>
+        <span
+          v-if="editingId !== object.id"
+          @dblclick.stop="startEditing(object)"
+          class="max-w-[70%] overflow-hidden text-ellipsis whitespace-nowrap"
+        >
+          {{ object.name }}
+        </span>
+        <input
+          v-else
+          ref="inputRef"
+          type="text"
+          :value="object.name"
+          class="bg-[#404040] max-w-[78%] q0 px-2 rounded outline-none focus:ring-1 focus:ring-[#4F46E5]"
+          @keyup.enter="handleNameUpdate(object, $event)"
+          @keyup.esc="handleNameUpdate(object, $event)"
+          @keydown.backspace.stop
+          @blur="handleNameUpdate(object, $event)"
+          @click.stop
+        />
       </div>
     </li>
   </ul>
-  <p v-else class="p-4 mx-3 text-xs text-center text-gray-400 border border-gray-700 border-dashed rounded-md">오브젝트가 없습니다.</p>
+  <p
+    v-else
+    class="p-4 mx-3 text-xs text-center text-gray-400 border border-gray-700 border-dashed rounded-md"
+  >
+    오브젝트가 없습니다.
+  </p>
 </template>
