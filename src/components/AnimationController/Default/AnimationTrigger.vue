@@ -61,6 +61,8 @@ const handleDeleteActionTarget = (index) => {
   objectStore.removeActionTarget(index)
 }
 
+const isObjectAssigned = ref(false)
+
 onMounted(() => {
   if (!selectedObject.value) {
     objectStore.selectObject(objects.value[0].id)
@@ -70,6 +72,7 @@ onMounted(() => {
       id: objects.value[0].id,
     })
   }
+  
 })
 
 onUnmounted(() => {
@@ -177,7 +180,7 @@ onUnmounted(() => {
       </div>
     </div>
     <!-- 액션 선택 후 각각 설정 -->
-    <AnimationPropertySetting v-if="selectedObject" />
+    <AnimationPropertySetting />
     <div class="p-4">
       <button class="w-full h-6 px-2 text-xs btn-primary min-w-fit">이 액션을 저장</button>
       <!-- 객체 및에 animations으로 저장됨 -->

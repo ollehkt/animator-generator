@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useControllerStore, useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 const controllerStore = useControllerStore()
@@ -16,6 +16,27 @@ const startFrom = ref({
 const toggleStartFrom = () => {
   isSettingStartFrom.value = !isSettingStartFrom.value
 }
+
+// Add computed properties to safely handle object values
+const objectX = computed({
+  get: () => selectedObject.value?.x ?? 0,
+  set: (value) => {
+    if (selectedObject.value) {
+      selectedObject.value.x = value
+    }
+  }
+})
+
+const objectY = computed({
+  get: () => selectedObject.value?.y ?? 0,
+  set: (value) => {
+    if (selectedObject.value) {
+      selectedObject.value.y = value
+    }
+  }
+})
+
+
 </script>
 
 <template>
@@ -24,11 +45,21 @@ const toggleStartFrom = () => {
     <div class="flex gap-2">
       <p class="flex flex-col w-1/2 gap-2">
         <label class="pl-1 text-xs text-gray-400">X</label>
-        <input type="number" v-model="selectedObject.x" class="input-dark" />
+        <input 
+          type="number" 
+          v-model="objectX" 
+          class="input-dark"
+          :disabled="!selectedObject" 
+        />
       </p>
       <p class="flex flex-col w-1/2 gap-2">
         <label class="pl-1 text-xs text-gray-400">Y</label>
-        <input type="number" v-model="selectedObject.y" class="input-dark" />
+        <input 
+          type="number" 
+          v-model="objectY" 
+          class="input-dark"
+          :disabled="!selectedObject" 
+        />
       </p>
     </div>
     <!-- 시작 위치 설정 -->
