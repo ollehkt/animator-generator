@@ -1,13 +1,14 @@
 <script setup>
 import { ref, computed } from 'vue'
-
 import { useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
+
 import TranslateAction from './TranslateAction.vue'
 import RotateAction from './RotateAction.vue'
 import OpacityAction from './OpacityAction.vue'
 import ScaleAction from './ScaleAction.vue'
 import SizeAction from './SizeAction.vue'
+import ColorAction from './ColorAction.vue'
 const controllerStore = useControllerStore()
 const { selectedActionType } = storeToRefs(controllerStore)
 
@@ -22,6 +23,8 @@ const targetComponent = computed(() => {
     return ScaleAction
   } else if (selectedActionType.value === 'size') {
     return SizeAction
+  } else if (selectedActionType.value === 'backgroundColor') {
+    return ColorAction
   }
 })
 </script>

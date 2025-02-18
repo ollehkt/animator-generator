@@ -209,6 +209,10 @@ export const useControllerStore = defineStore('controller', () => {
     element.dataset.rotate = '0deg'
   }
 
+  const updateAnimationConfig = (key, value) => {
+    animationConfig.value[key] = value
+  }
+
   return {
     showSourcePreview,
     selectedTriggerType,
@@ -222,5 +226,6 @@ export const useControllerStore = defineStore('controller', () => {
     setActionType,
     play,
     removeAnimation,
+    updateAnimationConfig,
   }
 })

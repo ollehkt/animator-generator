@@ -5,7 +5,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   #app {
     /* font-family: 'SUIT Variable', system-ui, sans-serif; */
@@ -19,20 +18,31 @@
   .input-dark {
     @apply text-xs p-2 !h-8 bg-[#252526] border border-[#333] rounded text-white pl-3 outline-none;
   }
+
+  .input-color {
+    @apply text-xs !h-8 bg-[#252526] border border-[#333] rounded text-white pl-3 outline-none;
+  }
+  .input-color::-webkit-color-swatch-wrapper {
+    @apply p-0;
+  }
+  .input-color::-webkit-color-swatch {
+    @apply border-none rounded;
+  }
+  .input-color::-moz-color-swatch {
+    @apply border-none rounded;
+  }
   .select-dark {
     @apply text-xs p-2 !h-8 outline-none bg-[#252526] border border-[#333] rounded text-white pl-3;
   }
 
-  
   .btn-primary {
-    @apply flex justify-center items-center min-w-[84px] gap-2 px-4 py-2 text-sm text-white transition-colors duration-200 bg-indigo-600 rounded-md hover:bg-indigo-500
-    
+    @apply flex justify-center items-center min-w-[84px] gap-2 px-4 py-2 text-sm text-white transition-colors duration-200 bg-indigo-600 rounded-md hover:bg-indigo-500;
   }
   .btn-dark {
-    @apply flex justify-center items-center min-w-[84px] border border-[#ccc] gap-2 px-3 py-1.5 text-sm text-white transition-colors duration-200 rounded-md shadow-sm bg-slate-700 hover:bg-slate-600
+    @apply flex justify-center items-center min-w-[84px] border border-[#ccc] gap-2 px-3 py-1.5 text-sm text-white transition-colors duration-200 rounded-md shadow-sm bg-slate-700 hover:bg-slate-600;
   }
 
   .mini-btn {
-    @apply w-8 h-8 flex gap-2 items-center justify-center font-bold text-white transition-colors duration-200 rounded-md shadow-sm bg-[#4F46E5] hover:bg-[#4F46E5]/80
+    @apply w-8 h-8 flex gap-2 items-center justify-center font-bold text-white transition-colors duration-200 rounded-md shadow-sm bg-[#4F46E5] hover:bg-[#4F46E5]/80;
   }
 }
