@@ -66,7 +66,7 @@ const handleNameUpdate = (object, event) => {
       v-for="object in objects"
       :key="object.id"
       @click="selectThisObject(object)"
-      class="p-2 py-3 transition-all duration-200 shadow-inner cursor-pointer hover:bg-[#2F2F2F]"
+      class="p-2 py-3 transition-all duration-200 text-sm text-[#CCC] shadow-inner cursor-pointer hover:bg-[#2F2F2F]"
       :class="{ 'bg-[#323232] text-white': selectedObject?.id === object.id }"
     >
       <div class="flex items-center gap-2">

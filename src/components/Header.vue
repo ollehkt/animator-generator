@@ -64,7 +64,8 @@ const handleAlign = (type) => {
   <header
     class="h-[50px] absolute top-0 left-0 w-full border-b border-[#000] flex items-center justify-end gap-6 px-10"
   >
-    <h1 class="mr-auto text1-lg">🍟L🏀O⛱️GO</h1>
+    <!-- <h1 class="mr-auto text-lg">🍟L🏀O⛱️GO</h1> -->
+    <h1 class="mr-auto text-lg"><img src="@/assets/svg/logo.svg" alt="logo" class="" /></h1>
     <!-- ALLIGN -->
     <div class="absolute flex items-center gap-4 mx-auto -translate-x-1/2 left-1/2">
       <button
