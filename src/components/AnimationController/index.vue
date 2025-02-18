@@ -15,6 +15,7 @@ const { activeTab } = storeToRefs(controllerStore)
     <span class="text-[#CCCCCC] text-sm">Animation Controls</span>
   </div>
   <div class="flex flex-col gap-2 p-4 overflow-y-auto h-[calc(100vh-82px)]">
+    <!-- Defalut: 액션리스트, 트리거 설정창 -->
     <Default />
     <!-- <component :is="targetComponent" /> 속성 | 액션 탭이 생길경우 사용-->
   </div>

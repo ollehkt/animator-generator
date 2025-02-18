@@ -2,23 +2,35 @@
 import { ref, watch, computed } from 'vue'
 import { useControllerStore, useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
-import { EASING_OPTIONS } from '@/helpers/consts'
-
-import OpacityAction from '../ObjectActions/OpacityAction.vue'
-import ScaleAction from '../ObjectActions/ScaleAction.vue'
-import TranslateAction from '../ObjectActions/TranslateAction.vue'
-import CommonProperty from './CommonProperty.vue'
+import { TRIGGER_CONFIG } from '@/helpers/consts'
 
 import PageAction from '../PageAction.vue'
+import ObjectAction from '../ObjectActions/index.vue'
 import MediaAction from '../MediaActions/index.vue'
+import CommonProperty from './CommonProperty.vue'
+
+console.log(TRIGGER_CONFIG, '?????')
 
 const controllerStore = useControllerStore()
-const objectStore = useObjectStore()
-const { selectedActionType, animationConfig, isEditingTrigger } = storeToRefs(controllerStore)
+const { selectedActionType, animationConfig } = storeToRefs(controllerStore)
 
-const isPageAction = computed(() => {
-  return selectedActionType.value === 'url'
-})
+const isPageAction = computed(() =>
+  TRIGGER_CONFIG.actions.value.pageActions.value
+    .map((action) => action.value)
+    .includes(selectedActionType.value)
+)
+
+const isObjectAction = computed(() =>
+  TRIGGER_CONFIG.actions.value.objectActions.value
+    .map((action) => action.value)
+    .includes(selectedActionType.value)
+)
+
+const isMediaAction = computed(() =>
+  TRIGGER_CONFIG.actions.value.mediaActions.value
+    .map((action) => action.value)
+    .includes(selectedActionType.value)
+)
 
 watch(selectedActionType, (newType) => {
   // Reset values when animation type changes
@@ -40,12 +52,8 @@ watch(selectedActionType, (newType) => {
   <div class="overflow-hidden text-gray-200 bg-gray-800">
     <div class="flex flex-col p-4 mt-2 gap-y-4">
       <PageAction v-if="isPageAction" />
-      <TranslateAction
-        v-if="selectedActionType === 'translate' || selectedActionType === 'rotate' || !selectedActionType"
-      />
-      <OpacityAction v-if="selectedActionType === 'opacity'" />
-      <ScaleAction v-if="selectedActionType === 'scale'" />
-
+      <ObjectAction v-if="isObjectAction" />
+      <MediaAction v-if="isMediaAction" />
       <CommonProperty />
     </div>
   </div>

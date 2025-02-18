@@ -22,7 +22,7 @@ export const useControllerStore = defineStore('controller', () => {
 
   // 액션리스트에 들어가야 하는 필수 값
   const selectedTriggerType = ref()
-  const selectedActionType = ref()
+  const selectedActionType = ref('translate')
 
   //==================================
 

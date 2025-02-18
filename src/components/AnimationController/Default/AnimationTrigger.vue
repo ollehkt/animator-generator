@@ -61,18 +61,19 @@ const handleDeleteActionTarget = (index) => {
   objectStore.removeActionTarget(index)
 }
 
-const isObjectAssigned = ref(false)
+const addThisAnimation = () => {
+  console.log('addThisAnimation')
+}
 
 onMounted(() => {
   if (!selectedObject.value) {
     objectStore.selectObject(objects.value[0].id)
   }
-  if(actionTargetList.value.length === 0) {
+  if (actionTargetList.value.length === 0) {
     objectStore.addActionTarget({
       id: objects.value[0].id,
     })
   }
-  
 })
 
 onUnmounted(() => {
@@ -101,7 +102,7 @@ onUnmounted(() => {
         뒤로
       </button>
     </div>
-    <!-- 기본 설정 -->
+    <!-- 기본 설정: 트리거, 트리거타겟, 액션, 액션타겟 -->
     <div class="p-4 pb-0 space-y-4">
       <template v-for="(value, key, index) in computedTriggerConfig" :key="key">
         <p class="flex flex-col gap-2">
@@ -179,10 +180,12 @@ onUnmounted(() => {
         </button>
       </div>
     </div>
-    <!-- 액션 선택 후 각각 설정 -->
+    <!-- 액션 선택 후 바뀌는 부분 & Timing -->
     <AnimationPropertySetting />
     <div class="p-4">
-      <button class="w-full h-6 px-2 text-xs btn-primary min-w-fit">이 액션을 저장</button>
+      <button 
+        @click="addThisAnimation"
+        class="w-full h-6 px-2 text-xs btn-primary min-w-fit">이 액션을 저장</button>
       <!-- 객체 및에 animations으로 저장됨 -->
     </div>
   </div>
