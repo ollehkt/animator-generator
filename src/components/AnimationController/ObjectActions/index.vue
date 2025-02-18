@@ -7,7 +7,7 @@ import TranslateAction from './TranslateAction.vue'
 import RotateAction from './RotateAction.vue'
 import OpacityAction from './OpacityAction.vue'
 import ScaleAction from './ScaleAction.vue'
-
+import SizeAction from './SizeAction.vue'
 const controllerStore = useControllerStore()
 const { selectedActionType } = storeToRefs(controllerStore)
 
@@ -20,6 +20,8 @@ const targetComponent = computed(() => {
     return OpacityAction
   } else if (selectedActionType.value === 'scale') {
     return ScaleAction
+  } else if (selectedActionType.value === 'size') {
+    return SizeAction
   }
 })
 </script>

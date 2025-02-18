@@ -87,7 +87,7 @@ onMounted(() => {
         :value="rangeValue"
       />
       <span 
-        class="absolute -translate-y-1/2 top-1/2 right-2 text-[10px]"
+        class="absolute text-sm -translate-y-1/2 top-1/2 right-2"
         :class="[props.unit === 'deg' && '!top-1 !-translate-y-0',]"
       >{{ computedUnit }}</span>
     </p>
@@ -111,7 +111,7 @@ label.customRange > .slider {
 label.customRange > .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px; /* Adjust width of the indicator */
+  width: 12px; /* Adjust width of the indicator */
   height: 32px; /* Adjust height of the indicator */
   border: 6px solid #4f46e5;
   background: #4f46e5; /* Color of the indicator */

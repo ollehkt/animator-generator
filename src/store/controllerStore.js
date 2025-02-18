@@ -39,6 +39,11 @@ export const useControllerStore = defineStore('controller', () => {
     opacityEnd: 0,
     scaleStart: 1,
     scaleEnd: 0,
+    rotate: {
+      x: 0,
+      y: 0,
+      z: 0,
+    },
     duration: 1000,
     easing: 'linear',
     loop: false,
