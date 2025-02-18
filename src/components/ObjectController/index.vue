@@ -1,7 +1,8 @@
 <script setup>
+
 import CurrentObject from './CurrentObject.vue'
 import ObjectList from './ObjectList.vue'
-
+import MediaList from './MediaList.vue'
 </script>
 
 <template>
@@ -11,7 +12,10 @@ import ObjectList from './ObjectList.vue'
     </div>
     <section class="space-y-2">
       <CurrentObject />
-      <ObjectList />
+      <div>
+        <ObjectList />
+        <MediaList />
+      </div>
     </section>
   </div>
 </template>

@@ -15,6 +15,11 @@ export const OBJECT_TYPE = [
     name: '텍스트',
     type: 'text',
   },
+  {
+    id: 4,
+    name: '미디어',
+    type: 'media',
+  },
 ]
 
 export const ALIGN_ICONS = {

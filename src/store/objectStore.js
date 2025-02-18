@@ -6,6 +6,7 @@ import { storeToRefs } from 'pinia'
 export const useObjectStore = defineStore('object', () => {
   // State
   const objects = ref([])
+  const mediaList = ref([])
   const selectedObject = ref(null)
   const actionTargetList = ref([])
   const objectStartFrom = ref(null)
@@ -21,7 +22,7 @@ export const useObjectStore = defineStore('object', () => {
   }
 
   // Actions
-  const addObject = (object, isClone = false) => {
+  const addObject = (object, isMedia = false) => {
     const { fullId, shortId } = generateUniqueId()
 
     const newObject = {
@@ -34,6 +35,26 @@ export const useObjectStore = defineStore('object', () => {
 
     objects.value.push(newObject)
     return newObject.id
+  }
+
+  const addMedia = (object) => {
+    const { fullId, shortId } = generateUniqueId()
+
+    const newObject = {
+      id: fullId,
+      name: `${object.type}-${shortId}`,
+      ...object,
+    }
+
+    mediaList.value.push(newObject)
+    return newObject.id
+  }
+
+  const removeMedia = (objectId) => {
+    const index = mediaList.value.findIndex((obj) => obj.id === objectId)
+    if (index !== -1) {
+      mediaList.value.splice(index, 1)
+    }
   }
 
   const removeObject = (objectId) => {
@@ -102,8 +123,8 @@ export const useObjectStore = defineStore('object', () => {
     }
 
     // Update object position
-    selectedObject.value.x = isCircle ? newX : newX - objectWidth/2
-    selectedObject.value.y = isCircle ? newY : newY - objectHeight/2
+    selectedObject.value.x = isCircle ? newX : newX - objectWidth / 2
+    selectedObject.value.y = isCircle ? newY : newY - objectHeight / 2
   }
 
   // 오브젝트 이름 업데이트
@@ -143,13 +164,16 @@ export const useObjectStore = defineStore('object', () => {
   return {
     // State
     objects,
+    mediaList,
     actionTargetList,
     selectedObject,
     objectStartFrom,
 
     // Actions
     addObject,
+    addMedia,
     removeObject,
+    removeMedia,
     selectObject,
     updateObjectName,
     updateObjectPosition,

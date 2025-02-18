@@ -24,6 +24,9 @@ const handleObjectType = (type) => {
     text: () => {
       addText()
     },
+    media: () => {
+      addMedia()
+    },
   }
   return action[type]()
 }
@@ -81,12 +84,22 @@ const addText = () => {
   })
 }
 
+const addMedia = () => {
+  console.log('addMedia')
+  objectStore.addMedia({
+    type: 'media',
+    media: 'audio',
+  })
+}
+
 const getObjectIcon = (type) => {
   switch (type) {
     case 'text':
       return 'T'
     case 'image':
       return 'I'
+    case 'media':
+      return 'M'
 
     default: // circle, rect, polygon
       return 'O'
