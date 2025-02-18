@@ -39,6 +39,15 @@ const handleGlobalClick = (event) => {
 
 const handleKeyDown = (event) => {
   // console.log('🔴', event.key)
+
+  if (
+    event.target.tagName === 'INPUT' ||
+    event.target.tagName === 'TEXTAREA' ||
+    event.target.isContentEditable
+  ) {
+    return
+  }
+  
   if (!selectedObject.value) return
 
   if (event.key === 'Backspace') {
@@ -51,25 +60,25 @@ const handleKeyDown = (event) => {
     case 'ArrowLeft':
       objectStore.updateObjectPosition(selectedObject.value.id, {
         x: selectedObject.value.x - moveAmount,
-        y: selectedObject.value.y
+        y: selectedObject.value.y,
       })
       break
     case 'ArrowRight':
       objectStore.updateObjectPosition(selectedObject.value.id, {
         x: selectedObject.value.x + moveAmount,
-        y: selectedObject.value.y
+        y: selectedObject.value.y,
       })
       break
     case 'ArrowUp':
       objectStore.updateObjectPosition(selectedObject.value.id, {
         x: selectedObject.value.x,
-        y: selectedObject.value.y - moveAmount
+        y: selectedObject.value.y - moveAmount,
       })
       break
     case 'ArrowDown':
       objectStore.updateObjectPosition(selectedObject.value.id, {
         x: selectedObject.value.x,
-        y: selectedObject.value.y + moveAmount
+        y: selectedObject.value.y + moveAmount,
       })
       break
   }
@@ -118,7 +127,10 @@ onUnmounted(() => {
         transition: 'transform 0.1s ease-out',
       }"
     >
-      <span>🚩<em class="text-xs not-italic">(0, 0)</em></span>
+      <span>
+        🚩
+        <em class="text-xs not-italic">(0, 0)</em>
+      </span>
       <Canvas :width="720" :height="452" />
     </div>
   </div>

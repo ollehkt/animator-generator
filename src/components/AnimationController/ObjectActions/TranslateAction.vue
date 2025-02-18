@@ -1,9 +1,11 @@
 <script setup>
 import { ref } from 'vue'
-import { useControllerStore } from '@/store'
+import { useControllerStore, useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 const controllerStore = useControllerStore()
-const { targetPOS } = storeToRefs(controllerStore)
+const objectStore = useObjectStore()
+const { targetPOS  } = storeToRefs(controllerStore)
+const { selectedObject } = storeToRefs(objectStore)
 
 const isSettingStartFrom = ref(false)
 const startFrom = ref({
@@ -22,11 +24,11 @@ const toggleStartFrom = () => {
     <div class="flex gap-2">
       <p class="flex flex-col w-1/2 gap-2">
         <label class="pl-1 text-xs text-gray-400">X</label>
-        <input type="number" v-model="targetPOS.x" class="input-dark" />
+        <input type="number" v-model="selectedObject.x" class="input-dark" />
       </p>
       <p class="flex flex-col w-1/2 gap-2">
         <label class="pl-1 text-xs text-gray-400">Y</label>
-        <input type="number" v-model="targetPOS.y" class="input-dark" />
+        <input type="number" v-model="selectedObject.y" class="input-dark" />
       </p>
     </div>
     <!-- 시작 위치 설정 -->

@@ -118,8 +118,8 @@ export const useObjectStore = defineStore('object', () => {
   const updateObjectPosition = (objectId, position) => {
     const object = objects.value.find((obj) => obj.id === objectId)
     if (object) {
-      object.x = position.x
-      object.y = position.y
+      object.x = Math.round(position.x)
+      object.y = Math.round(position.y)
     }
   }
 

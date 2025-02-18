@@ -118,8 +118,8 @@ const onDrag = (event) => {
   const transformedPoint = svgPoint.matrixTransform(svgRef.value.getScreenCTM().inverse())
 
   if (isDragging.value) {
-    selectedObject.value.x = transformedPoint.x - dragOffset.value.x
-    selectedObject.value.y = transformedPoint.y - dragOffset.value.y
+    selectedObject.value.x = Math.round(transformedPoint.x - dragOffset.value.x)
+    selectedObject.value.y = Math.round(transformedPoint.y - dragOffset.value.y)
     return
   }
 
@@ -177,11 +177,15 @@ const endDrag = () => {
   if (selectedObject.value && !selectedObject.value.isClone) {
     determineOutsideDirection(selectedObject.value)
   }
-
-  controllerStore.targetPOS = {
+  // 오브젝트 위치 업데이트
+  objectStore.updateObjectPosition(selectedObject.value.id, {
     x: selectedObject.value.x,
-    y: 180,
-  }
+    y: selectedObject.value.y,
+  })
+  // controllerStore.targetPOS = {
+  //   x: selectedObject.value.x,
+  //   y: selectedObject.value.y,
+  // }
 }
 
 const determineOutsideDirection = (object) => {

@@ -14,7 +14,7 @@ const { activeTab } = storeToRefs(controllerStore)
   <div class="h-8 bg-[#2D2D2D] flex items-center px-4 border-b border-[#333333]">
     <span class="text-[#CCCCCC] text-sm">Animation Controls</span>
   </div>
-  <div class="flex flex-col gap-2 p-6 overflow-y-auto h-[calc(100vh-82px)]">
+  <div class="flex flex-col gap-2 p-4 overflow-y-auto h-[calc(100vh-82px)]">
     <Default />
     <!-- <component :is="targetComponent" /> 속성 | 액션 탭이 생길경우 사용-->
   </div>
