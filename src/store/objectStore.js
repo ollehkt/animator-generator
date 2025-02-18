@@ -68,6 +68,8 @@ export const useObjectStore = defineStore('object', () => {
     let newX = object.x
     let newY = object.y
 
+    const isCircle = object.type === 'circle'
+
     // Calculate object dimensions based on type
     const objectWidth =
       object.type === 'circle' ? (object.radiusX || object.radius) * 2 : object.width
@@ -100,10 +102,19 @@ export const useObjectStore = defineStore('object', () => {
     }
 
     // Update object position
-    selectedObject.value.x = newX
-    selectedObject.value.y = newY
+    selectedObject.value.x = isCircle ? newX : newX - objectWidth/2
+    selectedObject.value.y = isCircle ? newY : newY - objectHeight/2
   }
 
+  // 오브젝트 이름 업데이트
+  const updateObjectName = (objectId, newName) => {
+    const object = objects.value.find((obj) => obj.id === objectId)
+    if (object) {
+      object.name = newName
+    }
+  }
+
+  // 오브젝트 위치 업데이트
   const updateObjectPosition = (objectId, position) => {
     const object = objects.value.find((obj) => obj.id === objectId)
     if (object) {
@@ -120,7 +131,7 @@ export const useObjectStore = defineStore('object', () => {
     objectStartFrom.value = startFrom
   }
 
-  // 애니메이션이 실제로 적용
+  // 애니메이션이 실제로 적용되는 객채
   const addActionTarget = (object) => {
     actionTargetList.value.push(object)
   }
@@ -140,6 +151,7 @@ export const useObjectStore = defineStore('object', () => {
     addObject,
     removeObject,
     selectObject,
+    updateObjectName,
     updateObjectPosition,
     initSelectedObject,
     setObjectStartFrom,

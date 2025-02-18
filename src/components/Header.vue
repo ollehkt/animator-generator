@@ -59,9 +59,6 @@ const handleAlign = (type) => {
 
 
 
-
-
-
 </script>
 <template>
   <header
