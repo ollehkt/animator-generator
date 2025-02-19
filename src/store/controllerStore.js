@@ -4,6 +4,8 @@ import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 export const useControllerStore = defineStore('controller', () => {
+  // 화면 컨트롤, 객체 애니메이션 컨트롤
+  
   // const state
   const objectStore = useObjectStore()
   const { selectedObject, objects } = storeToRefs(objectStore)
@@ -14,6 +16,7 @@ export const useControllerStore = defineStore('controller', () => {
   //   id: 'object',
   //   label: 'Object',
   // })
+  const isLayersMinimized = ref(false)
 
   // 액션 타입(페이지이동, 좌표로 이동...)
   const showSourcePreview = ref(false)
@@ -49,6 +52,10 @@ export const useControllerStore = defineStore('controller', () => {
     loop: false,
     delay: 0,
   })
+
+  const toggleLayersMinimized = () => {
+    isLayersMinimized.value = !isLayersMinimized.value
+  }
 
   // 트리거 설정 부분
   const setTriggerType = (type) => {
@@ -120,6 +127,7 @@ export const useControllerStore = defineStore('controller', () => {
   }
 
   return {
+    isLayersMinimized,
     showSourcePreview,
     selectedTriggerType,
     selectedActionType,
@@ -129,7 +137,7 @@ export const useControllerStore = defineStore('controller', () => {
     animations,
     targetPOS,
     animationConfig,
-
+    toggleLayersMinimized,
     setTriggerType,
     setActionType,
     removeAnimation,

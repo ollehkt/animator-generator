@@ -79,7 +79,7 @@ const handleAlign = (type) => {
       <button
         v-for="align in OBJECT_ALIGN.slice(3)"
         :key="align.id"
-        class="mini-btn !bg-transparent text-[#ccc] hover:text-white"
+        class="mini-btn !bg-transparent text-[#ccc] hover:text-white  "
         @click="handleAlign(align.type)"
         v-html="align.icon"
       ></button>
