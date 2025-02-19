@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useObjectStore, useControllerStore } from '@/store'
+import { TRIGGER_CONFIG } from '@/helpers/consts'
 
 const objectStore = useObjectStore()
 const controllerStore = useControllerStore()
@@ -11,6 +12,19 @@ const { isEditingTrigger } = storeToRefs(controllerStore)
 const handleAddAction = () => {
   isEditingTrigger.value = true
 }
+
+const getTriggerTypeString = (triggerType) => {
+  const trigger = TRIGGER_CONFIG.triggers.value.find((t) => t.value === triggerType)
+  return trigger ? trigger.label : triggerType
+}
+
+const getTriggerTargetName = (data) => {
+  console.log(data, 'why o name fuck')
+  return data.animation.length > 1
+    ? '복수 타겟'
+    : // ? data.animation[0].triggerTargetName + '<br> (  ... +' + data.animation.length + ' )'
+      data.animation[0].triggerTargetName
+}
 </script>
 
 <template>
@@ -18,14 +32,14 @@ const handleAddAction = () => {
     <div class="p-2 bg-gray-700 border-b border-gray-600">
       <h3 class="m-0 text-xs font-medium">애니메이션 목록</h3>
     </div>
-    <div v-if="objects.length === 0" class="flex items-center justify-center h-20 m-4 text-xs text-gray-400 border border-gray-700 border-dashed rounded-md">
+    <div
+      v-if="objects.length === 0"
+      class="flex items-center justify-center h-20 m-4 text-xs text-gray-400 border border-gray-700 border-dashed rounded-md"
+    >
       오브젝트가 없습니다.
     </div>
     <div v-else class="p-4">
-      <button 
-        @click="handleAddAction"
-        class="justify-center w-full btn-primary"
-      >
+      <button @click="handleAddAction" class="justify-center w-full btn-primary">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -42,19 +56,31 @@ const handleAddAction = () => {
         </svg>
         액션 추가
       </button>
-
-      <ul v-if="selectedObject?.animations?.length" class="mt-4 space-y-2">
-        <li 
-          v-for="animation in selectedObject.animations" 
-          :key="animation.id"
-          class="p-3 transition-colors duration-200 border border-gray-700 rounded-md hover:bg-gray-700"
+      <!-- {{ selectedObject.objectActionList }} -->
+      <ul v-if="selectedObject?.objectActionList?.length" class="mt-4 space-y-2">
+        <li
+          v-for="(data, index) in selectedObject.objectActionList"
+          :key="index"
+          class="p-3 transition-colors duration-200 border border-gray-700 rounded-md cursor-pointer hover:bg-gray-700"
         >
           <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <span class="text-sm font-medium">{{ animation.name }}</span>
-              <span class="text-xs text-gray-400">{{ animation.type }}</span>
+            <div class="flex items-center gap-3 grow">
+              <!-- 트리거 이벤트 -->
+              <span class="w-[70px] text-xs font-medium text-white shrink-0">
+                {{ getTriggerTypeString(data.triggerType) }}
+              </span>
+              <!-- 화살표 추가 -->
+              <span class="w-[2px] h-4 bg-gray-400 rounded-full"></span>
+              <!-- 트리거 타겟 이름 -->
+              <span
+                class="ml-auto grow text-xs font-medium text-[#CCC] pl-1"
+                v-html="getTriggerTargetName(data)"
+              ></span>
             </div>
-            <button class="p-1 text-gray-400 rounded hover:text-white hover:bg-gray-600">
+            <button
+              @click="handleDeleteActionTarget(index)"
+              class="px-2 text-gray-400 rounded hover:text-red-400"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -63,22 +89,17 @@ const handleAddAction = () => {
                 stroke="currentColor"
                 class="w-4 h-4"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
-          <div class="flex gap-2 mt-2 text-xs text-gray-400">
-            <span>X: {{ animation.x }}</span>
-            <span>Y: {{ animation.y }}</span>
-          </div>
         </li>
       </ul>
-      
-      <div v-else class="flex items-center justify-center h-20 mt-4 text-xs text-gray-400 border border-gray-700 border-dashed rounded-md">
+
+      <div
+        v-else
+        class="flex items-center justify-center h-20 mt-4 text-xs text-gray-400 border border-gray-700 border-dashed rounded-md"
+      >
         등록된 애니메이션이 없습니다
       </div>
     </div>

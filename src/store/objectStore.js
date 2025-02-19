@@ -29,7 +29,7 @@ export const useObjectStore = defineStore('object', () => {
       id: fullId,
       name: `${object.type}-${shortId}`,
       type: object.type || 'circle',
-      animationJson: [], // tirgger, 타겟 객체, 액션, 액션타겟 정보
+      objectActionList: [], // tirgger, 타겟 객체, 액션, 액션타겟 정보
       ...object,
     }
 
@@ -146,11 +146,47 @@ export const useObjectStore = defineStore('object', () => {
 
   // 오브젝트 애니메이션 업데이트
   const updateObjectAnimation = () => {
+    const controllerStore = useControllerStore()
+    const {
+      selectedTriggerType,
+      selectedActionType,
+      actionTargetList,
+      animationConfig,
+    } = storeToRefs(controllerStore)
+
     const objectId = selectedObject.value.id
     const targetObject = objects.value.find((obj) => obj.id === objectId)
+
     if (targetObject) {
-      // 이값은 interfacet에서 액션리스트에 사용하고 finalobjectjson 에서는 animationData에 해당함
-      targetObject.animationJson = 'hi 여기 이제 엄청 긴 jsob eㅡㄹ어간ㄷ가' 
+      const newAnimation = {
+        triggerType: selectedTriggerType.value,
+        isSimultaneousness: true,
+        callbackFunction: null,
+
+        animation: actionTargetList.value.map((target) => ({
+          triggerTarget: target.id || null,
+          triggerTargetName: target.name || null,
+          actionType: selectedActionType.value,
+          // points: [
+          //   { x: 400, y: 100 }, // These should come from your animation config
+          //   { x: 300, y: 200 }
+          // ],
+          ease: animationConfig.value.easing,
+          duration: animationConfig.value.duration,
+          delay: animationConfig.value.delay,
+          // count: null,
+          // direction: 'normal',
+          fillMode: null,
+          // actionSetting: {
+          //   moveType: 'line',
+          //   curviness: 1.5,
+          // },
+        })),
+      }
+      // console.log(newAnimation, 'check new animation')
+      targetObject.objectActionList.push(newAnimation)
+      // console.log(targetObject.objectActionList, 'check targetObject.objectActionList')
+      controllerStore.isEditingTrigger = false
     }
   }
 

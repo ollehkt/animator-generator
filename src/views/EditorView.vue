@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useObjectStore, useControllerStore } from '@/store'
+import { useObjectStore, useControllerStore, usePreviewStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import Header from '@/components/Header.vue'
 import Viewport from '@/components/Viewport/index.vue'
@@ -11,7 +11,9 @@ import Toolbox from '@/components/Toolbox/index.vue'
 import SourcePreview from '@/components/SourcePreview.vue'
 
 const controllerStore = useControllerStore()
+const previewStore = usePreviewStore()
 const { showSourcePreview, isLayersMinimized } = storeToRefs(controllerStore)
+const { objectJson } = storeToRefs(previewStore)
 
 const viewportRef = ref(null)
 

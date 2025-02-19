@@ -54,6 +54,7 @@ const goToActionList = () => {
 const addActionTarget = () => {
   controllerStore.addActionTarget({
     id: objects.value[0].id,
+    name: objects.value[0].name,
   })
 }
 
@@ -78,6 +79,7 @@ onMounted(() => {
   if (actionTargetList.value.length === 0) {
     controllerStore.addActionTarget({
       id: objects.value[0].id,
+      name: objects.value[0].name,
     })
   }
 })
