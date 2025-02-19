@@ -112,7 +112,6 @@ onUnmounted(() => {
     class="bg-[#2D2D2D] relative flex items-center justify-center w-full h-full overflow-auto"
   >
     <ZoomControls :zoom="zoom" :updateZoom="updateZoom" />
-
     <div
       class="transform-origin-center"
       :style="{

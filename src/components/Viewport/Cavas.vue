@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useObjectStore, useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { HANDLE_SIZE, HANDLE_POSITIONS } from '@/helpers/consts'
+import ObjectHandle from './ObjectHandle.vue'
 
 const props = defineProps({
   width: {
@@ -19,9 +20,7 @@ const props = defineProps({
   },
 })
 
-
 const objectStore = useObjectStore()
-const controllerStore = useControllerStore()
 const { objects, selectedObject } = storeToRefs(objectStore)
 
 const svgRef = ref(null)
@@ -37,13 +36,13 @@ let lastMoveTime = 0
 // Add cursor styles for each handle
 const handleCursors = [
   'nw-resize', // Top-left
-  'n-resize',  // Top-center
+  'n-resize', // Top-center
   'ne-resize', // Top-right
-  'e-resize',  // Middle-right
+  'e-resize', // Middle-right
   'se-resize', // Bottom-right
-  's-resize',  // Bottom-center
+  's-resize', // Bottom-center
   'sw-resize', // Bottom-left
-  'w-resize',  // Middle-left
+  'w-resize', // Middle-left
 ]
 
 const handleClick = (event, object) => {
@@ -60,6 +59,7 @@ const handleClick = (event, object) => {
   }
 }
 
+// 오브젝트 포인터다운 이벤트
 const startDrag = (event, object) => {
   event.stopPropagation()
   isDragging.value = true
@@ -77,24 +77,7 @@ const startDrag = (event, object) => {
   }
 }
 
-const startResize = (event, object, handleIndex) => {
-  event.stopPropagation()
-  isResizing.value = true
-  activeHandle.value = handleIndex
-  event.target.setPointerCapture(event.pointerId)
-
-  resizeStartDimensions.value = {
-    x: object.x,
-    y: object.y,
-    width: object.width,
-    height: object.height,
-    radius: object.radius,
-    radiusX: object.radiusX || object.radius,
-    radiusY: object.radiusY || object.radius
-  }
-}
-
-const onDrag = (event) => {
+const handlePointerMove = (event) => {
   if (!isDragging.value && !isResizing.value) return
   if (!selectedObject.value) return
 
@@ -107,6 +90,7 @@ const onDrag = (event) => {
   svgPoint.y = event.clientY
   const transformedPoint = svgPoint.matrixTransform(svgRef.value.getScreenCTM().inverse())
 
+  // 움직인 값대로 오브젝트 위치 업데이트
   if (isDragging.value) {
     selectedObject.value.x = Math.round(transformedPoint.x - dragOffset.value.x)
     selectedObject.value.y = Math.round(transformedPoint.y - dragOffset.value.y)
@@ -120,7 +104,7 @@ const onDrag = (event) => {
     if (selectedObject.value.type === 'circle') {
       const dx = transformedPoint.x - selectedObject.value.x
       const dy = transformedPoint.y - selectedObject.value.y
-      
+
       switch (activeHandle.value) {
         case 0: // Top-left
         case 4: // Bottom-right
@@ -140,7 +124,8 @@ const onDrag = (event) => {
           selectedObject.value.radiusY = Math.max(10, Math.abs(dy))
       }
     } else {
-      // Handle image and text resizing based on handle position
+      // Complete image and text resizing for all handles
+      console.log("handleNO=>",activeHandle.value)
       switch (activeHandle.value) {
         case 0: // Top-left
           selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
@@ -148,12 +133,34 @@ const onDrag = (event) => {
           selectedObject.value.x = transformedPoint.x
           selectedObject.value.y = transformedPoint.y
           break
+        case 1: // Top-center
+          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
+          selectedObject.value.y = transformedPoint.y
+          break
         case 2: // Top-right
           selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
           selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
           selectedObject.value.y = transformedPoint.y
           break
-        // Add other cases as needed
+        case 3: // Middle-right
+          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
+          break
+        case 4: // Bottom-right
+          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
+          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
+          break
+        case 5: // Bottom-center
+          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
+          break
+        case 6: // Bottom-left
+          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
+          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
+          selectedObject.value.x = transformedPoint.x
+          break
+        case 7: // Middle-left
+          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
+          selectedObject.value.x = transformedPoint.x
+          break
       }
     }
   }
@@ -172,7 +179,24 @@ const endDrag = () => {
     x: selectedObject.value.x,
     y: selectedObject.value.y,
   })
-  
+}
+
+// 핸들러 포인터다운
+const startResize = (event, object, handleIndex) => {
+  event.stopPropagation()
+  isResizing.value = true
+  activeHandle.value = handleIndex
+  event.target.setPointerCapture(event.pointerId)
+
+  resizeStartDimensions.value = {
+    x: object.x,
+    y: object.y,
+    width: object.width,
+    height: object.height,
+    radius: object.radius,
+    radiusX: object.radiusX || object.radius,
+    radiusY: object.radiusY || object.radius,
+  }
 }
 
 const determineOutsideDirection = (object) => {
@@ -243,7 +267,7 @@ const getHandlePositions = (object) => {
     :height="height"
     @dragenter.prevent
     @dragover.prevent
-    @pointermove.passive="onDrag"
+    @pointermove.passive="handlePointerMove"
     @pointerup="endDrag"
     @pointerleave="endDrag"
     @click="handleClick($event, null)"
@@ -305,68 +329,15 @@ const getHandlePositions = (object) => {
         >
           {{ object.text }}
         </text>
-
-        <!-- Control handles -->
-        <template v-if="selectedObject === object">
-          <!-- Selection border -->
-          <ellipse
-            v-if="object.type === 'circle'"
-            :cx="object.x"
-            :cy="object.y"
-            :rx="(object.radiusX || object.radius) + 2"
-            :ry="(object.radiusY || object.radius) + 2"
-            fill="none"
-            stroke="#4a9eff"
-            stroke-width="1"
-            stroke-dasharray="4 2"
-          />
-
-          <rect
-            v-if="object.type === 'image' || object.type === 'text'"
-            :x="Number(object.x) - 2"
-            :y="
-              object.type === 'text'
-                ? Number(object.y) - Number(object.height) + 1
-                : Number(object.y) - 2
-            "
-            :width="Number(object.width) + 4"
-            :height="Number(object.height) + 4"
-            fill="none"
-            stroke="#4a9eff"
-            stroke-width="1"
-            stroke-dasharray="4 2"
-          />
-          <!-- Resize handles -->
-          <rect
-            v-for="(pos, index) in getHandlePositions(object)"
-            :key="index"
-            :x="pos.x - HANDLE_SIZE / 2"
-            :y="pos.y - HANDLE_SIZE / 2"
-            :width="HANDLE_SIZE"
-            :height="HANDLE_SIZE"
-            fill="white"
-            stroke="#4a9eff"
-            stroke-width="1"
-            class="handle"
-            :data-direction="handleCursors[index].split('-')[0]"
-            @pointerdown="(e) => startResize(e, object, index)"
-          />
-        </template>
+        <!-- dashed line and handler -->
+        <ObjectHandle
+          v-if="selectedObject === object"
+          :object="object"
+          :handle-cursors="handleCursors"
+          :handle-positions="getHandlePositions(object)"
+          :on-start-resize="startResize"
+        />
       </g>
     </template>
   </svg>
 </template>
-
-<style scoped>
-.handle {
-  cursor: default;
-}
-.handle[data-direction="nw"] { cursor: nw-resize; }
-.handle[data-direction="n"]  { cursor: n-resize; }
-.handle[data-direction="ne"] { cursor: ne-resize; }
-.handle[data-direction="e"]  { cursor: e-resize; }
-.handle[data-direction="se"] { cursor: se-resize; }
-.handle[data-direction="s"]  { cursor: s-resize; }
-.handle[data-direction="sw"] { cursor: sw-resize; }
-.handle[data-direction="w"]  { cursor: w-resize; }
-</style>
