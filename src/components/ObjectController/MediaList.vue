@@ -1,13 +1,9 @@
 <script setup>
 import { storeToRefs } from 'pinia'
 import { useObjectStore } from '@/store'
-import { ref, nextTick } from 'vue'
 
 const objectStore = useObjectStore()
 const { objects, mediaList, selectedObject } = storeToRefs(objectStore)
-
-const editingId = ref(null)
-const inputRef = ref([])
 
 const getObjectIcon = (type) => {
   switch (type) {
@@ -24,10 +20,7 @@ const handleDeleteMedia = (id) => {
 </script>
 <template>
   <!-- MEDIA LIST -->
-  <div
-    v-if="mediaList.length > 0"
-    :class="{ 'mt-4': objects.length === 0 }"
-  >
+  <div v-if="mediaList.length > 0" :class="{ 'mt-4': objects.length === 0 }">
     <h4
       class="text-xs font-medium tracking-wide border-b border-[#2A2A2A] text-[#CCC] p-2 px-3 bg-[#1A1A1A]"
     >
@@ -38,12 +31,10 @@ const handleDeleteMedia = (id) => {
         v-for="object in mediaList"
         :key="object.id"
         class="px-2 flex items-center h-[44px] transition-all duration-200 text-sm text-[#CCC] shadow-inner cursor-pointer hover:bg-[#2F2F2F] group"
-        :class="{ 'bg-[#323232] text-white': selectedObject?.id === object.id }"
       >
         <div class="flex items-center gap-2 grow">
           <p
             class="flex items-center justify-center text-sm w-5 h-5 bg-[#404040] text-[#E5E5E5] rounded-sm"
-            :class="{ '!bg-[#4F46E5] text-white': selectedObject?.id === object.id }"
           >
             {{ getObjectIcon(object.type) }}
           </p>

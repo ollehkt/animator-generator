@@ -18,7 +18,7 @@ const handleAddAction = () => {
     <div class="p-2 bg-gray-700 border-b border-gray-600">
       <h3 class="m-0 text-xs font-medium">애니메이션 목록</h3>
     </div>
-    <div v-if="objects.length === 0" class="flex items-center justify-center h-20 m-4 text-sm text-gray-400 border border-gray-700 border-dashed rounded-md">
+    <div v-if="objects.length === 0" class="flex items-center justify-center h-20 m-4 text-xs text-gray-400 border border-gray-700 border-dashed rounded-md">
       오브젝트가 없습니다.
     </div>
     <div v-else class="p-4">
@@ -78,7 +78,7 @@ const handleAddAction = () => {
         </li>
       </ul>
       
-      <div v-else class="flex items-center justify-center h-20 mt-4 text-sm text-gray-400 border border-gray-700 border-dashed rounded-md">
+      <div v-else class="flex items-center justify-center h-20 mt-4 text-xs text-gray-400 border border-gray-700 border-dashed rounded-md">
         등록된 애니메이션이 없습니다
       </div>
     </div>

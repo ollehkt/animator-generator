@@ -1,39 +1,49 @@
 <script setup>
 import { ref } from 'vue'
-import { useObjectStore, useControllerStore } from '@/store'
-import { storeToRefs } from 'pinia'
-import { OBJECT_TYPE, OBJECT_ALIGN } from '@/helpers/consts'
+import { useObjectStore } from '@/store'
+// import { storeToRefs } from 'pinia'
+import { OBJECT_TYPE } from '@/helpers/consts'
+import ToolType from '@/components/Toolbox/ToolType.vue'
 
 const objectStore = useObjectStore()
-const controllerStore = useControllerStore()
-const { selectedObject } = storeToRefs(objectStore)
 
+const fileInput = ref(null)
 const objectType = ref(OBJECT_TYPE)
-const objectAlign = ref(OBJECT_ALIGN)
 
-const emit = defineEmits(['addObject'])
+const toolboxRef = ref(null)
+const showToolType = ref(false)
+const toolTypePosition = ref({ x: 0, y: 0 })
 
-const handleObjectType = (type) => {
+
+const handleObjectType = (type, event) => {
+  const buttonElement = event.currentTarget
+  const toolboxRect = toolboxRef.value.getBoundingClientRect()
+  const buttonRect = buttonElement.getBoundingClientRect()
+
+  // Calculate center position of the button
+  toolTypePosition.value = {
+    x: buttonRect.left - toolboxRect.left + (buttonRect.width / 2),
+    y: 0  // This will position it at the top of the toolbox
+  }
+
   const action = {
     shape: () => {
+      showToolType.value = false
       addShape()
     },
     image: () => {
-      uploadImageLocal()
+      showToolType.value = false
+      fileInput.value.click()
     },
     text: () => {
+      showToolType.value = false
       addText()
     },
     media: () => {
-      addMedia()
+      showToolType.value = true
     },
   }
   return action[type]()
-}
-const fileInput = ref(null)
-
-const uploadImageLocal = () => {
-  fileInput.value.click()
 }
 
 const handleFileChange = async (e) => {
@@ -85,11 +95,14 @@ const addText = () => {
 }
 
 const addMedia = () => {
-  console.log('addMedia')
   objectStore.addMedia({
     type: 'media',
     media: 'audio',
   })
+}
+
+const closeToolType = () => {
+  showToolType.value = false
 }
 
 const getObjectIcon = (type) => {
@@ -108,18 +121,25 @@ const getObjectIcon = (type) => {
 </script>
 <template>
   <div
+    ref="toolboxRef"
     class="absolute flex items-center justify-between gap-8 p-4 px-6 -translate-x-1/2 border bg-[#333]/80 backdrop-blur-sm border-gray-700 rounded-lg shadow-lg bottom-6 left-1/2 w-fit"
   >
     <input ref="fileInput" type="file" class="hidden" @change="handleFileChange" />
+
     <div class="flex gap-4">
       <button
         v-for="object in objectType"
         :key="object.id"
         class="mini-btn"
-        @click="handleObjectType(object.type)"
+        @click="handleObjectType(object.type, $event)"
       >
         {{ getObjectIcon(object.type) }}
       </button>
     </div>
+    <ToolType 
+      :position="toolTypePosition"
+      :show="showToolType"
+      :close="closeToolType"
+    />
   </div>
 </template>

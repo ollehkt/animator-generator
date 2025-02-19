@@ -6,7 +6,7 @@ import Header from '@/components/Header.vue'
 import Viewport from '@/components/Viewport/index.vue'
 import ObjectController from '@/components/ObjectController/index.vue'
 import AnimationController from '@/components/AnimationController/index.vue'
-import ObjectToolBar from '@/components/ObjectToolBar.vue'
+import Toolbox from '@/components/Toolbox/index.vue'
 
 import SourcePreview from '@/components/SourcePreview.vue'
 
@@ -34,7 +34,7 @@ const viewportRef = ref(null)
       <div class="h-full pt-8">
         <!-- Content area below tab -->
         <Viewport ref="viewportRef" />
-        <ObjectToolBar class="absolute transform -translate-x-1/2 bottom-4 left-1/2" />
+        <Toolbox class="absolute transform -translate-x-1/2 bottom-4 left-1/2" />
       </div>
     </div>
     <div class="w-[20%] bg-[#252526]">
