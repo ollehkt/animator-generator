@@ -14,6 +14,10 @@ const props = defineProps({
     type: Function,
     default: () => {},
   },
+  handleClick: {
+    type: Function,
+    default: () => {},
+  },
 })
 
 const mediaTypes = [
@@ -37,6 +41,8 @@ const mediaTypes = [
 const handleMouseLeave = () => {
   props.close()
 }
+
+
 </script>
 
 <template>
@@ -49,6 +55,7 @@ const handleMouseLeave = () => {
     @mouseleave="handleMouseLeave"
   >
     <button
+      @click="handleClick(type.type)"
       v-for="type in mediaTypes"
       :key="type.type"
       class="flex items-center w-full gap-2 px-4 py-2 text-xs text-left text-[#ccc] rounded hover:bg-gray-600 hover:text-white"

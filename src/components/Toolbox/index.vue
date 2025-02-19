@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useObjectStore } from '@/store'
-// import { storeToRefs } from 'pinia'
+import { storeToRefs } from 'pinia'
 import { OBJECT_TYPE } from '@/helpers/consts'
 import ToolType from '@/components/Toolbox/ToolType.vue'
 
@@ -14,7 +14,6 @@ const toolboxRef = ref(null)
 const showToolType = ref(false)
 const toolTypePosition = ref({ x: 0, y: 0 })
 
-
 const handleObjectType = (type, event) => {
   const buttonElement = event.currentTarget
   const toolboxRect = toolboxRef.value.getBoundingClientRect()
@@ -22,8 +21,8 @@ const handleObjectType = (type, event) => {
 
   // Calculate center position of the button
   toolTypePosition.value = {
-    x: buttonRect.left - toolboxRect.left + (buttonRect.width / 2),
-    y: 0  // This will position it at the top of the toolbox
+    x: buttonRect.left - toolboxRect.left + buttonRect.width / 2,
+    y: 0, // This will position it at the top of the toolbox
   }
 
   const action = {
@@ -94,13 +93,6 @@ const addText = () => {
   })
 }
 
-const addMedia = () => {
-  objectStore.addMedia({
-    type: 'media',
-    media: 'audio',
-  })
-}
-
 const closeToolType = () => {
   showToolType.value = false
 }
@@ -117,6 +109,19 @@ const getObjectIcon = (type) => {
     default: // circle, rect, polygon
       return 'O'
   }
+}
+
+const handlerToolType = (type) => {
+  if (type === 'audio') {
+    // todo file input 추가
+    objectStore.addMedia({
+      type: 'media',
+      media: 'audio',
+    })
+  } else {
+    alert('비디오처리', type)
+  }
+  showToolType.value = false
 }
 </script>
 <template>
@@ -136,10 +141,11 @@ const getObjectIcon = (type) => {
         {{ getObjectIcon(object.type) }}
       </button>
     </div>
-    <ToolType 
+    <ToolType
       :position="toolTypePosition"
       :show="showToolType"
       :close="closeToolType"
+      :handle-click="handlerToolType"
     />
   </div>
 </template>

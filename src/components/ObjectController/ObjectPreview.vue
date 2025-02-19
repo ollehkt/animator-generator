@@ -19,13 +19,18 @@ const drawPreview = () => {
 
   const obj = selectedObject.value
   if (obj.type === 'circle') {
-    // Scale down the circle to fit preview
+    // Scale down the circle/ellipse to fit preview
     const scale = 0.8
     const centerX = canvas.width / 2
     const centerY = canvas.height / 2
     
     ctx.beginPath()
-    ctx.arc(centerX, centerY, obj.radius * scale, 0, Math.PI * 2)
+    // Use radiusX and radiusY if available, otherwise fallback to radius
+    const radiusX = (obj.radiusX || obj.radius) * scale
+    const radiusY = (obj.radiusY || obj.radius) * scale
+    
+    // Use ellipse method for drawing
+    ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, Math.PI * 2)
     ctx.fillStyle = obj.fillStyle
     ctx.fill()
   } else if (obj.type === 'text') {
