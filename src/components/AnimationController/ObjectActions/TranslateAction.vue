@@ -1,10 +1,12 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { useControllerStore, useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
+
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
-const { targetPOS  } = storeToRefs(controllerStore)
+
+const { targetPOS, animationConfig } = storeToRefs(controllerStore)
 const { selectedObject } = storeToRefs(objectStore)
 
 const isSettingStartFrom = ref(false)
@@ -15,50 +17,62 @@ const startFrom = ref({
 
 const toggleStartFrom = () => {
   isSettingStartFrom.value = !isSettingStartFrom.value
+  if (!isSettingStartFrom.value) {
+    startFrom.value = {
+      x: 0,
+      y: 0,
+    }
+  }
 }
 
 // Add computed properties to safely handle object values
-const objectX = computed({
-  get: () => selectedObject.value?.x ?? 0,
-  set: (value) => {
-    if (selectedObject.value) {
-      selectedObject.value.x = value
-    }
+
+// const objectX = computed({
+//   get: () => selectedObject.value?.x ?? 0,
+//   set: (value) => {
+//     if (selectedObject.value) {
+//       selectedObject.value.x = value
+//     }
+//   }
+// })
+
+// const objectY = computed({
+//   get: () => selectedObject.value?.y ?? 0,
+//   set: (value) => {
+//     if (selectedObject.value) {
+//       selectedObject.value.y = value
+//     }
+//   }
+// })
+
+watch(startFrom, (newVal) => {
+  if (selectedObject.value) {
+    selectedObject.value.x = newVal.x
+    selectedObject.value.y = newVal.y
   }
-})
-
-const objectY = computed({
-  get: () => selectedObject.value?.y ?? 0,
-  set: (value) => {
-    if (selectedObject.value) {
-      selectedObject.value.y = value
-    }
-  }
-})
-
-
+}, { deep: true })
 </script>
 
 <template>
   <!-- TRANSLATE || ROTATE -->
   <div class="flex flex-col gap-4">
     <div class="flex gap-2">
-        <p class="flex flex-col gap-2 overflow-hidden">
+      <p class="flex flex-col gap-2 overflow-hidden">
         <label class="pl-1 text-xs text-gray-400">X</label>
-        <input 
-          type="number" 
-          v-model="objectX" 
+        <input
+          type="number"
+          v-model="animationConfig.x"
           class="input-dark"
-          :disabled="!selectedObject" 
+          :disabled="!selectedObject"
         />
       </p>
-        <p class="flex flex-col gap-2 overflow-hidden">
+      <p class="flex flex-col gap-2 overflow-hidden">
         <label class="pl-1 text-xs text-gray-400">Y</label>
-        <input 
-          type="number" 
-          v-model="objectY" 
+        <input
+          type="number"
+          v-model="animationConfig.y"
           class="input-dark"
-          :disabled="!selectedObject" 
+          :disabled="!selectedObject"
         />
       </p>
     </div>
@@ -81,15 +95,27 @@ const objectY = computed({
       </div>
       <div
         class="box-border flex gap-2"
-        :class="isSettingStartFrom ? 'border border-dashed border-[#825feb]' : 'border border-transparent'"
+        :class="
+          isSettingStartFrom ? 'border border-dashed border-[#825feb]' : 'border border-transparent'
+        "
       >
         <p class="flex flex-col gap-2 overflow-hidden">
           <label class="pl-1 text-xs text-gray-400">X</label>
-          <input type="number" v-model="startFrom.x" class="input-dark" />
+          <input
+            type="number"
+            v-model="startFrom.x"
+            class="input-dark"
+            :disabled="!isSettingStartFrom"
+          />
         </p>
         <p class="flex flex-col gap-2 overflow-hidden">
           <label class="pl-1 text-xs text-gray-400">Y</label>
-          <input type="number" v-model="startFrom.y" class="input-dark" />
+          <input
+            type="number"
+            v-model="startFrom.y"
+            class="input-dark"
+            :disabled="!isSettingStartFrom"
+          />
         </p>
       </div>
     </div>

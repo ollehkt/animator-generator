@@ -9,8 +9,7 @@ export const useControllerStore = defineStore('controller', () => {
   const { selectedObject, objects } = storeToRefs(objectStore)
 
   // state
-  // activeTab => 컨트롤러 탭 변경 있었을 경우 사용 현재 없음
-  // const activeTab = ref({
+  // const activeTab = ref({ //컨트롤러 탭 변경 있었을 경우 사용 현재 없음
   //   // 객체속성
   //   id: 'object',
   //   label: 'Object',
@@ -21,7 +20,7 @@ export const useControllerStore = defineStore('controller', () => {
   const isEditingTrigger = ref(false) // 리스트 || 트리거 설정
 
   // 액션리스트에 들어가야 하는 필수 값
-  const selectedTriggerType = ref()
+  const selectedTriggerType = ref('click')
   const selectedActionType = ref('translate')
   const actionTargetList = ref([])
 
@@ -130,6 +129,7 @@ export const useControllerStore = defineStore('controller', () => {
     animations,
     targetPOS,
     animationConfig,
+
     setTriggerType,
     setActionType,
     removeAnimation,

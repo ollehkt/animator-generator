@@ -7,7 +7,10 @@ import Canvas from './Cavas.vue'
 import ZoomControls from './ZoomControls.vue'
 
 const canvasRef = ref(null)
+const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
+
+const { isEditingTrigger } = storeToRefs(controllerStore)
 const { selectedObject } = storeToRefs(objectStore)
 
 // Add zoom state and controls
@@ -26,7 +29,9 @@ const handleGlobalClick = (event) => {
   }
 
   if (canvasRef.value?.contains(target)) {
+    isEditingTrigger.value = false
     selectedObject.value = null
+
   }
 }
 

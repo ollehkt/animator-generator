@@ -29,7 +29,7 @@ export const useObjectStore = defineStore('object', () => {
       id: fullId,
       name: `${object.type}-${shortId}`,
       type: object.type || 'circle',
-      animations: [], // tirgger, 타겟 객체, 액션, 액션타겟 정보
+      animationJson: [], // tirgger, 타겟 객체, 액션, 액션타겟 정보
       ...object,
     }
 
@@ -144,6 +144,16 @@ export const useObjectStore = defineStore('object', () => {
     }
   }
 
+  // 오브젝트 애니메이션 업데이트
+  const updateObjectAnimation = () => {
+    const objectId = selectedObject.value.id
+    const targetObject = objects.value.find((obj) => obj.id === objectId)
+    if (targetObject) {
+      // 이값은 interfacet에서 액션리스트에 사용하고 finalobjectjson 에서는 animationData에 해당함
+      targetObject.animationJson = 'hi 여기 이제 엄청 긴 jsob eㅡㄹ어간ㄷ가' 
+    }
+  }
+
   const initSelectedObject = () => {
     selectedObject.value = null
   }
@@ -170,7 +180,7 @@ export const useObjectStore = defineStore('object', () => {
     updateObjectPosition,
     initSelectedObject,
     setObjectStartFrom,
-
+    updateObjectAnimation,
     alignObject,
   }
 })

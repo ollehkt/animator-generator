@@ -103,7 +103,7 @@ const getEasingPath = (easingType) => {
 
     <!-- DELAY -->
     <div class="flex flex-col gap-2">
-      <label class="pl-1 text-xs text-gray-400">Delay</label>
+      <label class="pl-1 text-xs text-gray-400">Delay (ms)</label>
       <input type="number" v-model="animationConfig.delay" min="0" step="100" class="input-dark" />
     </div>
 

@@ -125,7 +125,7 @@ const handlePointerMove = (event) => {
       }
     } else {
       // Complete image and text resizing for all handles
-      console.log("handleNO=>",activeHandle.value)
+      // console.log("handleNO=>",activeHandle.value)
       switch (activeHandle.value) {
         case 0: // Top-left
           selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width - deltaX)

@@ -58,14 +58,20 @@ const addActionTarget = () => {
 }
 
 const handleDeleteActionTarget = (index) => {
+  if (actionTargetList.value.length === 1) {
+    return
+  }
   controllerStore.removeActionTarget(index)
 }
 
 const addThisAnimation = () => {
-  console.log('addThisAnimation')
+  objectStore.updateObjectAnimation()
 }
 
 onMounted(() => {
+  if (!selectedActionType.value) {
+    controllerStore.setActionType('translate')
+  }
   if (!selectedObject.value) {
     objectStore.selectObject(objects.value[0].id)
   }
@@ -152,11 +158,7 @@ onUnmounted(() => {
               타겟 추가
             </button>
           </div>
-          <div
-            v-for="(item, index) in actionTargetList"
-            :key="item.id"
-            class="flex gap-2"
-          >
+          <div v-for="(item, index) in actionTargetList" :key="item.id" class="flex gap-2">
             <select class="w-full select-dark" v-model="item.id">
               <option v-for="obj in objects" :key="obj.id" :value="obj.id">
                 {{ obj.name }}
@@ -182,7 +184,7 @@ onUnmounted(() => {
       </div>
     </div>
     <!-- 액션 선택 후 바뀌는 부분 & Timing -->
-    <AnimationPropertySetting />
+    <AnimationPropertySetting v-if="selectedActionType" />
     <div class="p-4">
       <button @click="addThisAnimation" class="w-full h-6 px-2 text-xs btn-primary min-w-fit">
         이 액션을 저장
