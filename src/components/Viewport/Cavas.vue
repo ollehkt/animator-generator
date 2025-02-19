@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { useObjectStore, useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import { HANDLE_SIZE, HANDLE_POSITIONS } from '@/helpers/consts'
 
 const props = defineProps({
   width: {
@@ -18,17 +19,6 @@ const props = defineProps({
   },
 })
 
-const HANDLE_SIZE = 8 // Size of control handles
-const HANDLE_POSITIONS = [
-  { x: -1, y: -1 }, // Top-left
-  { x: 0, y: -1 }, // Top-center
-  { x: 1, y: -1 }, // Top-right
-  { x: 1, y: 0 }, // Middle-right
-  { x: 1, y: 1 }, // Bottom-right
-  { x: 0, y: 1 }, // Bottom-center
-  { x: -1, y: 1 }, // Bottom-left
-  { x: -1, y: 0 }, // Middle-left
-]
 
 const objectStore = useObjectStore()
 const controllerStore = useControllerStore()
@@ -182,10 +172,7 @@ const endDrag = () => {
     x: selectedObject.value.x,
     y: selectedObject.value.y,
   })
-  // controllerStore.targetPOS = {
-  //   x: selectedObject.value.x,
-  //   y: selectedObject.value.y,
-  // }
+  
 }
 
 const determineOutsideDirection = (object) => {

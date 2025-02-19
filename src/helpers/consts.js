@@ -181,3 +181,15 @@ export const EASING_OPTIONS = [
   { label: 'Elastic In Out', value: 'cubic-bezier(0.87, 0, 0.13, 1)', category: 'Elastic' }
 ]
 
+// 뷰포트 캔버스
+export const HANDLE_SIZE = 8 // Size of control handles
+export const HANDLE_POSITIONS = [
+  { x: -1, y: -1 }, // Top-left
+  { x: 0, y: -1 }, // Top-center
+  { x: 1, y: -1 }, // Top-right
+  { x: 1, y: 0 }, // Middle-right
+  { x: 1, y: 1 }, // Bottom-right
+  { x: 0, y: 1 }, // Bottom-center
+  { x: -1, y: 1 }, // Bottom-left
+  { x: -1, y: 0 }, // Middle-left
+]

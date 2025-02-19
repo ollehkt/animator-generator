@@ -8,8 +8,8 @@ import AnimationPropertySetting from './AnimationPropertySetting.vue'
 
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
-const { selectedActionType } = storeToRefs(controllerStore)
-const { objects, selectedObject, actionTargetList } = storeToRefs(objectStore)
+const { selectedActionType, actionTargetList } = storeToRefs(controllerStore)
+const { objects, selectedObject } = storeToRefs(objectStore)
 
 const triggerConfig = ref(TRIGGER_CONFIG)
 
@@ -52,13 +52,13 @@ const goToActionList = () => {
 }
 
 const addActionTarget = () => {
-  objectStore.addActionTarget({
+  controllerStore.addActionTarget({
     id: objects.value[0].id,
   })
 }
 
 const handleDeleteActionTarget = (index) => {
-  objectStore.removeActionTarget(index)
+  controllerStore.removeActionTarget(index)
 }
 
 const addThisAnimation = () => {
@@ -70,7 +70,7 @@ onMounted(() => {
     objectStore.selectObject(objects.value[0].id)
   }
   if (actionTargetList.value.length === 0) {
-    objectStore.addActionTarget({
+    controllerStore.addActionTarget({
       id: objects.value[0].id,
     })
   }
@@ -153,7 +153,7 @@ onUnmounted(() => {
             </button>
           </div>
           <div
-            v-for="(item, index) in objectStore.actionTargetList"
+            v-for="(item, index) in actionTargetList"
             :key="item.id"
             class="flex gap-2"
           >

@@ -8,7 +8,7 @@ export const useObjectStore = defineStore('object', () => {
   const objects = ref([])
   const mediaList = ref([])
   const selectedObject = ref(null)
-  const actionTargetList = ref([])
+  // const actionTargetList = ref([])
   const objectStartFrom = ref(null)
 
   const generateUniqueId = () => {
@@ -152,20 +152,11 @@ export const useObjectStore = defineStore('object', () => {
     objectStartFrom.value = startFrom
   }
 
-  // 애니메이션이 실제로 적용되는 객채
-  const addActionTarget = (object) => {
-    actionTargetList.value.push(object)
-  }
-
-  const removeActionTarget = (index) => {
-    actionTargetList.value.splice(index, 1)
-  }
-
   return {
     // State
     objects,
     mediaList,
-    actionTargetList,
+    // actionTargetList,
     selectedObject,
     objectStartFrom,
 
@@ -179,8 +170,7 @@ export const useObjectStore = defineStore('object', () => {
     updateObjectPosition,
     initSelectedObject,
     setObjectStartFrom,
-    addActionTarget,
-    removeActionTarget,
+
     alignObject,
   }
 })

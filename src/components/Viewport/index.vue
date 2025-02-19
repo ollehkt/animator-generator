@@ -15,27 +15,20 @@ const zoom = ref(1)
 const MIN_ZOOM = 0.5 //50%
 const MAX_ZOOM = 2 //200%
 
+//전역 클릭 이벤트
 const handleGlobalClick = (event) => {
   const { target } = event
+
+  // 타겟이 핸들인 경우
+  if (target.hasAttribute('data-direction')) {
+    const direction = target.getAttribute('data-direction')
+    return
+  }
+
   if (canvasRef.value?.contains(target)) {
     selectedObject.value = null
   }
 }
-
-// const handleClick = (event, object) => {
-//   console.log
-//   if (!object) return
-
-//   if (object) {
-//     event.stopPropagation()
-//     selectedObject.value = object
-//     return
-//   }
-
-//   if (event.target.tagName === 'rect' || event.target.tagName === 'svg') {
-//     selectedObject.value = null
-//   }
-// }
 
 const handleKeyDown = (event) => {
   // console.log('🔴', event.key)
@@ -47,7 +40,7 @@ const handleKeyDown = (event) => {
   ) {
     return
   }
-  
+
   if (!selectedObject.value) return
 
   if (event.key === 'Backspace') {
