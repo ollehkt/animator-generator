@@ -69,7 +69,7 @@ const toggleLayersMinimized = () => {
       </div>
     </section>
     <!-- Animation controller -->
-    <section class="bg-[#252526] w-[20%]">
+    <section class="bg-[#252526] w-[20%] min-w-[342px] shrink-0">
       <div class="overflow-x-clip">
         <AnimationController />
       </div>

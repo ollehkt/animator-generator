@@ -36,6 +36,14 @@ export const useObjectStore = defineStore('object', () => {
     }
 
     objects.value.push(newObject)
+
+    // 트리거타겟객체도 동기화
+    const controllerStore = useControllerStore()
+    const { selectedTriggerTarget } = storeToRefs(controllerStore)
+    selectedTriggerTarget.value.push({
+      id: newObject.id,
+      name: newObject.name,
+    })
     return newObject.id
   }
 
@@ -150,45 +158,59 @@ export const useObjectStore = defineStore('object', () => {
     }
   }
 
-  // 오브젝트 애니메이션 업데이트
+  // 오브젝트 애니메이션 업데이트 (이 액션을 저장)
   const updateObjectAnimation = () => {
     const controllerStore = useControllerStore()
-    const { selectedTriggerType, selectedActionType, actionTargetList, animationConfig } =
-      storeToRefs(controllerStore)
+    const {
+      selectedTriggerType,
+      selectedTriggerTarget,
+      selectedActionType,
+      actionTargetList,
+      animationConfig,
+    } = storeToRefs(controllerStore)
 
     const objectId = selectedObject.value.id
     const targetObject = objects.value.find((obj) => obj.id === objectId)
 
     if (targetObject) {
       const newAnimation = {
-        triggerType: selectedTriggerType.value,
+        // 트리거 타입, 트리거 타겟 객체, 액션, 액션 타겟(복수가능), common config
+        triggerType: selectedTriggerType.value, // click, dbclick...
+        triggerTarget: selectedTriggerTarget.value, // 트리거 타겟 UUID
+        actionType: selectedActionType.value, // translate, scale, rotate...
+        actionTargetList, // 액션을 하는 객체 UUID
         isSimultaneousness: true,
         callbackFunction: null,
+        hello: 'world',
+        ease: animationConfig.value.easing,
+        duration: animationConfig.value.duration,
+        delay: animationConfig.value.delay,
+        fillMode: null,
 
-        animation: actionTargetList.value.map((target) => ({
-          triggerTarget: target.id || null,
-          triggerTargetName: target.name || null,
-          actionType: selectedActionType.value,
-          // points: [
-          //   { x: 400, y: 100 }, // These should come from your animation config
-          //   { x: 300, y: 200 }
-          // ],
-          ease: animationConfig.value.easing,
-          duration: animationConfig.value.duration,
-          delay: animationConfig.value.delay,
-          // count: null,
-          // direction: 'normal',
-          fillMode: null,
-          // actionSetting: {
-          //   moveType: 'line',
-          //   curviness: 1.5,
-          // },
-        })),
+        // 액션 타겟리스트 이거는 똑같은거 값을 두애니메이션으로 넣을때
+        // animation: actionTargetList.value.map((target) => ({
+        //   triggerTarget: target.id || null,
+        //   triggerTargetName: target.name || null,
+        //   actionType: selectedActionType.value,
+        //   ease: animationConfig.value.easing,
+        //   duration: animationConfig.value.duration,
+        //   delay: animationConfig.value.delay,
+        //   fillMode: null,
+
+        // })),
       }
-      // console.log(newAnimation, 'check new animation')
+
       targetObject.objectActionList.push(newAnimation)
-      // console.log(targetObject.objectActionList, 'check targetObject.objectActionList')
       controllerStore.isEditingTrigger = false
+      
+    }
+  }
+
+  const deleteObjectAnimation = (actionIndex) => {
+    const objectId = selectedObject.value.id
+    const object = objects.value.find((obj) => obj.id === objectId)
+    if (object) {
+      object.objectActionList.splice(actionIndex, 1)
     }
   }
 
@@ -218,6 +240,7 @@ export const useObjectStore = defineStore('object', () => {
     initSelectedObject,
     setObjectStartFrom,
     updateObjectAnimation,
+    deleteObjectAnimation,
     alignObject,
   }
 })

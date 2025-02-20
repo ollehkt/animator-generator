@@ -16,9 +16,9 @@ const triggerConfig = ref(TRIGGER_CONFIG)
 const computedTriggerConfig = computed(() => {
   return {
     ...triggerConfig.value,
-    targetObjects: {
-      label: triggerConfig.value.targetObjects.label,
-      value: objects.value,
+    triggerTarget: {
+      label: triggerConfig.value.triggerTarget.label,
+      value: objects.value
     },
   }
 })
@@ -32,20 +32,21 @@ const requireActionTarget = computed(() => {
 })
 
 const handleChange = (key, event) => {
+
+  console.log('key', key)
+  console.log('event', event)
+
+  const { target } = event
+
   const targetMethod = {
-    triggers: () => setTriggerType(key, event.target.value),
-    actions: () => setActionType(key, event.target.value),
+    triggers: () => controllerStore.setTriggerType(target.value),
+    triggerTarget: () => controllerStore.setTriggerTarget(target.value),
+    actions: () => controllerStore.setActionType(target.value),
   }
+
   targetMethod[key]()
 }
 
-const setTriggerType = (key, value) => {
-  controllerStore.setTriggerType(value)
-}
-
-const setActionType = (key, value) => {
-  controllerStore.setActionType(value)
-}
 
 const goToActionList = () => {
   controllerStore.isEditingTrigger = false
@@ -119,7 +120,8 @@ onUnmounted(() => {
           <select class="select-dark" @change="handleChange(key, $event)">
             <!-- value 배열일 경우 -->
             <template v-if="Array.isArray(value.value)">
-              <option v-for="item in value.value" :key="item.value" :value="item.value">
+              <option 
+                v-for="item in value.value" :key="item.id" :value="item.value">
                 {{ item.label || item.name }}
               </option>
             </template>

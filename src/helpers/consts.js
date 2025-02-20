@@ -97,8 +97,8 @@ export const TRIGGER_CONFIG = {
       {label: '떼기', value: 'mouseUp'},
     ]
   },
-  targetObjects: {
-    label: '트리거 타겟 객체',
+  triggerTarget: {
+    label: '트리거 타겟',
     value: [],
   },
 

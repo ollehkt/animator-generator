@@ -24,6 +24,7 @@ export const useControllerStore = defineStore('controller', () => {
 
   // 액션리스트에 들어가야 하는 필수 값
   const selectedTriggerType = ref('click')
+  const selectedTriggerTarget = ref([])
   const selectedActionType = ref('translate')
   const actionTargetList = ref([])
 
@@ -63,32 +64,14 @@ export const useControllerStore = defineStore('controller', () => {
     selectedTriggerType.value = type
   }
 
-  // 액션 설정 부분
-  const setActionType = (type) => {
-    // action
-    selectedActionType.value = type
+  // 트리거 타겟 설정
+  const setTriggerTarget = (target) => {
+    selectedTriggerTarget.value = target
   }
 
-  // Helper function to manage transforms
-  const updateTransform = (element, newTransform) => {
-    // Get current transform values from dataset or use defaults
-    const currentTransform = {
-      translate: element.dataset.translate || '0px, 0px',
-      scale: element.dataset.scale || '1',
-      rotate: element.dataset.rotate || '0deg',
-    }
-
-    // Update only the specified transform type
-    if (newTransform.translate) {
-      element.style.transform = `translate(${newTransform.translate})`
-      element.dataset.translate = newTransform.translate
-    } else if (newTransform.scale) {
-      element.style.transform = `scale(${newTransform.scale})`
-      element.dataset.scale = newTransform.scale
-    } else if (newTransform.rotate) {
-      element.style.transform = `rotate(${newTransform.rotate})`
-      element.dataset.rotate = newTransform.rotate
-    }
+  // 액션 설정 부분
+  const setActionType = (type) => {
+    selectedActionType.value = type
   }
 
   const removeAnimation = (animationId) => {
@@ -133,12 +116,14 @@ export const useControllerStore = defineStore('controller', () => {
     selectedActionType,
     isEditingTrigger,
     actionTargetList,
+    selectedTriggerTarget,
     // activeTab,
     animations,
     targetPOS,
     animationConfig,
     toggleLayersMinimized,
     setTriggerType,
+    setTriggerTarget,
     setActionType,
     removeAnimation,
     updateAnimationConfig,
