@@ -204,6 +204,7 @@ export const useObjectStore = defineStore('object', () => {
       }
     }
 
+
     controllerStore.isSettingTrigger = false
   }
 

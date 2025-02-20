@@ -15,7 +15,6 @@ const { selectedObject } = storeToRefs(objectStore)
 </script>
 <template>
   <div class="flex flex-col">
-    뷰포트기준이니? : {{ isViewportAction }}
     <ActionList v-if="!isSettingTrigger" />
     <AnimationTrigger v-else />
   </div>
