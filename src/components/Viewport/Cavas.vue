@@ -297,7 +297,7 @@ const getHandlePositions = (object) => {
           :cx="object.position.x"
           :cy="object.position.y"
           :rx="object.radius || object.size.radius"
-          :ry="object.radius || object.size.radius"
+          :ry="object.radius || object.size.radius" 
           :fill="object.fillStyle"
           @pointerdown="(e) => startDrag(e, object)"
           @click="(e) => handleClick(e, object)"

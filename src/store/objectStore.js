@@ -8,7 +8,6 @@ export const useObjectStore = defineStore('object', () => {
   const objects = ref([])
   const mediaList = ref([])
   const selectedObject = ref(null)
-  // const actionTargetList = ref([])
   const objectStartFrom = ref(null)
 
   const generateUniqueId = () => {
@@ -89,17 +88,21 @@ export const useObjectStore = defineStore('object', () => {
     const canvasHeight = 452 // From Canvas.vue props default height
 
     const object = selectedObject.value
-    let newX = object.x
-    let newY = object.y
+    let newX = object.position.x
+    let newY = object.position.y
 
-    const isCircle = object.type === 'circle'
+    const isCircle = object.objectType === 'diagram' && object.diagramType === 'circle'
 
     // Calculate object dimensions based on type
     const objectWidth =
-      object.type === 'circle' ? (object.radiusX || object.radius) * 2 : object.width
+      object.objectType === 'diagram' && object.diagramType === 'circle'
+        ? (object.radiusX || object.radius) * 2
+        : object.size.width
 
     const objectHeight =
-      object.type === 'circle' ? (object.radiusY || object.radius) * 2 : object.height
+      object.objectType === 'diagram' && object.diagramType === 'circle'
+        ? (object.radiusY || object.radius) * 2
+        : object.size.height
 
     switch (type) {
       // Horizontal alignment
@@ -126,8 +129,8 @@ export const useObjectStore = defineStore('object', () => {
     }
 
     // Update object position
-    selectedObject.value.x = isCircle ? newX : newX - objectWidth / 2
-    selectedObject.value.y = isCircle ? newY : newY - objectHeight / 2
+    selectedObject.value.position.x = isCircle ? newX : newX - objectWidth / 2
+    selectedObject.value.position.y = isCircle ? newY : newY - objectHeight / 2
   }
 
   // 오브젝트 이름 업데이트
@@ -142,20 +145,16 @@ export const useObjectStore = defineStore('object', () => {
   const updateObjectPosition = (objectId, position) => {
     const object = objects.value.find((obj) => obj.id === objectId)
     if (object) {
-      object.x = Math.round(position.x)
-      object.y = Math.round(position.y)
+      object.position.x = Math.round(position.x)
+      object.position.y = Math.round(position.y)
     }
   }
 
   // 오브젝트 애니메이션 업데이트
   const updateObjectAnimation = () => {
     const controllerStore = useControllerStore()
-    const {
-      selectedTriggerType,
-      selectedActionType,
-      actionTargetList,
-      animationConfig,
-    } = storeToRefs(controllerStore)
+    const { selectedTriggerType, selectedActionType, actionTargetList, animationConfig } =
+      storeToRefs(controllerStore)
 
     const objectId = selectedObject.value.id
     const targetObject = objects.value.find((obj) => obj.id === objectId)
@@ -205,7 +204,6 @@ export const useObjectStore = defineStore('object', () => {
     // State
     objects,
     mediaList,
-    // actionTargetList,
     selectedObject,
     objectStartFrom,
 

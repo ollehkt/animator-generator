@@ -12,7 +12,7 @@ const objectSize = computed(() => {
   if (!selectedObject.value) return { width: '-', height: '-' }
   
   // Handle circle type object
-  if (selectedObject.value.type === 'circle') {
+  if (selectedObject.value.objectType === 'diagram' && selectedObject.value.diagramType === 'circle') {
     // If the circle has radiusX and radiusY (ellipse)
     if (selectedObject.value.radiusX && selectedObject.value.radiusY) {
       return {
@@ -29,8 +29,8 @@ const objectSize = computed(() => {
 
   // Default case for other objects with width/height
   return {
-    width: selectedObject.value.width,
-    height: selectedObject.value.height,
+    width: selectedObject.value.size.width,
+    height: selectedObject.value.size.height,
   }
 })
 </script>
@@ -54,8 +54,8 @@ const objectSize = computed(() => {
     <div class="space-y-1">
       <label class="block text-xs text-[#9CA3AF]">캔버스 기준 좌표</label>
       <div class="flex gap-4 text-xs">
-        <span>X: {{ Math.round(selectedObject?.x) || '-' }}</span>
-        <span>Y: {{ Math.round(selectedObject?.y) || '-' }}</span>
+        <span>X: {{ Math.round(selectedObject?.position.x) || '-' }}</span>
+        <span>Y: {{ Math.round(selectedObject?.position.y) || '-' }}</span>
       </div>
     </div>
   </div>
