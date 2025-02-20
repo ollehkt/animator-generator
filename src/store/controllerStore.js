@@ -5,7 +5,7 @@ import { storeToRefs } from 'pinia'
 
 export const useControllerStore = defineStore('controller', () => {
   // 화면 컨트롤, 객체 애니메이션 컨트롤
-  
+
   // const state
   const objectStore = useObjectStore()
   const { selectedObject, objects } = storeToRefs(objectStore)
@@ -20,17 +20,17 @@ export const useControllerStore = defineStore('controller', () => {
 
   // 액션 타입(페이지이동, 좌표로 이동...)
   const showSourcePreview = ref(false)
-  const isEditingTrigger = ref(false) // 리스트 || 트리거 설정
+  const isSettingTrigger = ref(false) // 리스트 || 트리거 설정
+  const isEditingTrigger = ref(false) // 기존 저장된 액션내용 수정
 
-  // 액션리스트에 들어가야 하는 필수 값
+  // 액션리스트에 들어가야 하는 필수 값 ==================================
   const selectedTriggerType = ref('click')
   const selectedTriggerTarget = ref([])
   const selectedActionType = ref('translate')
   const actionTargetList = ref([])
 
-  //==================================
-
-  const animations = ref([])
+  //==============================================================
+  
   const targetPOS = ref({
     x: 0,
     y: 0,
@@ -74,11 +74,17 @@ export const useControllerStore = defineStore('controller', () => {
     selectedActionType.value = type
   }
 
-  const removeAnimation = (animationId) => {
-    const index = animations.value.findIndex((anim) => anim.id === animationId)
-    if (index !== -1) {
-      animations.value.splice(index, 1)
-    }
+  // 애니메이션이 실제로 적용되는 객채
+  const addActionTarget = (object) => {
+    actionTargetList.value.push(object)
+  }
+
+  const removeActionTarget = (index) => {
+    actionTargetList.value.splice(index, 1)
+  }
+
+  const updateAnimationConfig = (key, value) => {
+    animationConfig.value[key] = value
   }
 
   const resetToInitialState = (element, initialState) => {
@@ -96,38 +102,24 @@ export const useControllerStore = defineStore('controller', () => {
     element.dataset.rotate = '0deg'
   }
 
-  const updateAnimationConfig = (key, value) => {
-    animationConfig.value[key] = value
-  }
-
-  // 애니메이션이 실제로 적용되는 객채
-  const addActionTarget = (object) => {
-    actionTargetList.value.push(object)
-  }
-
-  const removeActionTarget = (index) => {
-    actionTargetList.value.splice(index, 1)
-  }
-
   return {
     isLayersMinimized,
     showSourcePreview,
     selectedTriggerType,
     selectedActionType,
+    isSettingTrigger,
     isEditingTrigger,
     actionTargetList,
     selectedTriggerTarget,
-    // activeTab,
-    animations,
     targetPOS,
     animationConfig,
+
     toggleLayersMinimized,
     setTriggerType,
     setTriggerTarget,
     setActionType,
-    removeAnimation,
-    updateAnimationConfig,
     addActionTarget,
     removeActionTarget,
+    updateAnimationConfig,
   }
 })

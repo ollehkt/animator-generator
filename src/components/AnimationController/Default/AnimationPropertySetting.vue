@@ -51,6 +51,6 @@ watch(selectedActionType, (newType) => {
     <PageAction v-if="isPageAction" />
     <ObjectAction v-if="isObjectAction" />
     <MediaAction v-if="isMediaAction" />
-    <CommonProperty />
+    <CommonProperty v-if="!isMediaAction" />
   </div>
 </template>

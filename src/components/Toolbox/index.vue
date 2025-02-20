@@ -126,8 +126,7 @@ const handlerToolType = (type) => {
   if (type === 'audio') {
     // todo file input 추가
     objectStore.addMedia({
-      type: 'media',
-      media: 'audio',
+      type: 'audio',
     })
   } else {
     alert('비디오처리', type)

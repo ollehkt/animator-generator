@@ -47,7 +47,7 @@ const handleSave = () => {
 }
 
 const loadProject = () => {
-  alert('loadProject')
+  router.push('/project')
 }
 
 const openPreview = () => {

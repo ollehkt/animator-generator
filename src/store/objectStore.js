@@ -69,13 +69,13 @@ export const useObjectStore = defineStore('object', () => {
 
   const removeObject = (objectId) => {
     const controllerStore = useControllerStore()
-    const { isEditingTrigger } = storeToRefs(controllerStore)
+    const { isSettingTrigger } = storeToRefs(controllerStore)
 
     const index = objects.value.findIndex((obj) => obj.id === objectId)
     if (index !== -1) {
       objects.value.splice(index, 1)
     }
-    isEditingTrigger.value = false
+    isSettingTrigger.value = false
     initSelectedObject()
   }
 
@@ -235,7 +235,7 @@ export const useObjectStore = defineStore('object', () => {
       }
 
       targetObject.objectActionList.push(newAnimation)
-      controllerStore.isEditingTrigger = false
+      controllerStore.isSettingTrigger = false
     }
   }
 

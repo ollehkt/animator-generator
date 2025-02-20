@@ -18,7 +18,7 @@ const computedTriggerConfig = computed(() => {
     ...triggerConfig.value,
     triggerTarget: {
       label: triggerConfig.value.triggerTarget.label,
-      value: objects.value
+      value: objects.value,
     },
   }
 })
@@ -32,10 +32,6 @@ const requireActionTarget = computed(() => {
 })
 
 const handleChange = (key, event) => {
-
-  console.log('key', key)
-  console.log('event', event)
-
   const { target } = event
 
   const targetMethod = {
@@ -47,9 +43,8 @@ const handleChange = (key, event) => {
   targetMethod[key]()
 }
 
-
 const goToActionList = () => {
-  controllerStore.isEditingTrigger = false
+  controllerStore.isSettingTrigger = false
 }
 
 const addActionTarget = () => {
@@ -120,8 +115,7 @@ onUnmounted(() => {
           <select class="select-dark" @change="handleChange(key, $event)">
             <!-- value 배열일 경우 -->
             <template v-if="Array.isArray(value.value)">
-              <option 
-                v-for="item in value.value" :key="item.id" :value="item.value">
+              <option v-for="item in value.value" :key="item.id" :value="item.value">
                 {{ item.label || item.name }}
               </option>
             </template>
