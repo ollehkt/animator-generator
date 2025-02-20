@@ -22,13 +22,16 @@ export const useObjectStore = defineStore('object', () => {
   }
 
   // Actions
-  const addObject = (object, isMedia = false) => {
+  const addObject = (object) => {
+    /**
+     * objectJson 에서 objectData에 해당하는 부분
+     * objectActionList는 animationData 부분
+     */
     const { fullId, shortId } = generateUniqueId()
 
     const newObject = {
       id: fullId,
-      name: `${object.type}-${shortId}`,
-      type: object.type || 'circle',
+      name: `${object.diagramType || object.objectType}-${shortId}`,
       objectActionList: [], // tirgger, 타겟 객체, 액션, 액션타겟 정보
       ...object,
     }

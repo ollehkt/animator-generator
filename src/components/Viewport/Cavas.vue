@@ -72,8 +72,8 @@ const startDrag = (event, object) => {
   const transformedPoint = svgPoint.matrixTransform(svgRef.value.getScreenCTM().inverse())
 
   dragOffset.value = {
-    x: transformedPoint.x - object.x,
-    y: transformedPoint.y - object.y,
+    x: transformedPoint.x - object.position.x,
+    y: transformedPoint.y - object.position.y,
   }
 }
 
@@ -92,8 +92,8 @@ const handlePointerMove = (event) => {
 
   // 움직인 값대로 오브젝트 위치 업데이트
   if (isDragging.value) {
-    selectedObject.value.x = Math.round(transformedPoint.x - dragOffset.value.x)
-    selectedObject.value.y = Math.round(transformedPoint.y - dragOffset.value.y)
+    selectedObject.value.position.x = Math.round(transformedPoint.x - dragOffset.value.x)
+    selectedObject.value.position.y = Math.round(transformedPoint.y - dragOffset.value.y)
     return
   }
 
@@ -101,9 +101,9 @@ const handlePointerMove = (event) => {
     const deltaX = transformedPoint.x - resizeStartDimensions.value.x
     const deltaY = transformedPoint.y - resizeStartDimensions.value.y
 
-    if (selectedObject.value.type === 'circle') {
-      const dx = transformedPoint.x - selectedObject.value.x
-      const dy = transformedPoint.y - selectedObject.value.y
+    if (selectedObject.value.objectType === 'diagram' && selectedObject.value.diagramType === 'circle') {
+      const dx = transformedPoint.x - selectedObject.value.position.x
+      const dy = transformedPoint.y - selectedObject.value.position.y
 
       switch (activeHandle.value) {
         case 0: // Top-left
@@ -128,38 +128,38 @@ const handlePointerMove = (event) => {
       // console.log("handleNO=>",activeHandle.value)
       switch (activeHandle.value) {
         case 0: // Top-left
-          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
-          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
-          selectedObject.value.x = transformedPoint.x
-          selectedObject.value.y = transformedPoint.y
+          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
+          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
+          selectedObject.value.position.x = transformedPoint.x
+          selectedObject.value.position.y = transformedPoint.y
           break
         case 1: // Top-center
-          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
-          selectedObject.value.y = transformedPoint.y
+          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
+          selectedObject.value.position.y = transformedPoint.y
           break
         case 2: // Top-right
-          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
-          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
-          selectedObject.value.y = transformedPoint.y
+          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
+          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
+          selectedObject.value.position.y = transformedPoint.y
           break
         case 3: // Middle-right
-          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
+          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
           break
         case 4: // Bottom-right
-          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
-          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
+          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
+          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
           break
         case 5: // Bottom-center
-          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
+          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
           break
         case 6: // Bottom-left
-          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
-          selectedObject.value.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
-          selectedObject.value.x = transformedPoint.x
+          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
+          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
+          selectedObject.value.position.x = transformedPoint.x
           break
         case 7: // Middle-left
-          selectedObject.value.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
-          selectedObject.value.x = transformedPoint.x
+          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
+          selectedObject.value.position.x = transformedPoint.x
           break
       }
     }
@@ -174,10 +174,10 @@ const endDrag = () => {
   if (selectedObject.value && !selectedObject.value.isClone) {
     determineOutsideDirection(selectedObject.value)
   }
-  // 오브젝트 위치 업데이트
+  // Update position property access
   objectStore.updateObjectPosition(selectedObject.value.id, {
-    x: selectedObject.value.x,
-    y: selectedObject.value.y,
+    x: selectedObject.value.position.x,
+    y: selectedObject.value.position.y,
   })
 }
 
@@ -189,10 +189,10 @@ const startResize = (event, object, handleIndex) => {
   event.target.setPointerCapture(event.pointerId)
 
   resizeStartDimensions.value = {
-    x: object.x,
-    y: object.y,
-    width: object.width,
-    height: object.height,
+    x: object.position.x,
+    y: object.position.y,
+    width: object.size.width,
+    height: object.size.height,
     radius: object.radius,
     radiusX: object.radiusX || object.radius,
     radiusY: object.radiusY || object.radius,
@@ -200,50 +200,49 @@ const startResize = (event, object, handleIndex) => {
 }
 
 const determineOutsideDirection = (object) => {
-  // object 가 캔버스 상하좌우 어디에 있는지 확인함
   if (!svgRef.value || !object) return null
 
   const svgBounds = svgRef.value.getBoundingClientRect()
   const objectRadius = object.radius || 0
 
-  // Check if object is outside SVG boundaries
-  if (object.x + objectRadius < 0) {
+  // Update property access for position
+  if (object.position.x + objectRadius < 0) {
     objectStore.setObjectStartFrom('fromLeft')
     return 'fromLeft'
   }
-  if (object.x - objectRadius > svgBounds.width) {
+  if (object.position.x - objectRadius > svgBounds.width) {
     objectStore.setObjectStartFrom('fromRight')
     return 'fromRight'
   }
-  if (object.y + objectRadius < 0) {
+  if (object.position.y + objectRadius < 0) {
     objectStore.setObjectStartFrom('fromTop')
     return 'fromTop'
   }
-  if (object.y - objectRadius > svgBounds.height) {
+  if (object.position.y - objectRadius > svgBounds.height) {
     objectStore.setObjectStartFrom('fromBottom')
     return 'fromBottom'
   }
   objectStore.setObjectStartFrom('inside')
-  return 'inside' // Object is inside SVG
+  return 'inside'
 }
 
 const getHandlePositions = (object) => {
   if (!object) return []
 
-  if (object.type === 'circle') {
+  if (object.objectType === 'diagram' && object.diagramType === 'circle') {
     const rx = object.radiusX || object.radius
     const ry = object.radiusY || object.radius
     return HANDLE_POSITIONS.map((pos) => ({
-      x: object.x + pos.x * (rx + HANDLE_SIZE),
-      y: object.y + pos.y * (ry + HANDLE_SIZE),
+      x: object.position.x + pos.x * (rx + HANDLE_SIZE),
+      y: object.position.y + pos.y * (ry + HANDLE_SIZE),
     }))
   }
 
-  if (object.type === 'image' || object.type === 'text') {
-    const width = Number(object.width) || 0
-    const height = Number(object.height) || 0
-    const x = Number(object.x) || 0
-    const y = object.type === 'text' ? Number(object.y) - height : Number(object.y)
+  if (object.objectType === 'image' || object.objectType === 'text') {
+    const width = Number(object.size.width) || 0
+    const height = Number(object.size.height) || 0
+    const x = Number(object.position.x) || 0
+    const y = object.objectType === 'text' ? Number(object.position.y) - height : Number(object.position.y)
 
     return [
       { x, y }, // Top-left
@@ -294,11 +293,11 @@ const getHandlePositions = (object) => {
       <g :id="object.id">
         <!-- Change circle to ellipse -->
         <ellipse
-          v-if="object.type === 'circle'"
-          :cx="object.x"
-          :cy="object.y"
-          :rx="object.radiusX || object.radius"
-          :ry="object.radiusY || object.radius"
+          v-if="object.objectType === 'diagram'"
+          :cx="object.position.x"
+          :cy="object.position.y"
+          :rx="object.radius || object.size.radius"
+          :ry="object.radius || object.size.radius"
           :fill="object.fillStyle"
           @pointerdown="(e) => startDrag(e, object)"
           @click="(e) => handleClick(e, object)"
@@ -306,12 +305,12 @@ const getHandlePositions = (object) => {
         />
 
         <image
-          v-if="object.type === 'image'"
-          :x="Number(object.x) || 0"
-          :y="Number(object.y) || 0"
-          :width="Number(object.width) || 100"
-          :height="Number(object.height) || 100"
-          :href="object.imageUrl"
+          v-if="object.objectType === 'image'"
+          :x="Number(object.position.x) || 0"
+          :y="Number(object.position.y) || 0"
+          :width="Number(object.size.width) || 100"
+          :height="Number(object.size.height) || 100"
+          :href="object.url"
           preserveAspectRatio="xMidYMid meet"
           @pointerdown="(e) => startDrag(e, object)"
           @click="(e) => handleClick(e, object)"
@@ -319,9 +318,9 @@ const getHandlePositions = (object) => {
         />
 
         <text
-          v-if="object.type === 'text'"
-          :x="object.x"
-          :y="object.y"
+          v-if="object.objectType === 'text'"
+          :x="object.position.x"
+          :y="object.position.y"
           :fill="object.fillStyle"
           @pointerdown="(e) => startDrag(e, object)"
           @click="(e) => handleClick(e, object)"

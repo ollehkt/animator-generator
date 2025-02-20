@@ -23,9 +23,9 @@ const props = defineProps({
 
 <template>
   <ellipse
-    v-if="object.type === 'circle'"
-    :cx="object.x"
-    :cy="object.y"
+    v-if="object.objectType === 'diagram' && object.diagramType === 'circle'"
+    :cx="object.position.x"
+    :cy="object.position.y"
     :rx="(object.radiusX || object.radius) + 2"
     :ry="(object.radiusY || object.radius) + 2"
     fill="none"
@@ -35,7 +35,7 @@ const props = defineProps({
   />
 
   <rect
-    v-if="object.type === 'image' || object.type === 'text'"
+    v-if="object.objectType === 'image' || object.objectType === 'text'"
     :x="handlePositions[0].x"
     :y="handlePositions[0].y"
     :width="handlePositions[2].x - handlePositions[0].x"

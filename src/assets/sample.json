@@ -1,0 +1,153 @@
+{
+  "objectJSON": [
+    {
+      "objectData": {
+        "uuid": "obj-a123",
+        "objcetName": "유저가지정한객체이름이들어갑니다ex 확인버튼",
+        "objectType": "diagram",
+        "diagramType": "circle",
+        "url": null,
+        "text": null,
+        "position": {
+          "x": 320,
+          "y": 400
+        },
+        "style": {
+          "background": "#825feb",
+          "color": "#825feb",
+          "opacity": 100
+        },
+        "size": {
+          "width": 100,
+          "height": 100
+        }
+      },
+      "animationData": [
+        {
+          "triggerType": "click",
+          "animation": [
+            {
+              "triggerTarget": null,
+              "actionType": "move",
+              "points": [
+                { "x": 400, "y": 100 },
+                { "x": 300, "y": 200 }
+              ],
+              "ease": "linear",
+              "duration": 2,
+              "delay": 0,
+              "count": null,
+              "direction": "normal",
+              "fillMode": null,
+              "actionSetting": {
+                "moveType": "line",
+                "curviness": 1.5
+              }
+            },
+            {
+              "triggerTarget": "svg-da3k1nk5ljk2l4-34nkl1j3-123",
+              "actionType": "move",
+              "points": [
+                { "x": 400, "y": 100 },
+                { "x": 300, "y": 200 }
+              ],
+              "ease": "linear",
+              "duration": 2,
+              "delay": 0,
+              "count": null,
+              "direction": "normal",
+              "fillMode": null,
+              "actionSetting": {
+                "moveType": "line",
+                "curviness": 1.5
+              }
+            }
+          ],
+          "isSimultaneousness": true,
+          "callbackFunction": "preprocessTestFunction"
+        },
+        {
+          "triggerType": "dblclick",
+          "animation": [
+            {
+              "triggerTarget": null,
+              "actionType": "scale",
+              "points": null,
+              "ease": "linear",
+              "duration": 2,
+              "delay": 0,
+              "count": null,
+              "direction": "normal",
+              "fillMode": null,
+              "actionSetting": { "scaleMagnification": 3 }
+            }
+          ],
+          "isSimultaneousness": false,
+          "callbackFunction": null
+        },
+        {
+          "triggerType": "mouseover",
+          "animation": [
+            {
+              "triggerTarget": "obj-12va1l3al32jaoc1",
+              "actionType": "rotate",
+              "points": null,
+              "ease": "ease-in-out",
+              "duration": 2,
+              "delay": 2,
+              "count": null,
+              "fillMode": null,
+              "actionSetting": {
+                "degree": 45
+              }
+            }
+          ],
+          "isSimultaneousness": false,
+          "callbackFunction": null
+        },
+        {
+          "triggerType": "blur",
+          "animation": [
+            {
+              "triggerTarget": null,
+              "actionType": "scale",
+              "points": null,
+              "ease": "linear",
+              "duration": 2,
+              "delay": 0,
+              "count": null,
+              "direction": "normal",
+              "fillMode": null,
+              "actionSetting": {
+                "scaleMagnification": 1.5
+              }
+            }
+          ],
+          "isSimultaneousness": false,
+          "callbackFunction": null
+        },
+        {
+          "triggerType": "load",
+          "animation": [
+            {
+              "triggerTarget": null,
+              "actionType": "scale",
+              "points": null,
+              "ease": "linear",
+              "duration": 2,
+              "delay": 0,
+              "count": null,
+              "direction": "normal",
+              "fillMode": null,
+              "actionSetting": {
+                "scaleMagnification": 1.5
+              }
+            }
+          ],
+          "isSimultaneousness": false,
+          "callbackFunction": null
+        }
+      ]
+    }
+  ]
+}
