@@ -61,6 +61,7 @@ watch(
         :range-value="Math.abs(rotateConfig.startAngle)"
         :updateRangeValue="updateRotateConfig"
         :unit="rotateConfig.unit"
+        :max="360"
       />
     </div>
     <!-- 방향 -->

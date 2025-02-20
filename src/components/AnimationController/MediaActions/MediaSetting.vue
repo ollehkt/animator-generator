@@ -1,12 +1,45 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useControllerStore } from '@/store'
+import { storeToRefs } from 'pinia'
 
+import RangeInput from '@/components/Common/RangeInput.vue'
+
+const controllerStore = useControllerStore()
+const { selectedActionType } = storeToRefs(controllerStore)
+
+const { mediaList } = storeToRefs(controllerStore)
+const volume = ref(50)
 const audioConfig = ref([
-  { label: 'Fade In', value: 0.5, unit: 's' },
-  { label: 'Fade Out', value: 0.5, unit: 's' },
-  { label: 'Delay', value: 0, unit: 's' },
-  { label: 'Loop', value: false, boolean: true },
+  {
+    label: 'Fade In',
+    value: 0.5,
+    unit: 's',
+    showOn: ['play'],
+  },
+  {
+    label: 'Fade Out',
+    value: 0.5,
+    unit: 's',
+    showOn: ['play', 'mute', 'pause'],
+  },
+  {
+    label: 'Delay',
+    value: 0,
+    unit: 's',
+    showOn: ['play', 'mute', 'pause', 'volume'],
+  },
+  {
+    label: 'Loop',
+    value: false,
+    boolean: true,
+    showOn: ['play'],
+  },
 ])
+
+const filteredAudioConfig = computed(() => {
+  return audioConfig.value.filter((item) => item.showOn.includes(selectedActionType.value))
+})
 
 const toggleLoop = () => {
   const loopConfig = audioConfig.value.find((item) => item.label === 'Loop')
@@ -14,11 +47,21 @@ const toggleLoop = () => {
     loopConfig.value = !loopConfig.value
   }
 }
+
+const updateRangeValue = (value) => {
+  volume.value = Number(value)
+}
 </script>
 
 <template>
   <div class="flex flex-col gap-4">
-    <div v-for="item in audioConfig" :key="item.label" >
+    <RangeInput
+      v-if="selectedActionType === 'volume'"
+      :range-value="volume"
+      :updateRangeValue="updateRangeValue"
+      :unit="'%'"
+    />
+    <div v-for="item in filteredAudioConfig" :key="item.label">
       <!-- 반복재생 -->
       <p v-if="item.boolean" class="flex items-center gap-2">
         <label class="pl-1 text-xs text-gray-400">반복재생</label>

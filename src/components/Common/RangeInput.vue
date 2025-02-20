@@ -16,6 +16,11 @@ const props = defineProps({
     type: Function,
     default: () => {},
   },
+
+  max: {
+    type: Number,
+    default: 100,
+  },
 })
 
 const rangeInput = ref(null)
@@ -31,9 +36,10 @@ const setRangeValue = (e) => {
   target.style.background =
     'linear-gradient(to right, #4f46E5 0%, #4f46E5 ' +
     gradientValue * value +
-    '%, rgb(236, 236, 236) ' +
+    '%, rgb(204, 204, 204) ' +
     gradientValue * value +
-    '%, rgb(236, 236, 236) 100%)'
+    '%, rgb(204, 204, 204) 100%)'
+
 
   updateIndicatorPosition()
   props.updateRangeValue(value)
@@ -58,7 +64,7 @@ const updateIndicatorPosition = () => {
 }
 
 const computedUnit = computed(() => {
-  return props.unit === 'deg' ? '°' : 'px'
+  return props.unit === 'deg' ? '°' : props.unit
 })
 // Initialize the range value on mount
 onMounted(() => {
@@ -73,8 +79,8 @@ onMounted(() => {
         @input="setRangeValue($event)"
         type="range"
         :value="rangeValue"
-        min="0"
-        max="360"
+        :min="0"
+        :max="max"
         class="w-full slider"
       />
       <!-- <span ref="indicator" class="indicator">{{ rangeValue }}</span> -->
@@ -119,7 +125,7 @@ label.customRange > .slider::-webkit-slider-thumb {
   cursor: pointer;
 }
 
-label.customRange > .indicator {
+/* label.customRange > .indicator {
   width: 54px;
   height: 28px;
   position: absolute;
@@ -133,5 +139,5 @@ label.customRange > .indicator {
   line-height: 28px;
   text-align: center;
   border-radius: 8px;
-}
+} */
 </style>

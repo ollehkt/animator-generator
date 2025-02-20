@@ -21,3 +21,4 @@ const { mediaList } = storeToRefs(objectStore)
     </p>
   </div>
 </template>
+  
