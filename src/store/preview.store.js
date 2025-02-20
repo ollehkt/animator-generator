@@ -5,41 +5,52 @@ import { storeToRefs } from 'pinia'
 
 export const usePreviewStore = defineStore('preview', () => {
   const objectStore = useObjectStore()
-  const controllerStore = useControllerStore()
-  // const { selectedObject } = storeToRefs(objectStore)
+  const { objects } = storeToRefs(objectStore)
 
   const objectJson = ref(null)
 
   const setObjectJson = () => {
+    if (!objects.value || objects.value.length === 0) {
+      objectJson.value = { objectJSON: [] }
+      return
+    }
+
     objectJson.value = {
-      objectJSON: objectStore.objects.value.map(obj => ({
-        objectData: {
-          uuid: obj?.id || 'object-default',
-          objectName: obj?.name || '',
-          objectType: 'diagram',
-          diagramType: obj?.type || 'circle',
-          url: '',
-          text: '',
-          points: {
-            x: obj?.x || 0,
-            y: obj?.y || 0
+      objectJSON: objects.value.map((obj) => {
+        if (obj.objectActionList && obj.objectActionList.length > 0) {
+          obj.objectActionList.forEach((action) => {
+            const animationData = action.animation[0]
+          })
+        }
+
+        return {
+          objectData: {
+            uuid: obj.id,
+            objectName: obj.name,
+            objectType: obj.objectType,
+            diagramType: obj.diagramType,
+            points: {
+              x: obj.position?.x || 0,
+              y: obj.position?.y || 0,
+            },
+            background: obj.fillStyle,
+            size: {
+              width: obj.size?.width || 100,
+              height: obj.size?.height || 100,
+            },
+            opacity: obj.opacity || 100,
+            color: obj.fillStyle,
+            text: obj.text || '',
+            url: obj.url || '',
           },
-          background: obj?.fillStyle || '#825feb',
-          size: {
-            width: obj?.radius ? obj.radius * 2 : 100,
-            height: obj?.radius ? obj.radius * 2 : 100
-          },
-          opacity: 100,
-          color: obj?.fillStyle || '#825feb'
-        },
-        animationData: obj?.objectActionList || []
-      }))
+          animationData: obj.objectActionList || [],
+        }
+      }),
     }
   }
-  
+
   return {
     objectJson,
-    setObjectJson
+    setObjectJson,
   }
-  
 })

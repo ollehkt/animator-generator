@@ -204,6 +204,40 @@ export const useObjectStore = defineStore('object', () => {
         //   fillMode: null,
 
         // })),
+        animation: actionTargetList.value.map((target) => {
+          const animData = {
+            triggerTarget: target.id || null,
+            triggerTargetName: target.name || null,
+            actionType: selectedActionType.value,
+            ease: animationConfig.value.easing,
+            duration: animationConfig.value.duration,
+            delay: animationConfig.value.delay,
+            fillMode: null,
+          }
+
+          // 액션 타입에 따라 필요한 속성 추가
+          switch (selectedActionType.value) {
+            case 'translate':
+              animData.targetPOS = {
+                x: animationConfig.value.x,
+                y: animationConfig.value.y,
+              }
+              break
+            case 'rotate':
+              animData.rotate = animationConfig.value.rotate
+              break
+            case 'scale':
+              animData.scaleStart = animationConfig.value.scaleStart
+              animData.scaleEnd = animationConfig.value.scaleEnd
+              break
+            case 'opacity':
+              animData.opacityStart = animationConfig.value.opacityStart
+              animData.opacityEnd = animationConfig.value.opacityEnd
+              break
+          }
+
+          return animData
+        }),
       }
 
       targetObject.objectActionList.push(newAnimation)

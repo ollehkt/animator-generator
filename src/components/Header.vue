@@ -9,6 +9,7 @@ const objectStore = useObjectStore()
 const controllerStore = useControllerStore()
 const { showSourcePreview } = storeToRefs(controllerStore)
 const { selectedObject } = storeToRefs(objectStore)
+const { objects } = storeToRefs(objectStore)
 
 const headerButtons = [
   {
@@ -50,15 +51,16 @@ const loadProject = () => {
 }
 
 const openPreview = () => {
-  window.open('/preview', '_blank')
+  if (objects.value && objects.value.length > 0) {
+    return router.push('/preview')
+  }
+
+  return alert('미리보기할 객체가 없습니다.')
 }
 
 const handleAlign = (type) => {
   objectStore.alignObject(type)
 }
-
-
-
 </script>
 <template>
   <header
@@ -79,7 +81,7 @@ const handleAlign = (type) => {
       <button
         v-for="align in OBJECT_ALIGN.slice(3)"
         :key="align.id"
-        class="mini-btn !bg-transparent text-[#ccc] hover:text-white  "
+        class="mini-btn !bg-transparent text-[#ccc] hover:text-white"
         @click="handleAlign(align.type)"
         v-html="align.icon"
       ></button>
@@ -103,6 +105,5 @@ const handleAlign = (type) => {
       </svg>
       {{ button.koreanLabel }}
     </button>
-  
   </header>
 </template>
