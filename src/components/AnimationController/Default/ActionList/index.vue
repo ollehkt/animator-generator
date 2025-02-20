@@ -40,8 +40,7 @@ const handleAddAction = () => {
 <template>
   <div class="overflow-hidden text-gray-200 bg-gray-800 border border-gray-700 rounded-lg">
     <div class="p-2 bg-gray-700 border-b border-gray-600">
-      <h3 class="m-0 text-xs font-medium">애니메이션 목록</h3>
-      뷰포트기준이니? : {{ isViewportAction }}
+      <h3 class="m-0 text-xs font-medium">애니메이션 목록</h3>      
     </div>  
     <div class="p-4">
       <button @click="handleAddAction" class="justify-center w-full btn-primary">

@@ -8,12 +8,36 @@ import AnimationPropertySetting from './AnimationPropertySetting.vue'
 
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
-const { selectedActionType, actionTargetList } = storeToRefs(controllerStore)
+const { selectedActionType, actionTargetList, isViewportAction } = storeToRefs(controllerStore)
 const { objects, selectedObject } = storeToRefs(objectStore)
 
 const triggerConfig = ref(TRIGGER_CONFIG)
 
 const computedTriggerConfig = computed(() => {
+  if (isViewportAction.value) {
+    return {
+      ...triggerConfig.value,
+      triggers: {
+        label: triggerConfig.value.triggers.label,
+        value: [
+          {
+            label: '페이지 로드',
+            value: 'pageload',
+          },
+        ],
+      },
+      triggerTarget: {
+        label: triggerConfig.value.triggerTarget.label,
+        value: [
+          {
+            id: 'page',
+            name: '페이지',
+          },
+        ],
+      },
+    }
+  }
+
   return {
     ...triggerConfig.value,
     triggerTarget: {
@@ -22,6 +46,18 @@ const computedTriggerConfig = computed(() => {
     },
   }
 })
+
+// const computedTriggerConfig = computed(() => {
+
+//   // todo viewport 기준일 경우 트리거는 페이지로드만 있고 트리거 타겟은 페이지임
+//   return {
+//     ...triggerConfig.value,
+//     triggerTarget: {
+//       label: triggerConfig.value.triggerTarget.label,
+//       value: objects.value,
+//     },
+//   }
+// })
 
 const requireActionTarget = computed(() => {
   if (!selectedActionType.value) return true
@@ -69,9 +105,9 @@ onMounted(() => {
   if (!selectedActionType.value) {
     controllerStore.setActionType('translate')
   }
-  if (!selectedObject.value && objects.value.length > 0) {
-    objectStore.selectObject(objects.value[0].id)
-  }
+  // if (!selectedObject.value && objects.value.length > 0) {
+  //   objectStore.selectObject(objects.value[0].id)
+  // }
   if (actionTargetList.value.length === 0 && objects.value.length > 0) {
     controllerStore.addActionTarget({
       id: objects.value[0].id,
