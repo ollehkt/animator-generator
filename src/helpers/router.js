@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import {
   EditorView,
   PreviewView,
+  ProjectView,
 } from '@/views'
 
 export const router = createRouter({
@@ -18,6 +19,11 @@ export const router = createRouter({
       path: '/',
       name: 'editor',
       component: EditorView,
+    },
+    {
+      path: '/project',
+      name: 'project',
+      component: ProjectView,
     },
     {
       path: '/preview',

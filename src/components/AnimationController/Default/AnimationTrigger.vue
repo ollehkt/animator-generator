@@ -49,7 +49,7 @@ const handleChange = (key, event) => {
 
 
 const goToActionList = () => {
-  controllerStore.isEditingTrigger = false
+  controllerStore.isSettingTrigger = false
 }
 
 const addActionTarget = () => {

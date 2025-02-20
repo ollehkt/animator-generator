@@ -10,7 +10,7 @@ const canvasRef = ref(null)
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
 
-const { isEditingTrigger } = storeToRefs(controllerStore)
+const { isSettingTrigger } = storeToRefs(controllerStore)
 const { selectedObject } = storeToRefs(objectStore)
 
 // Add zoom state and controls
@@ -29,7 +29,7 @@ const handleGlobalClick = (event) => {
   }
 
   if (canvasRef.value?.contains(target)) {
-    isEditingTrigger.value = false
+    isSettingTrigger.value = false
     selectedObject.value = null
 
   }

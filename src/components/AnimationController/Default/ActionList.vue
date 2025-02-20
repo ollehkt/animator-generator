@@ -7,10 +7,10 @@ import { TRIGGER_CONFIG } from '@/helpers/consts'
 const objectStore = useObjectStore()
 const controllerStore = useControllerStore()
 const { objects, selectedObject } = storeToRefs(objectStore)
-const { isEditingTrigger } = storeToRefs(controllerStore)
+const { isSettingTrigger } = storeToRefs(controllerStore)
 
 const handleAddAction = () => {
-  isEditingTrigger.value = true
+  isSettingTrigger.value = true
 }
 
 const getTriggerTypeString = (triggerType) => {
@@ -27,7 +27,6 @@ const getActionTypeString = (actionType) => {
 }
 
 const getTriggerTargetName = (data) => {
-  console.log(data, '???')
   return data.actionTargetList.length > 1
     ? data.actionTargetList[0].name + '<br> (  ... +' + data.actionTargetList.length + ' )'
     : data.actionTargetList[0].name
@@ -36,7 +35,7 @@ const getTriggerTargetName = (data) => {
 const editAction = (data) => {
   // todo 액션아이디가 필요한디
   console.log(data, '???')
-  isEditingTrigger.value = true
+  isSettingTrigger.value = true
 }
 
 const deleteAction = (data) => {
