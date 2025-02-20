@@ -47,8 +47,8 @@ const toggleStartFrom = () => {
 
 watch(startFrom, (newVal) => {
   if (selectedObject.value) {
-    selectedObject.value.x = newVal.x
-    selectedObject.value.y = newVal.y
+    selectedObject.value.position.x = newVal.x
+    selectedObject.value.position.y = newVal.y
   }
 }, { deep: true })
 </script>

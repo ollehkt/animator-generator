@@ -18,7 +18,7 @@ const drawPreview = () => {
   if (!selectedObject.value) return
 
   const obj = selectedObject.value
-  if (obj.type === 'circle') {
+  if (obj.objectType === 'diagram' && obj.diagramType === 'circle') {
     // Scale down the circle/ellipse to fit preview
     const scale = 0.8
     const centerX = canvas.width / 2
@@ -33,7 +33,7 @@ const drawPreview = () => {
     ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, Math.PI * 2)
     ctx.fillStyle = obj.fillStyle
     ctx.fill()
-  } else if (obj.type === 'text') {
+  } else if (obj.objectType === 'text') {
     // Set text properties
     ctx.font = '14px Arial'
     ctx.fillStyle = '#FFFFFF' // Default white color for text
@@ -44,25 +44,25 @@ const drawPreview = () => {
     const centerX = canvas.width / 2
     const centerY = canvas.height / 2
     ctx.fillText(obj.text, centerX, centerY)
-  } else if (obj.type === 'image') {
+  } else if (obj.objectType === 'image') {
     const img = new Image()
     img.onload = () => {
       // Calculate scaling to fit the preview while maintaining aspect ratio
       const scale = Math.min(
-        canvas.width / img.width,
-        canvas.height / img.height
+        canvas.width / obj.size.width,
+        canvas.height / obj.size.height
       ) * 0.8 // 80% of available space
 
-      const scaledWidth = img.width * scale
-      const scaledHeight = img.height * scale
+      const scaledWidth = obj.size.width * scale
+      const scaledHeight = obj.size.height * scale
       
-      // Center the image
+      // Center the image in preview
       const x = (canvas.width - scaledWidth) / 2
       const y = (canvas.height - scaledHeight) / 2
 
       ctx.drawImage(img, x, y, scaledWidth, scaledHeight)
     }
-    img.src = obj.imageUrl
+    img.src = obj.url
   }
 }
 

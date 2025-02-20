@@ -101,7 +101,10 @@ const handlePointerMove = (event) => {
     const deltaX = transformedPoint.x - resizeStartDimensions.value.x
     const deltaY = transformedPoint.y - resizeStartDimensions.value.y
 
-    if (selectedObject.value.objectType === 'diagram' && selectedObject.value.diagramType === 'circle') {
+    if (
+      selectedObject.value.objectType === 'diagram' &&
+      selectedObject.value.diagramType === 'circle'
+    ) {
       const dx = transformedPoint.x - selectedObject.value.position.x
       const dy = transformedPoint.y - selectedObject.value.position.y
 
@@ -125,21 +128,30 @@ const handlePointerMove = (event) => {
       }
     } else {
       // Complete image and text resizing for all handles
-      // console.log("handleNO=>",activeHandle.value)
+      // console.log('handleNO Iam not circle=>', activeHandle.value)
       switch (activeHandle.value) {
         case 0: // Top-left
           selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
-          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
+          selectedObject.value.size.height = Math.max(
+            20,
+            resizeStartDimensions.value.height - deltaY
+          )
           selectedObject.value.position.x = transformedPoint.x
           selectedObject.value.position.y = transformedPoint.y
           break
         case 1: // Top-center
-          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
+          selectedObject.value.size.height = Math.max(
+            20,
+            resizeStartDimensions.value.height - deltaY
+          )
           selectedObject.value.position.y = transformedPoint.y
           break
         case 2: // Top-right
           selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
-          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height - deltaY)
+          selectedObject.value.size.height = Math.max(
+            20,
+            resizeStartDimensions.value.height - deltaY
+          )
           selectedObject.value.position.y = transformedPoint.y
           break
         case 3: // Middle-right
@@ -147,14 +159,23 @@ const handlePointerMove = (event) => {
           break
         case 4: // Bottom-right
           selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
-          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
+          selectedObject.value.size.height = Math.max(
+            20,
+            resizeStartDimensions.value.height + deltaY
+          )
           break
         case 5: // Bottom-center
-          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
+          selectedObject.value.size.height = Math.max(
+            20,
+            resizeStartDimensions.value.height + deltaY
+          )
           break
         case 6: // Bottom-left
           selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
-          selectedObject.value.size.height = Math.max(20, resizeStartDimensions.value.height + deltaY)
+          selectedObject.value.size.height = Math.max(
+            20,
+            resizeStartDimensions.value.height + deltaY
+          )
           selectedObject.value.position.x = transformedPoint.x
           break
         case 7: // Middle-left
@@ -181,7 +202,6 @@ const endDrag = () => {
   })
 }
 
-// 핸들러 포인터다운
 const startResize = (event, object, handleIndex) => {
   event.stopPropagation()
   isResizing.value = true
@@ -191,11 +211,17 @@ const startResize = (event, object, handleIndex) => {
   resizeStartDimensions.value = {
     x: object.position.x,
     y: object.position.y,
-    width: object.size.width,
-    height: object.size.height,
-    radius: object.radius,
-    radiusX: object.radiusX || object.radius,
-    radiusY: object.radiusY || object.radius,
+    ...(object.objectType === 'image' ||
+      (object.objectType === 'text' && {
+        width: object.size.width,
+        height: object.size.height,
+      })),
+    ...(object.objectType === 'diagram' &&
+      object.diagramType === 'circle' && {
+        radius: object.radius,
+        radiusX: object.radiusX || object.radius,
+        radiusY: object.radiusY || object.radius,
+      }),
   }
 }
 
@@ -242,7 +268,8 @@ const getHandlePositions = (object) => {
     const width = Number(object.size.width) || 0
     const height = Number(object.size.height) || 0
     const x = Number(object.position.x) || 0
-    const y = object.objectType === 'text' ? Number(object.position.y) - height : Number(object.position.y)
+    const y =
+      object.objectType === 'text' ? Number(object.position.y) - height : Number(object.position.y)
 
     return [
       { x, y }, // Top-left
@@ -293,11 +320,11 @@ const getHandlePositions = (object) => {
       <g :id="object.id">
         <!-- Change circle to ellipse -->
         <ellipse
-          v-if="object.objectType === 'diagram'"
+          v-if="object.objectType === 'diagram' && object.diagramType === 'circle'"
           :cx="object.position.x"
           :cy="object.position.y"
-          :rx="object.radius || object.size.radius"
-          :ry="object.radius || object.size.radius" 
+          :rx="object.radiusX || object.radius"
+          :ry="object.radiusY || object.radius"
           :fill="object.fillStyle"
           @pointerdown="(e) => startDrag(e, object)"
           @click="(e) => handleClick(e, object)"
