@@ -11,7 +11,7 @@ const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
 
 const { isSettingTrigger } = storeToRefs(controllerStore)
-const { selectedObject } = storeToRefs(objectStore)
+const { selectedObject, canvasSelected } = storeToRefs(objectStore)
 
 // Add zoom state and controls
 const zoom = ref(1)
@@ -21,7 +21,6 @@ const MAX_ZOOM = 2 //200%
 //전역 클릭 이벤트
 const handleGlobalClick = (event) => {
   const { target } = event
-
   // 타겟이 핸들인 경우
   if (target.hasAttribute('data-direction')) {
     const direction = target.getAttribute('data-direction')
@@ -30,8 +29,8 @@ const handleGlobalClick = (event) => {
 
   if (canvasRef.value?.contains(target)) {
     isSettingTrigger.value = false
-    selectedObject.value = null
-
+    objectStore.initSelectedObject()
+    // selectedObject.value = null
   }
 }
 
@@ -97,6 +96,10 @@ const updateZoom = (newZoom) => {
   zoom.value = newZoom
 }
 
+const handleClickCanvas = () => {
+  objectStore.canvasSelected = true
+}
+
 onMounted(() => {
   window.addEventListener('click', handleGlobalClick)
   window.addEventListener('keydown', handleKeyDown)
@@ -118,6 +121,7 @@ onUnmounted(() => {
   >
     <ZoomControls :zoom="zoom" :updateZoom="updateZoom" />
     <div
+      @click="handleClickCanvas"
       class="transform-origin-center"
       :style="{
         transform: `scale(${zoom})`,

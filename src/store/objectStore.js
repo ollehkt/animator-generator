@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
+
 export const useObjectStore = defineStore('object', () => {
   // State
   const objects = ref([])
@@ -83,6 +84,11 @@ export const useObjectStore = defineStore('object', () => {
    * @param {string} objectId
    */
   const selectObject = (objectId) => {
+    // todo action 으로 따로 정리!!
+    const controllerStore = useControllerStore()
+    const { isViewportAction } = storeToRefs(controllerStore)
+    isViewportAction.value = false
+
     selectedObject.value = null
     const object = objects.value.find((obj) => obj.id === objectId)
     selectedObject.value = object || null
@@ -202,7 +208,6 @@ export const useObjectStore = defineStore('object', () => {
 
       targetObject.objectActionList.push(newAnimation)
       controllerStore.isSettingTrigger = false
-      
     }
   }
 
@@ -215,7 +220,10 @@ export const useObjectStore = defineStore('object', () => {
   }
 
   const initSelectedObject = () => {
+    // deselct object and init viewport ref true
     selectedObject.value = null
+    const controllerStore = useControllerStore()
+    controllerStore.initViewportAction()
   }
 
   const setObjectStartFrom = (startFrom) => {

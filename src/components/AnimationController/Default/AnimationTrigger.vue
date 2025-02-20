@@ -69,10 +69,10 @@ onMounted(() => {
   if (!selectedActionType.value) {
     controllerStore.setActionType('translate')
   }
-  if (!selectedObject.value) {
+  if (!selectedObject.value && objects.value.length > 0) {
     objectStore.selectObject(objects.value[0].id)
   }
-  if (actionTargetList.value.length === 0) {
+  if (actionTargetList.value.length === 0 && objects.value.length > 0) {
     controllerStore.addActionTarget({
       id: objects.value[0].id,
       name: objects.value[0].name,

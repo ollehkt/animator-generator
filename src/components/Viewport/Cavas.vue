@@ -50,12 +50,14 @@ const handleClick = (event, object) => {
 
   if (object) {
     event.stopPropagation()
-    selectedObject.value = object
+    objectStore.selectObject(object.id)
+    // selectedObject.value = object
     return
   }
 
   if (event.target.tagName === 'rect' || event.target.tagName === 'svg') {
-    selectedObject.value = null
+    // selectedObject.value = null
+    objectStore.initSelectedObject()
   }
 }
 

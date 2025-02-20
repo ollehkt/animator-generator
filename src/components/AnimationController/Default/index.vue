@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useControllerStore, useObjectStore } from '@/store'
 
-import ActionList from './ActionList.vue'
+import ActionList from './ActionList/index.vue'
 import AnimationTrigger from './AnimationTrigger.vue'
 
 const controllerStore = useControllerStore()

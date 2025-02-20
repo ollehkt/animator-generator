@@ -17,6 +17,7 @@ export const useControllerStore = defineStore('controller', () => {
   //   label: 'Object',
   // })
   const isLayersMinimized = ref(false)
+  const isViewportAction = ref(true) // 오브젝트는 생성이나 선택전 뷰포트만 존재
 
   // 액션 타입(페이지이동, 좌표로 이동...)
   const showSourcePreview = ref(false)
@@ -87,23 +88,13 @@ export const useControllerStore = defineStore('controller', () => {
     animationConfig.value[key] = value
   }
 
-  const resetToInitialState = (element, initialState) => {
-    // Reset position
-    selectedObject.value.x = initialState.x
-    selectedObject.value.y = initialState.y
-
-    // Reset all transforms and opacity
-    element.style.transform = ''
-    element.style.opacity = initialState.opacity
-
-    // Clear all dataset values
-    element.dataset.translate = `${initialState.x}px, ${initialState.y}px`
-    element.dataset.scale = '1'
-    element.dataset.rotate = '0deg'
+  const initViewportAction = () => {
+    isViewportAction.value = true
   }
 
   return {
     isLayersMinimized,
+    isViewportAction, // 오브젝트가 없는데 액션추가 하면 화면 기준 액션 생성
     showSourcePreview,
     selectedTriggerType,
     selectedActionType,
@@ -121,5 +112,6 @@ export const useControllerStore = defineStore('controller', () => {
     addActionTarget,
     removeActionTarget,
     updateAnimationConfig,
+    initViewportAction,
   }
 })
