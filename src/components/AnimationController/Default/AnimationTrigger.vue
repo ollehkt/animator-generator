@@ -8,7 +8,13 @@ import AnimationPropertySetting from './AnimationPropertySetting.vue'
 
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
-const { selectedActionType, actionTargetList, isViewportAction } = storeToRefs(controllerStore)
+const {
+  selectedActionType,
+  selectedTriggerTarget,
+  actionTargetList,
+  isViewportAction,
+  selectedTriggerType,
+} = storeToRefs(controllerStore)
 const { objects, selectedObject } = storeToRefs(objectStore)
 
 const triggerConfig = ref(TRIGGER_CONFIG)
@@ -89,13 +95,27 @@ const addThisAnimation = () => {
   objectStore.updateObjectAnimation()
 }
 
+const handleChangeActionTarget = (index, event) => {
+  const actionTargetId = event.target.value
+  const actionTargetObj = objects.value.find((obj) => obj.id === actionTargetId)
+
+  if (actionTargetObj) {
+    controllerStore.updateActionTarget(index, {
+      id: actionTargetObj.id,
+      name: actionTargetObj.name,
+    })
+  }
+}
+
 onMounted(() => {
   if (!selectedActionType.value) {
     controllerStore.setActionType('translate')
   }
-  // if (!selectedObject.value && objects.value.length > 0) {
-  //   objectStore.selectObject(objects.value[0].id)
-  // }
+
+  if (!selectedTriggerTarget.value) {
+    controllerStore.setTriggerTarget(objects.value[0].id)
+  }
+
   if (actionTargetList.value.length === 0 && objects.value.length > 0) {
     controllerStore.addActionTarget({
       id: objects.value[0].id,
@@ -136,7 +156,12 @@ onUnmounted(() => {
         <label class="pl-1 text-xs text-gray-400">{{ config.label }}</label>
         <select class="select-dark" @change="handleChange(key, $event)">
           <template v-if="Array.isArray(config.value)">
-            <option v-for="item in config.value" :key="item.id" :value="item.value">
+            <option
+              v-for="item in config.value"
+              :key="item.id"
+              :value="key === 'triggerTarget' ? item.id : item.value"
+            >
+              <!-- :value="item.value" -->
               {{ item.label || item.name }}
             </option>
           </template>
@@ -177,7 +202,11 @@ onUnmounted(() => {
             </button>
           </div>
           <div v-for="(item, index) in actionTargetList" :key="item.id" class="flex gap-2">
-            <select class="w-full select-dark" v-model="item.id">
+            <select
+              class="w-full select-dark"
+              :value="item.id"
+              @change="handleChangeActionTarget(index, $event)"
+            >
               <option v-for="obj in objects" :key="obj.id" :value="obj.id">
                 {{ obj.name }}
               </option>

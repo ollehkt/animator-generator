@@ -26,12 +26,12 @@ export const useControllerStore = defineStore('controller', () => {
 
   // 액션리스트에 들어가야 하는 필수 값 ==================================
   const selectedTriggerType = ref('click')
-  const selectedTriggerTarget = ref([])
+  const selectedTriggerTarget = ref(null)
   const selectedActionType = ref('translate')
   const actionTargetList = ref([])
 
   //==============================================================
-  
+
   const targetPOS = ref({
     x: 0,
     y: 0,
@@ -80,6 +80,10 @@ export const useControllerStore = defineStore('controller', () => {
     actionTargetList.value.push(object)
   }
 
+  const updateActionTarget = (index, payload) => {
+    actionTargetList.value[index] = payload
+  }
+
   const removeActionTarget = (index) => {
     actionTargetList.value.splice(index, 1)
   }
@@ -110,6 +114,7 @@ export const useControllerStore = defineStore('controller', () => {
     setTriggerTarget,
     setActionType,
     addActionTarget,
+    updateActionTarget,
     removeActionTarget,
     updateAnimationConfig,
     initViewportAction,

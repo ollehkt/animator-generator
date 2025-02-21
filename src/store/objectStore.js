@@ -11,11 +11,12 @@ export const useObjectStore = defineStore('object', () => {
   const objectStartFrom = ref(null)
   const viewportActionList = ref([])
 
-  const generateUniqueId = () => {
+  const generateUniqueId = (object) => {
     let fullId, shortId
+    const objectName = object.diagramType || object.objectType
     do {
       const uuid = crypto.randomUUID()
-      fullId = `object-${uuid}`
+      fullId = `${objectName}-${uuid}`
       shortId = `${uuid.slice(0, 8)}`
     } while (objects.value.some((obj) => obj.id === fullId))
     return { fullId, shortId }
@@ -27,7 +28,7 @@ export const useObjectStore = defineStore('object', () => {
      * objectJson 에서 objectData에 해당하는 부분
      * objectActionList는 animationData 부분
      */
-    const { fullId, shortId } = generateUniqueId()
+    const { fullId, shortId } = generateUniqueId(object)
 
     const newObject = {
       id: fullId,
@@ -39,12 +40,12 @@ export const useObjectStore = defineStore('object', () => {
     objects.value.push(newObject)
 
     // 트리거타겟객체도 동기화
-    const controllerStore = useControllerStore()
-    const { selectedTriggerTarget } = storeToRefs(controllerStore)
-    selectedTriggerTarget.value.push({
-      id: newObject.id,
-      name: newObject.name,
-    })
+    // const controllerStore = useControllerStore()
+    // const { selectedTriggerTarget } = storeToRefs(controllerStore)
+    // selectedTriggerTarget.value.push({
+    //   id: newObject.id,
+    //   name: newObject.name,
+    // })
     return newObject.id
   }
 
@@ -69,13 +70,37 @@ export const useObjectStore = defineStore('object', () => {
   }
 
   const removeObject = (objectId) => {
+    // todo actionTargetList 에서 같은 ID 삭제
     const controllerStore = useControllerStore()
     const { isSettingTrigger } = storeToRefs(controllerStore)
 
+    // objects 에서 삭제
     const index = objects.value.findIndex((obj) => obj.id === objectId)
     if (index !== -1) {
       objects.value.splice(index, 1)
     }
+
+    // 각 오브젝트에서 actionTargetList 에서 같은 ID 삭제
+    objects.value.forEach((obj) => {
+      if (obj.objectActionList) {
+        obj.objectActionList = obj.objectActionList
+          .map((action) => {
+            // actionTargetList 배열에서 특정 id를 가진 target만 제거
+            const filteredTargets = action.actionTargetList.filter(
+              (target) => target.id !== objectId
+            );
+            
+            // 나머지 속성들은 그대로 유지하면서 필터링된 actionTargetList만 업데이트
+            return {
+              ...action,
+              actionTargetList: filteredTargets,
+            };
+          })
+          // actionTargetList가 완전히 비어있는 action만 제거
+          .filter((action) => action.actionTargetList.length > 0);
+      }
+    })
+
     isSettingTrigger.value = false
     initSelectedObject()
   }
@@ -175,9 +200,9 @@ export const useObjectStore = defineStore('object', () => {
       isViewportAction,
     } = storeToRefs(controllerStore)
 
-    const createAnimationConfig = (triggerType, triggerTarget) => ({
-      triggerType,
-      triggerTarget,
+    const createAnimationConfig = () => ({
+      triggerType: selectedTriggerType.value,
+      triggerTarget: selectedTriggerTarget.value,
       actionType: selectedActionType.value,
       actionTargetList: actionTargetList.value,
       isSimultaneousness: true,
@@ -204,13 +229,11 @@ export const useObjectStore = defineStore('object', () => {
       }
     }
 
-
     controllerStore.isSettingTrigger = false
   }
 
   // // 오브젝트 애니메이션 업데이트 (이 액션을 저장)
   // const updateObjectAnimation = () => {
-  
 
   //       // 액션 타겟리스트 이거는 똑같은거 값을 두애니메이션으로 넣을때
   //       // animation: actionTargetList.value.map((target) => ({
@@ -222,7 +245,7 @@ export const useObjectStore = defineStore('object', () => {
   //       //   delay: animationConfig.value.delay,
   //       //   fillMode: null,
 
-  //       // })), 
+  //       // })),
   //       animation: actionTargetList.value.map((target) => {
   //         const animData = {
   //           triggerTarget: target.id || null,
