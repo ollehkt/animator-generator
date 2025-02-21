@@ -85,6 +85,6 @@ const deleteAction = (data) => {
     v-else
     class="flex items-center justify-center h-20 mt-4 text-xs text-gray-400 border border-gray-700 border-dashed rounded-md"
   >
-    등록된 애니메이션이 없습니다 (object)
+    등록된 애니메이션이 없습니다
   </div>
 </template>

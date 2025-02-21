@@ -15,8 +15,6 @@ const handleAddAction = () => {
   isSettingTrigger.value = true
 }
 
-
-
 /**
  * 페이지액션을 어떻게 처리하냐
  * 페이지액션(global)
@@ -39,10 +37,19 @@ const handleAddAction = () => {
 
 <template>
   <div class="overflow-hidden text-gray-200 bg-gray-800 border border-gray-700 rounded-lg">
-    <div class="p-2 bg-gray-700 border-b border-gray-600">
-      <h3 class="m-0 text-xs font-medium">애니메이션 목록</h3>      
-    </div>  
-    <div class="p-4">
+    <div class="flex items-center justify-between p-2 bg-gray-700 border-b border-gray-600">
+      <h3 class="m-0 text-xs font-medium">애니메이션 목록</h3>
+      <p class="pr-4 text-xs text-gray-400">
+        {{ isViewportAction ? 'Viewport Action' : 'Object Action' }}
+      </p>
+    </div>
+    <div
+      v-if="objects.length === 0"
+      class="flex flex-col items-center justify-center h-24 gap-2 p-6 m-4 text-xs text-gray-400 border border-gray-700 border-dashed rounded-md"
+    >
+      오브젝트가 없습니다.
+    </div>
+    <div v-else class="p-4">
       <button @click="handleAddAction" class="justify-center w-full btn-primary">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -60,9 +67,9 @@ const handleAddAction = () => {
         </svg>
         액션 추가
       </button>
-    
-      <ObjectActionList v-if="!isViewportAction"/>
-      <ViewportActionList v-else/>
+
+      <ObjectActionList v-if="!isViewportAction" />
+      <ViewportActionList v-else />
     </div>
   </div>
 </template>
