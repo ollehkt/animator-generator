@@ -1,10 +1,13 @@
 <script setup>
 import { useControllerStore } from '@/store'
+import { storeToRefs } from 'pinia'
+
 import CurrentObject from './CurrentObject.vue'
 import ObjectList from './ObjectList.vue'
 import MediaList from './MediaList.vue'
 
 const controllerStore = useControllerStore()
+const { isLayersMinimized } = storeToRefs(controllerStore)
 
 const minimizeLayers = () => {
   controllerStore.toggleLayersMinimized()
@@ -12,9 +15,9 @@ const minimizeLayers = () => {
 </script>
 
 <template>
-  <div>
+  <div :class="[isLayersMinimized ? 'opacity-0' : 'opacity-100']">
     <div class="h-8 bg-[#1E1E1E] flex items-center px-4 border-b border-[#2A2A2A]">
-      <span class="text-[#CCC] text-sm">Layers</span>
+      <span class="text-[#CCC] text-sm">Layers</span>{{  }}
       <button 
         @click="minimizeLayers"
         class="ml-auto group"

@@ -22,23 +22,23 @@ const getActionTypeString = (actionType) => {
 </script>
 <template>
   <div class="mt-4 border1">
+    <p class="pl-2 mb-1 text-xs font-medium">페이지 로드</p>
     <ul v-if="viewportActionList.length" class="mt-2 space-y-2">
       <li
         v-for="action in viewportActionList"
         :key="action.id"
-        class="h-[58px] p-3 transition-colors duration-200 border border-gray-700 rounded-md cursor-pointer hover:bg-gray-700"
+        class="p-3 transition-colors duration-200 border border-gray-700 rounded-md cursor-pointer hover:bg-gray-700"
       >
         <div class="flex items-center justify-between h-full">
           <div class="flex items-center gap-3 grow">
-            <span class="w-[70px] text-xs font-medium text-white shrink-0">
-              {{ getActionTypeString(action.actionType) }}
-            </span>
-            <span class="w-[2px] h-4 bg-gray-400 rounded-full"></span>
             <span
-              class="ml-auto grow text-xs font-medium text-[#CCC] pl-1"
+              class="basis-1/2 text-xs font-medium text-[#CCC] pl-1 overflow-hidden whitespace-nowrap text-ellipsis block"
               v-html="getActionTargetName(action)"
             ></span>
-            
+            <span class="w-[2px] h-4 bg-gray-400 rounded-full"></span>
+            <span class="text-xs font-medium basis-1/2">
+              {{ getActionTypeString(action.actionType) }}
+            </span>
           </div>
           <button class="px-2 text-gray-400 rounded hover:text-red-400">
             <svg
