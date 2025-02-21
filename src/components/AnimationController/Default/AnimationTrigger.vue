@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useControllerStore, useObjectStore, useAnimationStore } from '@/store'
+import { useControllerStore, useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { TRIGGER_CONFIG } from '@/helpers/consts'
 
@@ -8,7 +8,6 @@ import AnimationPropertySetting from './AnimationPropertySetting.vue'
 
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
-const animationStore = useAnimationStore()
 const { selectedActionType, actionTargetList, isViewportAction } = storeToRefs(controllerStore)
 const { objects, selectedObject } = storeToRefs(objectStore)
 
@@ -87,8 +86,7 @@ const handleDeleteActionTarget = (index) => {
 }
 
 const addThisAnimation = () => {
-  // objectStore.updateObjectAnimation()
-  animationStore.updatePreviewAnimation()
+  objectStore.updateObjectAnimation()
 }
 
 onMounted(() => {

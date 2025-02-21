@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import { useAnimationStore } from '@/store'
 
 export const useObjectStore = defineStore('object', () => {
   // State
@@ -164,97 +165,48 @@ export const useObjectStore = defineStore('object', () => {
     }
   }
 
-  // const updateObjectAnimation = () => {
-  //   const controllerStore = useControllerStore()
-  //   const {
-  //     selectedTriggerType,
-  //     selectedTriggerTarget,
-  //     selectedActionType,
-  //     actionTargetList,
-  //     animationConfig,
-  //     isViewportAction,
-  //   } = storeToRefs(controllerStore)
+  const updateObjectAnimation = () => {
+    const controllerStore = useControllerStore()
+    const animationStore = useAnimationStore()
+    const {
+      selectedTriggerType,
+      selectedTriggerTarget,
+      selectedActionType,
+      actionTargetList,
+      animationConfig,
+      isViewportAction,
+    } = storeToRefs(controllerStore)
 
-  //   //       // 액션 타겟리스트 이거는 똑같은거 값을 두애니메이션으로 넣을때
-  //   //       // animation: actionTargetList.value.map((target) => ({
-  //   //       //   triggerTarget: target.id || null,
-  //   //       //   triggerTargetName: target.name || null,
-  //   //       //   actionType: selectedActionType.value,
-  //   //       //   ease: animationConfig.value.easing,
-  //   //       //   duration: animationConfig.value.duration,
-  //   //       //   delay: animationConfig.value.delay,
-  //   //       //   fillMode: null,
+    //   액션 타겟리스트 이거는 똑같은거 값을 두애니메이션으로 넣을때
+    // animation: actionTargetList.value.map((target) => ({
+    //   triggerTarget: target.id || null,
+    //   triggerTargetName: target.name || null,
+    //   actionType: selectedActionType.value,
+    //   ease: animationConfig.value.easing,
+    //   duration: animationConfig.value.duration,
+    //   delay: animationConfig.value.delay,
+    //   fillMode: null,
 
-  //   //       // })),
+    const newAnimation = animationStore.createAnimationConfig(
+      selectedTriggerType.value,
+      selectedTriggerTarget.value,
+      actionTargetList.value,
+      selectedActionType.value,
+      animationConfig.value
+    )
 
-  //   const createAnimationConfig = (triggerType, triggerTarget) => {
-  //     const animationData = actionTargetList.value.map((target) => {
-  //       const animData = {
-  //         triggerTarget: target.id || null,
-  //         triggerTargetName: target.name || null,
-  //         actionType: selectedActionType.value,
-  //         ease: animationConfig.value.easing,
-  //         duration: animationConfig.value.duration,
-  //         delay: animationConfig.value.delay,
-  //         fillMode: null,
-  //       }
+    if (isViewportAction.value) {
+      viewportActionList.value.push(newAnimation)
+    } else {
+      const objectId = selectedObject.value?.id
+      const targetObject = objects.value.find((obj) => obj.id === objectId)
+      if (targetObject) {
+        targetObject.objectActionList.push(newAnimation)
+      }
+    }
 
-  //       // 액션 타입에 따라 필요한 속성 추가
-  //       switch (selectedActionType.value) {
-  //         case 'translate':
-  //           animData.targetPOS = {
-  //             x: animationConfig.value.x,
-  //             y: animationConfig.value.y,
-  //           }
-  //           break
-  //         case 'rotate':
-  //           animData.rotate = animationConfig.value.rotate
-  //           break
-  //         case 'scale':
-  //           animData.scaleStart = animationConfig.value.scaleStart
-  //           animData.scaleEnd = animationConfig.value.scaleEnd
-  //           break
-  //         case 'opacity':
-  //           animData.opacityStart = animationConfig.value.opacityStart
-  //           animData.opacityEnd = animationConfig.value.opacityEnd
-  //           break
-  //       }
-  //       return animData
-  //     })
-
-  //     return {
-  //       triggerType,
-  //       triggerTarget,
-  //       actionType: selectedActionType.value,
-  //       actionTargetList: actionTargetList.value,
-  //       isSimultaneousness: true,
-  //       callbackFunction: null,
-  //       ease: animationConfig.value.easing,
-  //       duration: animationConfig.value.duration,
-  //       delay: animationConfig.value.delay,
-  //       fillMode: null,
-  //       animation: animationData,
-  //     }
-  //   }
-
-  //   if (isViewportAction.value) {
-  //     const viewportAnimation = createAnimationConfig('pageload', 'page')
-  //     viewportActionList.value.push(viewportAnimation)
-  //   } else {
-  //     const objectId = selectedObject.value?.id
-  //     const targetObject = objects.value.find((obj) => obj.id === objectId)
-
-  //     if (targetObject) {
-  //       const newAnimation = createAnimationConfig(
-  //         selectedTriggerType.value,
-  //         selectedTriggerTarget.value
-  //       )
-  //       targetObject.objectActionList.push(newAnimation)
-  //     }
-  //   }
-
-  //   controllerStore.isSettingTrigger = false
-  // }
+    controllerStore.isSettingTrigger = false
+  }
 
   const deleteObjectAnimation = (actionIndex) => {
     const objectId = selectedObject.value.id
@@ -292,7 +244,7 @@ export const useObjectStore = defineStore('object', () => {
     updateObjectPosition,
     initSelectedObject,
     setObjectStartFrom,
-    // updateObjectAnimation,
+    updateObjectAnimation,
     deleteObjectAnimation,
     alignObject,
   }
