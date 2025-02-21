@@ -99,7 +99,7 @@ const toggleVisibility = (object) => {
           @click.stop
         />
         <!-- visibility -->
-        <div @click.stop="toggleVisibility(object)" class="h-0 ml-auto mr-2 overflow-hidden group-hover:block group-hover:h-fit">
+        <div @click="toggleVisibility(object)" class="h-0 ml-auto mr-2 overflow-hidden group-hover:block group-hover:h-fit">
           <svg
             v-if="object.isVisible"
             xmlns="http://www.w3.org/2000/svg"
