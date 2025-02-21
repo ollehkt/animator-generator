@@ -48,7 +48,10 @@ const computedTriggerConfig = computed(() => {
     ...triggerConfig.value,
     triggerTarget: {
       label: triggerConfig.value.triggerTarget.label,
-      value: objects.value,
+      value: objects.value.map((obj) => ({
+        id: obj.id,
+        name: obj.name,
+      })),
     },
   }
 })
@@ -63,6 +66,8 @@ const requireActionTarget = computed(() => {
 
 const handleChange = (key, event) => {
   const { target } = event
+
+  console.log(target.value)
 
   const targetMethod = {
     triggers: () => controllerStore.setTriggerType(target.value),
@@ -108,10 +113,6 @@ const handleChangeActionTarget = (index, event) => {
 }
 
 onMounted(() => {
-  if (!selectedTriggerTarget.value) {
-    controllerStore.setTriggerTarget(objects.value[0].id)
-  }
-
   if (actionTargetList.value.length === 0 && objects.value.length > 0) {
     controllerStore.addActionTarget({
       id: objects.value[0].id,
@@ -150,7 +151,11 @@ onUnmounted(() => {
     <div class="p-4 pb-0 space-y-4">
       <p v-for="(config, key) in computedTriggerConfig" :key="key" class="flex flex-col gap-2">
         <label class="pl-1 text-xs text-gray-400">{{ config.label }}</label>
-        <select class="select-dark" @change="handleChange(key, $event)">
+        <select
+          class="select-dark"
+          @change="handleChange(key, $event)"
+          v-bind="key === 'triggerTarget' && selectedObject ? { value: selectedObject.id } : {}"
+        >
           <template v-if="Array.isArray(config.value)">
             <option
               v-for="item in config.value"

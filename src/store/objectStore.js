@@ -226,6 +226,8 @@ export const useObjectStore = defineStore('object', () => {
       fillMode: null,
     }
 
+    // console.log('actions', actions)
+
     const newAnimation = animationStore.createAnimationConfig(
       selectedTriggerType.value,
       selectedTriggerTarget.value,
@@ -234,13 +236,15 @@ export const useObjectStore = defineStore('object', () => {
       animationConfig.value
     )
 
+    // console.log('newAnimation', newAnimation)
+
     if (isViewportAction.value) {
-      viewportActionList.value.push(actions)
+      viewportActionList.value.push(newAnimation)
     } else {
       const objectId = selectedObject.value?.id
       const targetObject = objects.value.find((obj) => obj.id === objectId)
       if (targetObject) {
-        targetObject.objectActionList.push(actions)
+        targetObject.objectActionList.push(newAnimation)
       }
     }
     controllerStore.isSettingTrigger = false

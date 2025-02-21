@@ -67,6 +67,7 @@ export const useControllerStore = defineStore('controller', () => {
 
   // 트리거 타겟 설정
   const setTriggerTarget = (target) => {
+    objectStore.selectObject(target)
     selectedTriggerTarget.value = target
   }
 
