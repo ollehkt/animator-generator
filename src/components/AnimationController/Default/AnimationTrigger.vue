@@ -30,8 +30,8 @@ const computedTriggerConfig = computed(() => {
         label: triggerConfig.value.triggerTarget.label,
         value: [
           {
-            id: 'page',
-            name: '페이지',
+            label: '페이지',
+            value: 'page',
           },
         ],
       },
@@ -46,18 +46,6 @@ const computedTriggerConfig = computed(() => {
     },
   }
 })
-
-// const computedTriggerConfig = computed(() => {
-
-//   // todo viewport 기준일 경우 트리거는 페이지로드만 있고 트리거 타겟은 페이지임
-//   return {
-//     ...triggerConfig.value,
-//     triggerTarget: {
-//       label: triggerConfig.value.triggerTarget.label,
-//       value: objects.value,
-//     },
-//   }
-// })
 
 const requireActionTarget = computed(() => {
   if (!selectedActionType.value) return true
@@ -144,32 +132,28 @@ onUnmounted(() => {
     </div>
     <!-- 기본 설정: 트리거, 트리거타겟, 액션, 액션타겟 -->
     <div class="p-4 pb-0 space-y-4">
-      <template v-for="(value, key, index) in computedTriggerConfig" :key="key">
-        <p class="flex flex-col gap-2">
-          <label class="pl-1 text-xs text-gray-400">{{ value.label }}</label>
-          <!-- @change="(e) => setActionType(key, e.target.value)" -->
-          <select class="select-dark" @change="handleChange(key, $event)">
-            <!-- value 배열일 경우 -->
-            <template v-if="Array.isArray(value.value)">
-              <option v-for="item in value.value" :key="item.id" :value="item.value">
-                {{ item.label || item.name }}
+      <p v-for="(config, key) in computedTriggerConfig" :key="key" class="flex flex-col gap-2">
+        <label class="pl-1 text-xs text-gray-400">{{ config.label }}</label>
+        <select class="select-dark" @change="handleChange(key, $event)">
+          <template v-if="Array.isArray(config.value)">
+            <option v-for="item in config.value" :key="item.id" :value="item.value">
+              {{ item.label || item.name }}
+            </option>
+          </template>
+
+          <template v-else>
+            <optgroup
+              v-for="(group, groupKey) in config.value"
+              :key="groupKey"
+              :label="group.label"
+            >
+              <option v-for="item in group.value" :key="item.value" :value="item.value">
+                {{ item.label }}
               </option>
-            </template>
-            <!-- value 객체일 경우 -->
-            <template v-else>
-              <optgroup
-                v-for="(group, groupKey) in value.value"
-                :key="groupKey"
-                :label="group.label"
-              >
-                <option v-for="item in group.value" :key="item.value" :value="item.value">
-                  {{ item.label }}
-                </option>
-              </optgroup>
-            </template>
-          </select>
-        </p>
-      </template>
+            </optgroup>
+          </template>
+        </select>
+      </p>
       <!-- 액션 타겟 분리 -->
       <div v-if="requireActionTarget" class="space-y-4">
         <div class="flex flex-col gap-2">
