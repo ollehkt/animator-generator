@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useControllerStore } from '@/store'
+import { useControllerStore, useAnimationStore } from '@/store'
 import { storeToRefs } from 'pinia'
-import { useAnimationStore } from '@/store'
 
 export const useObjectStore = defineStore('object', () => {
   // State
@@ -99,6 +98,8 @@ export const useObjectStore = defineStore('object', () => {
           })
           // 액션 타겟 오브젝트다 지워지면 액션 자체를 지워버림
           .filter((action) => action.actionTargetList.length > 0)
+          // actionTargetList가 완전히 비어있는 action만 제거
+          .filter((action) => action.actionTargetList.length > 0)
       }
     })
 
@@ -192,6 +193,7 @@ export const useObjectStore = defineStore('object', () => {
 
   const updateObjectAnimation = () => {
     const controllerStore = useControllerStore()
+    const animationStore = useAnimationStore()
     const {
       selectedTriggerType,
       selectedTriggerTarget,
@@ -201,19 +203,13 @@ export const useObjectStore = defineStore('object', () => {
       isViewportAction,
     } = storeToRefs(controllerStore)
 
-    // Create the animation configuration
-    const newAnimation = {
-      triggerType: selectedTriggerType.value,
-      triggerTarget: selectedTriggerTarget.value,
-      actionType: selectedActionType.value,
-      actionTargetList: actionTargetList.value,
-      isSimultaneousness: true,
-      callbackFunction: null,
-      ease: animationConfig.value.easing,
-      duration: animationConfig.value.duration,
-      delay: animationConfig.value.delay,
-      fillMode: null,
-    }
+    const newAnimation = animationStore.createAnimationConfig(
+      selectedTriggerType.value,
+      selectedTriggerTarget.value,
+      actionTargetList.value,
+      selectedActionType.value,
+      animationConfig.value,
+    )
 
     if (isViewportAction.value) {
       viewportActionList.value.push(newAnimation)
@@ -224,7 +220,6 @@ export const useObjectStore = defineStore('object', () => {
         targetObject.objectActionList.push(newAnimation)
       }
     }
-
     controllerStore.isSettingTrigger = false
   }
 
