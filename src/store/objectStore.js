@@ -34,6 +34,7 @@ export const useObjectStore = defineStore('object', () => {
       id: fullId,
       name: `${object.diagramType || object.objectType}-${shortId}`,
       objectActionList: [], // tirgger, 타겟 객체, 액션, 액션타겟 정보
+      isVisible: true,
       ...object,
     }
 
@@ -108,7 +109,9 @@ export const useObjectStore = defineStore('object', () => {
   }
 
   /**
+   * Select an object
    * @param {string} objectId
+   * 오브젝트가 선택되면 isViewportAction = false
    */
   const selectObject = (objectId) => {
     // todo action 으로 따로 정리!!
@@ -119,6 +122,17 @@ export const useObjectStore = defineStore('object', () => {
     selectedObject.value = null
     const object = objects.value.find((obj) => obj.id === objectId)
     selectedObject.value = object || null
+  }
+
+  /**
+   * Toggle visibility of an object
+   * @param {string} objectId
+   */
+  const toggleVisibility = (objectId) => {
+    const object = objects.value.find((obj) => obj.id === objectId)
+    if (object) {
+      object.isVisible = !object.isVisible
+    }
   }
 
   // 오브젝트 정렬
@@ -282,6 +296,7 @@ export const useObjectStore = defineStore('object', () => {
     removeObject,
     removeMedia,
     selectObject,
+    toggleVisibility,
     updateObjectName,
     updateObjectPosition,
     initSelectedObject,
