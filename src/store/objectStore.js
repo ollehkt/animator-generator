@@ -89,16 +89,16 @@ export const useObjectStore = defineStore('object', () => {
             // actionTargetList 배열에서 특정 id를 가진 target만 제거
             const filteredTargets = action.actionTargetList.filter(
               (target) => target.id !== objectId
-            );
-            
+            )
+
             // 나머지 속성들은 그대로 유지하면서 필터링된 actionTargetList만 업데이트
             return {
               ...action,
               actionTargetList: filteredTargets,
-            };
+            }
           })
-          // actionTargetList가 완전히 비어있는 action만 제거
-          .filter((action) => action.actionTargetList.length > 0);
+          // 액션 타겟 오브젝트다 지워지면 액션 자체를 지워버림
+          .filter((action) => action.actionTargetList.length > 0)
       }
     })
 
@@ -192,7 +192,6 @@ export const useObjectStore = defineStore('object', () => {
 
   const updateObjectAnimation = () => {
     const controllerStore = useControllerStore()
-    const animationStore = useAnimationStore()
     const {
       selectedTriggerType,
       selectedTriggerTarget,
@@ -202,7 +201,8 @@ export const useObjectStore = defineStore('object', () => {
       isViewportAction,
     } = storeToRefs(controllerStore)
 
-    const createAnimationConfig = () => ({
+    // Create the animation configuration
+    const newAnimation = {
       triggerType: selectedTriggerType.value,
       triggerTarget: selectedTriggerTarget.value,
       actionType: selectedActionType.value,
@@ -213,7 +213,7 @@ export const useObjectStore = defineStore('object', () => {
       duration: animationConfig.value.duration,
       delay: animationConfig.value.delay,
       fillMode: null,
-    })
+    }
 
     if (isViewportAction.value) {
       viewportActionList.value.push(newAnimation)
@@ -227,61 +227,6 @@ export const useObjectStore = defineStore('object', () => {
 
     controllerStore.isSettingTrigger = false
   }
-
-  // // 오브젝트 애니메이션 업데이트 (이 액션을 저장)
-  // const updateObjectAnimation = () => {
-
-  //       // 액션 타겟리스트 이거는 똑같은거 값을 두애니메이션으로 넣을때
-  //       // animation: actionTargetList.value.map((target) => ({
-  //       //   triggerTarget: target.id || null,
-  //       //   triggerTargetName: target.name || null,
-  //       //   actionType: selectedActionType.value,
-  //       //   ease: animationConfig.value.easing,
-  //       //   duration: animationConfig.value.duration,
-  //       //   delay: animationConfig.value.delay,
-  //       //   fillMode: null,
-
-  //       // })),
-  //       animation: actionTargetList.value.map((target) => {
-  //         const animData = {
-  //           triggerTarget: target.id || null,
-  //           triggerTargetName: target.name || null,
-  //           actionType: selectedActionType.value,
-  //           ease: animationConfig.value.easing,
-  //           duration: animationConfig.value.duration,
-  //           delay: animationConfig.value.delay,
-  //           fillMode: null,
-  //         }
-
-  //         // 액션 타입에 따라 필요한 속성 추가
-  //         switch (selectedActionType.value) {
-  //           case 'translate':
-  //             animData.targetPOS = {
-  //               x: animationConfig.value.x,
-  //               y: animationConfig.value.y,
-  //             }
-  //             break
-  //           case 'rotate':
-  //             animData.rotate = animationConfig.value.rotate
-  //             break
-  //           case 'scale':
-  //             animData.scaleStart = animationConfig.value.scaleStart
-  //             animData.scaleEnd = animationConfig.value.scaleEnd
-  //             break
-  //           case 'opacity':
-  //             animData.opacityStart = animationConfig.value.opacityStart
-  //             animData.opacityEnd = animationConfig.value.opacityEnd
-  //             break
-  //         }
-
-  //         return animData
-  //       }),
-  //     }
-
-  //     targetObject.objectActionList.push(newAnimation)
-  //     controllerStore.isSettingTrigger = false
-  //   }
-  // }
 
   const deleteObjectAnimation = (actionIndex) => {
     const objectId = selectedObject.value.id

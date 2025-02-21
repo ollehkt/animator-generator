@@ -75,6 +75,14 @@ export const useControllerStore = defineStore('controller', () => {
     selectedActionType.value = type
   }
 
+  // 트리거 설정 초기화
+  const initTriggerSetting = () => {
+    console.log('트리거 세팅 초기화')
+    selectedTriggerType.value = 'click'
+    selectedTriggerTarget.value = null
+    selectedActionType.value = 'translate'
+  }
+
   // 애니메이션이 실제로 적용되는 객채
   const addActionTarget = (object) => {
     actionTargetList.value.push(object)
@@ -118,5 +126,6 @@ export const useControllerStore = defineStore('controller', () => {
     removeActionTarget,
     updateAnimationConfig,
     initViewportAction,
+    initTriggerSetting,
   }
 })

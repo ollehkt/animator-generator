@@ -74,7 +74,7 @@ const handleNameUpdate = (object, event) => {
           class="flex items-center justify-center text-sm w-5 h-5 bg-[#404040] text-[#E5E5E5] rounded-sm"
           :class="{ '!bg-[#4F46E5] text-white': selectedObject?.id === object.id }"
         >
-          {{ getObjectIcon(object.type) }}
+          {{ getObjectIcon(object.objectType) }}
         </p>
         <span
           v-if="editingId !== object.id"

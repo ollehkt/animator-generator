@@ -108,10 +108,6 @@ const handleChangeActionTarget = (index, event) => {
 }
 
 onMounted(() => {
-  if (!selectedActionType.value) {
-    controllerStore.setActionType('translate')
-  }
-
   if (!selectedTriggerTarget.value) {
     controllerStore.setTriggerTarget(objects.value[0].id)
   }
@@ -125,7 +121,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  selectedActionType.value = null
+  controllerStore.initTriggerSetting()
 })
 </script>
 <template>
