@@ -203,21 +203,44 @@ export const useObjectStore = defineStore('object', () => {
       isViewportAction,
     } = storeToRefs(controllerStore)
 
+    /**
+     * @중요
+     * sample.json 구조는 UI에 사용되지 않습니다.
+     * sample.json 구조는 소스를 내보내기 할때 최종적으로 나가는 구조입니다
+     * sample.json 구조는 미리보기를 할때 사용되는 구조입니다
+     *   @중요 objectActionList 에 사용되는 JSON 구조는 변경하지 마세요
+     * - 구조 변경 시 연결된 모든 UI 컴포넌트가 작동하지 않습니다
+     * - newAnimation JSON 형식으로 변경 시 전체 UI 리팩토링이 필요합니다.
+     *
+     */
+    const actions = {
+      triggerType: selectedTriggerType.value,
+      triggerTarget: selectedTriggerTarget.value,
+      actionType: selectedActionType.value,
+      actionTargetList: actionTargetList.value,
+      isSimultaneousness: true,
+      callbackFunction: null,
+      ease: animationConfig.value.easing,
+      duration: animationConfig.value.duration,
+      delay: animationConfig.value.delay,
+      fillMode: null,
+    }
+
     const newAnimation = animationStore.createAnimationConfig(
       selectedTriggerType.value,
       selectedTriggerTarget.value,
       actionTargetList.value,
       selectedActionType.value,
-      animationConfig.value,
+      animationConfig.value
     )
 
     if (isViewportAction.value) {
-      viewportActionList.value.push(newAnimation)
+      viewportActionList.value.push(actions)
     } else {
       const objectId = selectedObject.value?.id
       const targetObject = objects.value.find((obj) => obj.id === objectId)
       if (targetObject) {
-        targetObject.objectActionList.push(newAnimation)
+        targetObject.objectActionList.push(actions)
       }
     }
     controllerStore.isSettingTrigger = false
