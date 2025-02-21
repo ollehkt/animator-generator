@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
+import { useAnimationStore } from '@/store'
 
 export const useObjectStore = defineStore('object', () => {
   // State
@@ -191,6 +192,7 @@ export const useObjectStore = defineStore('object', () => {
 
   const updateObjectAnimation = () => {
     const controllerStore = useControllerStore()
+    const animationStore = useAnimationStore()
     const {
       selectedTriggerType,
       selectedTriggerTarget,
@@ -214,18 +216,12 @@ export const useObjectStore = defineStore('object', () => {
     })
 
     if (isViewportAction.value) {
-      const viewportAnimation = createAnimationConfig('pageload', 'page')
-      viewportActionList.value.push(viewportAnimation)
+      viewportActionList.value.push(newAnimation)
     } else {
       const objectId = selectedObject.value?.id
       const targetObject = objects.value.find((obj) => obj.id === objectId)
-
       if (targetObject) {
-        const objectAnimation = createAnimationConfig(
-          selectedTriggerType.value,
-          selectedTriggerTarget.value
-        )
-        targetObject.objectActionList.push(objectAnimation)
+        targetObject.objectActionList.push(newAnimation)
       }
     }
 
