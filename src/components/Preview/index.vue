@@ -8,14 +8,14 @@ const objectStore = useObjectStore()
 const objects = ref([
   {
     objectData: {
-      uuid: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
-      objectType: 'text',
-      // diagramType: 'circle',
+      uuid: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
+      objectType: 'diagram',
+      diagramType: 'circle',
       url: '',
-      text: '텍스트를 입력하세요',
+      text: '타원입니다',
       points: {
-        x: 100,
-        y: 100,
+        x: 220,
+        y: 200,
       },
       style: {
         background: '#825feb',
@@ -23,45 +23,26 @@ const objects = ref([
         color: '#825feb',
       },
       size: {
-        width: 200,
-        height: 200,
+        width: 174,
+        height: 108,
       },
-      radiusX: 121.37890625,
-      radiusY: 49.66796875,
     },
     animationData: [
       {
         triggerType: 'click',
-        // keyCode: '40',
         animation: [
           {
-            triggerTarget: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
-            // actionType: 'move',
-            // points: [
-            //   { x: 200, y: 200 },
-            //   { x: 100, y: 400 },
-            // ],
-            // ease: 'linear',
-            // duration: 2,
-            // delay: 0,
-            // count: null,
-            // direction: 'normal',
-            // fillMode: null,
-            // actionSetting: {
-            //   moveType: 'curve',
-            //   curviness: 1.5,
-            // },
-            actionType: 'size',
+            triggerTarget: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
+            actionType: 'rotate',
             points: null,
-            ease: 'linear',
+            ease: 'ease-in-out',
             duration: 2,
             delay: 0,
             count: null,
-            direction: 'normal',
+            loop: false,
             fillMode: null,
             actionSetting: {
-              width: 500,
-              height: 500,
+              degree: 45,
             },
           },
         ],
@@ -72,17 +53,17 @@ const objects = ref([
   },
   {
     objectData: {
-      uuid: 'circle-cc3ee06c-7a46-42c5-9c50-e4a1a1fcbdb7',
+      uuid: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
       objectType: 'diagram',
       diagramType: 'circle',
       url: '',
-      text: 'hello world',
+      text: '',
       points: {
         x: 220,
         y: 200,
       },
       style: {
-        background: '#000000',
+        background: '#825feb',
         opacity: 100,
         color: '#825feb',
       },
@@ -96,7 +77,7 @@ const objects = ref([
         triggerType: 'click',
         animation: [
           {
-            triggerTarget: 'circle-cc3ee06c-7a46-42c5-9c50-e4a1a1fcbdb7',
+            triggerTarget: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
             actionType: 'move',
             points: [
               {
@@ -107,7 +88,35 @@ const objects = ref([
                 x: 300,
                 y: 100,
               },
+              {
+                x: 400,
+                y: 100,
+              },
+              {
+                x: 100,
+                y: 100,
+              },
+              {
+                x: 300,
+                y: 100,
+              },
             ],
+            ease: 'linear',
+            duration: 2,
+            delay: 0,
+            count: 0,
+            direction: 'normal',
+            fillMode: null,
+            loop: true,
+            actionSetting: {
+              moveType: 'line',
+              curviness: 1.5,
+            },
+          },
+          {
+            triggerTarget: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
+            actionType: 'size',
+            points: null,
             ease: 'linear',
             duration: 2,
             delay: 0,
@@ -115,8 +124,7 @@ const objects = ref([
             direction: 'normal',
             fillMode: null,
             actionSetting: {
-              moveType: 'line',
-              curviness: 1.5,
+              color: '#ffe400',
             },
           },
         ],
@@ -125,9 +133,65 @@ const objects = ref([
       },
     ],
   },
+  // {
+  //   objectData: {
+  //     uuid: null,
+  //     objectType: 'diagram',
+  //     diagramType: 'circle',
+  //     url: '',
+  //     text: '',
+  //     points: {
+  //       x: 220,
+  //       y: 200,
+  //     },
+  //     style: {
+  //       background: '#825feb',
+  //       opacity: 100,
+  //       color: '#825feb',
+  //     },
+  //     size: {
+  //       width: 150,
+  //       height: 200,
+  //     },
+  //   },
+  //   animationData: [
+  //     {
+  //       triggerType: 'click',
+  //       animation: [
+  //         {
+  //           triggerTarget: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
+  //           actionType: 'move',
+  //           points: [
+  //             {
+  //               x: 120,
+  //               y: 100,
+  //             },
+  //             {
+  //               x: 300,
+  //               y: 100,
+  //             },
+  //           ],
+  //           ease: 'linear',
+  //           duration: 2,
+  //           delay: 0,
+  //           count: null,
+  //           direction: 'normal',
+  //           fillMode: null,
+  //           actionSetting: {
+  //             moveType: 'line',
+  //             curviness: 1.5,
+  //           },
+  //         },
+  //       ],
+  //       isSimultaneousness: true,
+  //       callbackFunction: null,
+  //     },
+  //   ],
+  // },
 ])
 const svgRef = ref(null)
 const elementRefs = ref({})
+const animationExecuted = ref({})
 
 const setRef = (el, objectId) => {
   if (el) {
@@ -148,8 +212,15 @@ const handleTrigger = (objectId, triggerType) => {
 
   // 각 액션의 애니메이션 실행
   matchingAnimations.animation.forEach((anim) => {
+    // 이미 실행된 애니메이션이고 루프가 아니면 실행하지 않음
+    if (animationExecuted.value[objectId] && !anim.loop) return
     executeAnimation(anim.triggerTarget, anim)
   })
+
+  // 한 번은 실행시키고 애니메이션 실행되었으면 true로 변경
+  if (matchingAnimations.animation.length > 0) {
+    animationExecuted.value[objectId] = true
+  }
 }
 
 const getTransformOriginCenter = (element) => {
@@ -196,7 +267,7 @@ const executeAnimation = (objectId, animation) => {
   if (!element) {
     console.log('Element not found:', objectId)
     return
-  } // TODO: 모든 스위치문에 loop냐 아니냐에 따라 분기 처리 필요
+  }
 
   const animationConfig = {
     duration: (animation.duration || 1) * 1000,
@@ -292,7 +363,7 @@ const executeAnimation = (objectId, animation) => {
       const scale = animation.actionSetting.scaleMagnification
       element.animate(
         [
-          { transformOrigin: getTransformOriginCenter(element) },
+          { transformOrigin: getTransformOriginCenter(element), transform: 'scale(1)' },
           { transformOrigin: getTransformOriginCenter(element), transform: `scale(${scale})` },
         ],
         animationConfig
@@ -302,7 +373,7 @@ const executeAnimation = (objectId, animation) => {
     case 'rotate':
       element.animate(
         [
-          { transformOrigin: getTransformOriginCenter(element) },
+          { transformOrigin: getTransformOriginCenter(element), transform: 'rotate(0deg)' },
           {
             transform: `rotate(${animation.actionSetting.degree}deg)`,
             transformOrigin: getTransformOriginCenter(element),
@@ -329,14 +400,22 @@ const executeAnimation = (objectId, animation) => {
 
       break
 
-    // case 'size':
-    //   const sizeElement = getCircleElement(element)
-    //   if (!sizeElement) return
+      // case 'size':
+      //   const sizeElement = getCircleElement(element)
+      //   if (!sizeElement) return
 
-    //   // 타원일 경우 반지름 업데이트
-    //   const newRadiusWidth = animation.actionSetting.width / 2
-    //   const newRadiusHeight = animation.actionSetting.height / 2
-    //   sizeElement.animate([{ rx: newRadiusWidth, ry: newRadiusHeight }], animationConfig)
+      // 타원일 경우 반지름 업데이트
+      const currentRadiusWidth = sizeElement.getAttribute('rx')
+      const currentRadiusHeight = sizeElement.getAttribute('ry')
+      const newRadiusWidth = animation.actionSetting.width / 2
+      const newRadiusHeight = animation.actionSetting.height / 2
+      sizeElement.animate(
+        [
+          { rx: currentRadiusWidth, ry: currentRadiusHeight },
+          { rx: newRadiusWidth, ry: newRadiusHeight },
+        ],
+        animationConfig
+      )
 
     //   //TODO: 이미지나 텍스트일 경우 업데이트 로직 필요
 
@@ -562,15 +641,15 @@ onUnmounted(() => {
           :rx="object.objectData.size.width / 2"
           :ry="object.objectData.size.height / 2"
           :fill="object.objectData.style.background"
-          @click="handleTrigger(object.objectData.uuid, 'click')"
-          @dblclick="handleTrigger(object.objectData.uuid, 'dblclick')"
+          @click.stop="handleTrigger(object.objectData.uuid, 'click')"
+          @dblclick.stop="handleTrigger(object.objectData.uuid, 'dblclick')"
           @mouseenter="handleTrigger(object.objectData.uuid, 'mouseenter')"
           @mouseleave="handleTrigger(object.objectData.uuid, 'mouseleave')"
           @mouseover="handleTrigger(object.objectData.uuid, 'mouseover')"
           @mouseout="handleTrigger(object.objectData.uuid, 'mouseout')"
           @mouseup="handleTrigger(object.objectData.uuid, 'mouseup')"
           @mousedown="handleTrigger(object.objectData.uuid, 'mousedown')"
-          @contextmenu="handleTrigger(object.objectData.uuid, 'contextmenu')"
+          @contextmenu.stop="handleTrigger(object.objectData.uuid, 'contextmenu')"
           tabindex="0"
           @focus="handleTrigger(object.objectData.uuid, 'focus')"
           @focusin="handleTrigger(object.objectData.uuid, 'focusin')"
