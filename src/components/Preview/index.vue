@@ -8,12 +8,15 @@ const objectStore = useObjectStore()
 const objects = ref([
   {
     objectData: {
-      uuid: 'svg-da3k1nk5ljk2l4-34nkl1j3-123',
-      objectType: 'image',
-      diagramType: null,
-      url: 'https://questbook-prod-bucket.s3.ap-northeast-2.amazonaws.com/user/1/Questbook_test_2024-12-17-14-09-497.png',
+      uuid: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
+      objectType: 'diagram',
+      diagramType: 'circle',
+      url: '',
       text: '',
-      points: { x: 100, y: 100 },
+      points: {
+        x: 220,
+        y: 200,
+      },
       style: {
         background: '#825feb',
         opacity: 100,
@@ -29,17 +32,17 @@ const objects = ref([
         triggerType: 'click',
         animation: [
           {
-            triggerTarget: 'svg-da3k1nk5ljk2l4-34nkl1j3-123',
-            actionType: 'display',
+            triggerTarget: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
+            actionType: 'rotate',
             points: null,
-            ease: 'linear',
-            duration: 0.9,
+            ease: 'ease-in-out',
+            duration: 2,
             delay: 0,
             count: null,
-            direction: 'normal',
+            loop: false,
             fillMode: null,
             actionSetting: {
-              isHidden: true,
+              degree: 45,
             },
           },
         ],
@@ -50,6 +53,14 @@ const objects = ref([
   },
 ])
 const svgRef = ref(null)
+const elementRefs = ref({})
+const animationExecuted = ref({})
+
+const setRef = (el, objectId) => {
+  if (el) {
+    elementRefs.value[objectId] = el
+  }
+}
 
 const handleTrigger = (objectId, triggerType) => {
   const targetObject = objects.value.find((obj) => obj.objectData.uuid === objectId)
@@ -59,7 +70,6 @@ const handleTrigger = (objectId, triggerType) => {
   const matchingAnimations = targetObject.animationData.find(
     (data) => data.triggerType === triggerType
   )
-
   if (!matchingAnimations) return
 
   // 동시 실행 여부 확인
@@ -71,10 +81,13 @@ const handleTrigger = (objectId, triggerType) => {
   } else {
     // 순차적으로 실행
     matchingAnimations.animation.forEach((anim, index) => {
-      setTimeout(() => {
-        executeAnimation(anim.triggerTarget || objectId, anim)
-      }, (anim.delay || 0) * 1000 + index * 100)
+      if (animationExecuted.value[objectId] && !anim.loop) return
+      executeAnimation(anim.triggerTarget || objectId, anim)
     })
+
+    if (matchingAnimations.animation.length > 0) {
+      animationExecuted.value[objectId] = true
+    }
   }
 
   // 콜백 함수 실행
@@ -83,15 +96,23 @@ const handleTrigger = (objectId, triggerType) => {
   }
 }
 
+const getTransformOriginCenter = (element) => {
+  const bbox = element.getBBox()
+  const centerX = bbox.x + bbox.width / 2
+  const centerY = bbox.y + bbox.height / 2
+
+  return `${centerX}px ${centerY}px`
+}
+
+const getCircleElement = (element) => {
+  return element.firstElementChild
+}
+
 const executeAnimation = (objectId, animation) => {
-  const element = document.getElementById(objectId)
+  const element = elementRefs.value[objectId]
   if (!element) {
     console.log('Element not found:', objectId)
     return
-  }
-
-  const getCircleElement = (element) => {
-    return element.firstElementChild
   }
 
   // 애니메이션을 실행할 객체의 objectData 찾기
@@ -99,8 +120,6 @@ const executeAnimation = (objectId, animation) => {
   if (!targetObject) return
 
   const bbox = element.getBBox()
-  const centerX = bbox.x + bbox.width / 2
-  const centerY = bbox.y + bbox.height / 2
 
   const animationConfig = {
     duration: (animation.duration || 1) * 1000,
@@ -185,8 +204,8 @@ const executeAnimation = (objectId, animation) => {
       const scale = animation.actionSetting.scaleMagnification
       element.animate(
         [
-          { transformOrigin: `${centerX}px ${centerY}px` },
-          { transformOrigin: `${centerX}px ${centerY}px`, transform: `scale(${scale})` },
+          { transformOrigin: getTransformOriginCenter(element), transform: 'scale(1)' },
+          { transformOrigin: getTransformOriginCenter(element), transform: `scale(${scale})` },
         ],
         animationConfig
       )
@@ -195,10 +214,10 @@ const executeAnimation = (objectId, animation) => {
     case 'rotate':
       element.animate(
         [
-          { transformOrigin: `${centerX}px ${centerY}px` },
+          { transformOrigin: getTransformOriginCenter(element), transform: 'rotate(0deg)' },
           {
             transform: `rotate(${animation.actionSetting.degree}deg)`,
-            transformOrigin: `${centerX}px ${centerY}px`,
+            transformOrigin: getTransformOriginCenter(element),
           },
         ],
         animationConfig
@@ -396,13 +415,24 @@ const updateElementPosition = (element, objectData) => {
       break
   }
 }
+
+// 컴포넌트 마운트 시 load 이벤트 트리거
+onMounted(() => {
+  objects.value.forEach((object) => {
+    handleTrigger(object.objectData.uuid, 'load')
+  })
+})
 </script>
 
 <template>
   <div class="flex items-center justify-center w-full h-screen bg-white">
     <svg ref="svgRef" :width="720" :height="452" class="bg-white border border-black outline-none">
-      <g v-for="object in objects" :key="object.objectData.uuid" :id="object.objectData.uuid">
-        <!-- Circle -->
+      <g
+        v-for="object in objects"
+        :key="object.objectData.uuid"
+        :id="object.objectData.uuid"
+        :ref="(el) => setRef(el, object.objectData.uuid)"
+      >
         <ellipse
           class="outline-none"
           v-if="
@@ -410,10 +440,23 @@ const updateElementPosition = (element, objectData) => {
           "
           :cx="object.objectData.points.x"
           :cy="object.objectData.points.y"
-          :rx="object.objectData.radiusX || object.objectData.size.width / 2"
-          :ry="object.objectData.radiusY || object.objectData.size.height / 2"
+          :rx="object.objectData.size.width / 2"
+          :ry="object.objectData.size.height / 2"
           :fill="object.objectData.style.background"
-          @click="handleTrigger(object.objectData.uuid, 'click')"
+          @click.stop="handleTrigger(object.objectData.uuid, 'click')"
+          @dblclick.stop="handleTrigger(object.objectData.uuid, 'dblclick')"
+          @mouseenter="handleTrigger(object.objectData.uuid, 'mouseenter')"
+          @mouseleave="handleTrigger(object.objectData.uuid, 'mouseleave')"
+          @mouseover="handleTrigger(object.objectData.uuid, 'mouseover')"
+          @mouseout="handleTrigger(object.objectData.uuid, 'mouseout')"
+          @mouseup="handleTrigger(object.objectData.uuid, 'mouseup')"
+          @mousedown="handleTrigger(object.objectData.uuid, 'mousedown')"
+          @contextmenu.stop="handleTrigger(object.objectData.uuid, 'contextmenu')"
+          tabindex="0"
+          @focus="handleTrigger(object.objectData.uuid, 'focus')"
+          @focusin="handleTrigger(object.objectData.uuid, 'focusin')"
+          @focusout="handleTrigger(object.objectData.uuid, 'focusout')"
+          @blur="handleTrigger(object.objectData.uuid, 'blur')"
         />
 
         <!-- Image -->
