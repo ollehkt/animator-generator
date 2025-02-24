@@ -12,10 +12,12 @@ import SourcePreview from '@/components/SourcePreview.vue'
 
 const controllerStore = useControllerStore()
 const previewStore = usePreviewStore()
+const objectStore = useObjectStore()
 const { showSourcePreview, isLayersMinimized } = storeToRefs(controllerStore)
 const { objectJson } = storeToRefs(previewStore)
 
 const viewportRef = ref(null)
+console.log(objectStore)
 
 const toggleLayersMinimized = () => {
   controllerStore.toggleLayersMinimized()
