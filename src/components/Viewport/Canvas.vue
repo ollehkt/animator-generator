@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { useObjectStore, useControllerStore } from '@/store'
+import { useObjectStore, useControllerStore, useViewportStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { HANDLE_SIZE, HANDLE_POSITIONS } from '@/helpers/consts'
 import ObjectHandle from './ObjectHandle.vue'
@@ -21,6 +21,7 @@ const props = defineProps({
 })
 
 const objectStore = useObjectStore()
+const viewportStore = useViewportStore()
 const { objects, selectedObject } = storeToRefs(objectStore)
 
 const svgRef = ref(null)
@@ -61,8 +62,8 @@ const handleClick = (event, object) => {
   }
 }
 
-// 오브젝트 포인터다운 이벤트
-const startDrag = (event, object) => {
+// @pointerdown
+const handleObjectPointerDown = (event, object) => {
   event.stopPropagation()
   isDragging.value = true
   event.target.setPointerCapture(event.pointerId)
@@ -79,6 +80,7 @@ const startDrag = (event, object) => {
   }
 }
 
+// svg 위에서 이동 이벤트
 const handlePointerMove = (event) => {
   if (!isDragging.value && !isResizing.value) return
   if (!selectedObject.value) return
@@ -100,34 +102,17 @@ const handlePointerMove = (event) => {
   }
 
   if (isResizing.value) {
-    const deltaX = transformedPoint.x - resizeStartDimensions.value.x
-    const deltaY = transformedPoint.y - resizeStartDimensions.value.y
+   
+    const deltaX = Number(transformedPoint.x - resizeStartDimensions.value.x)
+    const deltaY = Number(transformedPoint.y - resizeStartDimensions.value.y)
 
+    // Handle circle resizing
     if (
       selectedObject.value.objectType === 'diagram' &&
       selectedObject.value.diagramType === 'circle'
     ) {
-      const dx = transformedPoint.x - selectedObject.value.position.x
-      const dy = transformedPoint.y - selectedObject.value.position.y
-
-      switch (activeHandle.value) {
-        case 0: // Top-left
-        case 4: // Bottom-right
-          selectedObject.value.radiusX = Math.max(10, Math.abs(dx))
-          selectedObject.value.radiusY = Math.max(10, Math.abs(dy))
-          break
-        case 1: // Top-center
-        case 5: // Bottom-center
-          selectedObject.value.radiusY = Math.max(10, Math.abs(dy))
-          break
-        case 3: // Middle-right
-        case 7: // Middle-left
-          selectedObject.value.radiusX = Math.max(10, Math.abs(dx))
-          break
-        default:
-          selectedObject.value.radiusX = Math.max(10, Math.abs(dx))
-          selectedObject.value.radiusY = Math.max(10, Math.abs(dy))
-      }
+      viewportStore.handleCircleResize(transformedPoint, activeHandle.value)
+      return
     } else {
       // Complete image and text resizing for all handles
       // console.log('handleNO Iam not circle=>', activeHandle.value)
@@ -189,22 +174,9 @@ const handlePointerMove = (event) => {
   }
 }
 
-const endDrag = () => {
-  isDragging.value = false
-  isResizing.value = false
-  activeHandle.value = null
-  if (!selectedObject.value) return
-  if (selectedObject.value && !selectedObject.value.isClone) {
-    determineOutsideDirection(selectedObject.value)
-  }
-  // Update position property access
-  objectStore.updateObjectPosition(selectedObject.value.id, {
-    x: selectedObject.value.position.x,
-    y: selectedObject.value.position.y,
-  })
-}
-
+// 가이드라인 rect 포인터다운이벤트
 const startResize = (event, object, handleIndex) => {
+  console.log('startResize')
   event.stopPropagation()
   isResizing.value = true
   activeHandle.value = handleIndex
@@ -225,6 +197,21 @@ const startResize = (event, object, handleIndex) => {
         radiusY: object.radiusY || object.radius,
       }),
   }
+}
+
+const endDrag = () => {
+  isDragging.value = false
+  isResizing.value = false
+  activeHandle.value = null
+  if (!selectedObject.value) return
+  if (selectedObject.value && !selectedObject.value.isClone) {
+    determineOutsideDirection(selectedObject.value)
+  }
+  // Update position property access
+  objectStore.updateObjectPosition(selectedObject.value.id, {
+    x: selectedObject.value.position.x,
+    y: selectedObject.value.position.y,
+  })
 }
 
 const determineOutsideDirection = (object) => {
@@ -328,7 +315,7 @@ const getHandlePositions = (object) => {
           :rx="object.radiusX || object.radius"
           :ry="object.radiusY || object.radius"
           :fill="object.fillStyle"
-          @pointerdown="(e) => startDrag(e, object)"
+          @pointerdown="(e) => handleObjectPointerDown(e, object)"
           @click="(e) => handleClick(e, object)"
           :class="{ 'cursor-move': true }"
         />
@@ -341,7 +328,7 @@ const getHandlePositions = (object) => {
           :height="Number(object.size.height) || 100"
           :href="object.url"
           preserveAspectRatio="xMidYMid meet"
-          @pointerdown="(e) => startDrag(e, object)"
+          @pointerdown="(e) => handleObjectPointerDown(e, object)"
           @click="(e) => handleClick(e, object)"
           :class="{ 'cursor-move': true }"
         />
@@ -351,7 +338,7 @@ const getHandlePositions = (object) => {
           :x="object.position.x"
           :y="object.position.y"
           :fill="object.fillStyle"
-          @pointerdown="(e) => startDrag(e, object)"
+          @pointerdown="(e) => handleObjectPointerDown(e, object)"
           @click="(e) => handleClick(e, object)"
           :class="{ 'cursor-move': true }"
         >
