@@ -8,14 +8,14 @@ const objectStore = useObjectStore()
 const objects = ref([
   {
     objectData: {
-      uuid: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
-      objectType: 'diagram',
-      diagramType: 'circle',
+      uuid: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
+      objectType: 'text',
+      diagramType: null,
       url: '',
-      text: '타원입니다',
+      text: '텍스트를 입력하세요',
       points: {
-        x: 220,
-        y: 200,
+        x: 100,
+        y: 100,
       },
       style: {
         background: '#825feb',
@@ -23,171 +23,40 @@ const objects = ref([
         color: '#825feb',
       },
       size: {
-        width: 140,
-        height: 100,
-      },
-    },
-    animationData: [
-      {
-        triggerType: 'click',
-        animation: [
-          {
-            triggerTarget: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
-            actionType: 'rotate',
-            points: null,
-            ease: 'ease-in-out',
-            duration: 2,
-            delay: 0,
-            count: null,
-            loop: false,
-            fillMode: null,
-            actionSetting: {
-              degree: 45,
-            },
-          },
-        ],
-        isSimultaneousness: true,
-        callbackFunction: null,
-      },
-    ],
-  },
-  {
-    objectData: {
-      uuid: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
-      objectType: 'diagram',
-      diagramType: 'circle',
-      url: '',
-      text: '',
-      points: {
-        x: 220,
-        y: 200,
-      },
-      style: {
-        background: '#825feb',
-        opacity: 100,
-        color: '#825feb',
-      },
-      size: {
-        width: 150,
+        width: 200,
         height: 200,
       },
+      radiusX: 121.37890625,
+      radiusY: 49.66796875,
     },
     animationData: [
       {
         triggerType: 'click',
         animation: [
           {
-            triggerTarget: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
+            triggerTarget: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
             actionType: 'move',
             points: [
-              {
-                x: 120,
-                y: 100,
-              },
-              {
-                x: 300,
-                y: 100,
-              },
-              {
-                x: 400,
-                y: 100,
-              },
-              {
-                x: 100,
-                y: 100,
-              },
-              {
-                x: 300,
-                y: 100,
-              },
+              { x: 100, y: 100 },
+              { x: 100, y: 200 },
             ],
             ease: 'linear',
             duration: 2,
             delay: 0,
-            count: 0,
+            count: null,
             direction: 'normal',
             fillMode: null,
-            loop: true,
             actionSetting: {
               moveType: 'line',
               curviness: 1.5,
             },
           },
-          {
-            triggerTarget: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
-            actionType: 'size',
-            points: null,
-            ease: 'linear',
-            duration: 2,
-            delay: 0,
-            count: null,
-            direction: 'normal',
-            fillMode: null,
-            actionSetting: {
-              color: '#ffe400',
-            },
-          },
         ],
         isSimultaneousness: true,
         callbackFunction: null,
       },
     ],
   },
-  // {
-  //   objectData: {
-  //     uuid: null,
-  //     objectType: 'diagram',
-  //     diagramType: 'circle',
-  //     url: '',
-  //     text: '',
-  //     points: {
-  //       x: 220,
-  //       y: 200,
-  //     },
-  //     style: {
-  //       background: '#825feb',
-  //       opacity: 100,
-  //       color: '#825feb',
-  //     },
-  //     size: {
-  //       width: 150,
-  //       height: 200,
-  //     },
-  //   },
-  //   animationData: [
-  //     {
-  //       triggerType: 'click',
-  //       animation: [
-  //         {
-  //           triggerTarget: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
-  //           actionType: 'move',
-  //           points: [
-  //             {
-  //               x: 120,
-  //               y: 100,
-  //             },
-  //             {
-  //               x: 300,
-  //               y: 100,
-  //             },
-  //           ],
-  //           ease: 'linear',
-  //           duration: 2,
-  //           delay: 0,
-  //           count: null,
-  //           direction: 'normal',
-  //           fillMode: null,
-  //           actionSetting: {
-  //             moveType: 'line',
-  //             curviness: 1.5,
-  //           },
-  //         },
-  //       ],
-  //       isSimultaneousness: true,
-  //       callbackFunction: null,
-  //     },
-  //   ],
-  // },
 ])
 const svgRef = ref(null)
 const elementRefs = ref({})
@@ -522,11 +391,8 @@ const updateElementPosition = (element, objectData) => {
       break
 
     case 'text':
-      // text는 중앙 정렬을 위해 text-anchor="middle" 속성이 필요
       element.setAttribute('x', points.x)
       element.setAttribute('y', points.y)
-      element.setAttribute('text-anchor', 'middle')
-      element.setAttribute('dominant-baseline', 'middle')
       break
 
     case 'diagram':
