@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useControllerStore } from '@/store'
+import { useControllerStore, useAnimationStore } from '@/store'
 import { storeToRefs } from 'pinia'
-import { useAnimationStore } from '@/store'
 
 export const useObjectStore = defineStore('object', () => {
   // State
@@ -35,6 +34,7 @@ export const useObjectStore = defineStore('object', () => {
       id: fullId,
       name: `${object.diagramType || object.objectType}-${shortId}`,
       objectActionList: [], // tirgger, 타겟 객체, 액션, 액션타겟 정보
+      isVisible: true,
       ...object,
     }
 
@@ -51,7 +51,7 @@ export const useObjectStore = defineStore('object', () => {
   }
 
   const addMedia = (object) => {
-    const { fullId, shortId } = generateUniqueId()
+    const { fullId, shortId } = generateUniqueId(object)
 
     const newObject = {
       id: fullId,
@@ -97,6 +97,8 @@ export const useObjectStore = defineStore('object', () => {
               actionTargetList: filteredTargets,
             }
           })
+          // 액션 타겟 오브젝트다 지워지면 액션 자체를 지워버림
+          .filter((action) => action.actionTargetList.length > 0)
           // actionTargetList가 완전히 비어있는 action만 제거
           .filter((action) => action.actionTargetList.length > 0)
       }
@@ -107,7 +109,9 @@ export const useObjectStore = defineStore('object', () => {
   }
 
   /**
+   * Select an object
    * @param {string} objectId
+   * 오브젝트가 선택되면 isViewportAction = false
    */
   const selectObject = (objectId) => {
     // todo action 으로 따로 정리!!
@@ -118,6 +122,17 @@ export const useObjectStore = defineStore('object', () => {
     selectedObject.value = null
     const object = objects.value.find((obj) => obj.id === objectId)
     selectedObject.value = object || null
+  }
+
+  /**
+   * Toggle visibility of an object
+   * @param {string} objectId
+   */
+  const toggleVisibility = (objectId) => {
+    const object = objects.value.find((obj) => obj.id === objectId)
+    if (object) {
+      object.isVisible = !object.isVisible
+    }
   }
 
   // 오브젝트 정렬
@@ -175,9 +190,20 @@ export const useObjectStore = defineStore('object', () => {
 
   // 오브젝트 이름 업데이트
   const updateObjectName = (objectId, newName) => {
+    // todo object.name을 정적으로 사용하는 곳 모두 수정 (액션리스트...?)
+    
     const object = objects.value.find((obj) => obj.id === objectId)
     if (object) {
       object.name = newName
+
+      // 오브젝트 액션리스트 name 수정
+      
+      object.objectActionList.forEach((action) => {
+        const actionTarget = action.actionTargetList.find((target) => target.id === objectId)
+        if (actionTarget) {
+          actionTarget.name = newName
+        }
+      })
     }
   }
 
@@ -202,15 +228,30 @@ export const useObjectStore = defineStore('object', () => {
       isViewportAction,
     } = storeToRefs(controllerStore)
 
-    //   액션 타겟리스트 이거는 똑같은거 값을 두애니메이션으로 넣을때
-    // animation: actionTargetList.value.map((target) => ({
-    //   triggerTarget: target.id || null,
-    //   triggerTargetName: target.name || null,
-    //   actionType: selectedActionType.value,
-    //   ease: animationConfig.value.easing,
-    //   duration: animationConfig.value.duration,
-    //   delay: animationConfig.value.delay,
-    //   fillMode: null,
+    /**
+     * @중요
+     * sample.json 구조는 UI에 사용되지 않습니다.
+     * sample.json 구조는 소스를 내보내기 할때 최종적으로 나가는 구조입니다
+     * sample.json 구조는 미리보기를 할때 사용되는 구조입니다
+     *   @중요 objectActionList 에 사용되는 JSON 구조는 변경하지 마세요
+     * - 구조 변경 시 연결된 모든 UI 컴포넌트가 작동하지 않습니다
+     * - newAnimation JSON 형식으로 변경 시 전체 UI 리팩토링이 필요합니다.
+     *
+     */
+    const actions = {
+      triggerType: selectedTriggerType.value,
+      triggerTarget: selectedTriggerTarget.value,
+      actionType: selectedActionType.value,
+      actionTargetList: actionTargetList.value,
+      isSimultaneousness: true,
+      callbackFunction: null,
+      ease: animationConfig.value.easing,
+      duration: animationConfig.value.duration,
+      delay: animationConfig.value.delay,
+      fillMode: null,
+    }
+
+    // console.log('actions', actions)
 
     const newAnimation = animationStore.createAnimationConfig(
       selectedTriggerType.value,
@@ -219,6 +260,9 @@ export const useObjectStore = defineStore('object', () => {
       selectedActionType.value,
       animationConfig.value
     )
+
+    // console.log('newAnimation', newAnimation)
+
     if (isViewportAction.value) {
       viewportActionList.value.push(newAnimation)
     } else {
@@ -263,6 +307,7 @@ export const useObjectStore = defineStore('object', () => {
     removeObject,
     removeMedia,
     selectObject,
+    toggleVisibility,
     updateObjectName,
     updateObjectPosition,
     initSelectedObject,

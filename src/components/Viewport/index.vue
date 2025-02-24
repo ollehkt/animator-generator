@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useObjectStore, useControllerStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
-import Canvas from './Cavas.vue'
+import Canvas from './Canvas.vue'
 import ZoomControls from './ZoomControls.vue'
 
 const canvasRef = ref(null)

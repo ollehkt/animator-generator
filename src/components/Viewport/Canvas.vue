@@ -319,7 +319,7 @@ const getHandlePositions = (object) => {
 
     <!-- Objects -->
     <template v-for="object in objects" :key="object.id">
-      <g :id="object.id">
+      <g :id="object.id" v-show="object.isVisible">
         <!-- Change circle to ellipse -->
         <ellipse
           v-if="object.objectType === 'diagram' && object.diagramType === 'circle'"

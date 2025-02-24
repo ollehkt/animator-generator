@@ -3,7 +3,6 @@ import { storeToRefs } from 'pinia'
 import { useObjectStore, useControllerStore } from '@/store'
 import { TRIGGER_CONFIG } from '@/helpers/consts'
 
-
 const objectStore = useObjectStore()
 const controllerStore = useControllerStore()
 const { selectedObject } = storeToRefs(objectStore)
@@ -39,30 +38,30 @@ const deleteAction = (data) => {
 </script>
 <template>
   <!-- OBJECT ACTION -->
-  <ul v-if="selectedObject?.objectActionList?.length" class="mt-4 space-y-2">
+  <ul v-if="selectedObject?.objectActionList?.length" class="mt-4 space-y-4">
     <li
       v-for="(data, index) in selectedObject.objectActionList"
       :key="index"
-      class="h-[58px] p-3 transition-colors duration-200 border border-gray-700 rounded-md cursor-pointer hover:bg-gray-700"
+      class=""
       @click="editAction(data)"
     >
-      <div class="flex items-center justify-between h-full">
-        <div class="flex items-center gap-3 grow">
-          <!-- 트리거 -->
-          <span class="w-[70px] text-xs font-medium text-white shrink-0">
-            {{ getTriggerTypeString(data.triggerType) }}
-          </span>
-          <span class="w-[2px] h-4 bg-gray-400 rounded-full"></span>
-          <!-- 트리거 타겟 이름 -->
+      <p class="pl-2 mb-1 text-xs font-medium">
+        {{ getTriggerTypeString(data.triggerType) }}
+      </p>
+      <div
+        class="flex items-center justify-between p-3 transition-colors duration-200 border border-gray-700 rounded-md cursor-pointer hover:bg-gray-700"
+      >
+        <p class="flex items-center gap-3 grow">
           <span
-            class="ml-auto grow text-xs font-medium text-[#CCC] pl-1"
+            class="basis-1/2 text-xs font-medium text-[#CCC] pl-1 overflow-hidden whitespace-nowrap text-ellipsis block"
             v-html="getTriggerTargetName(data)"
           ></span>
+          <span class="w-[2px] h-4 bg-gray-400 rounded-full flex-shrink-0"></span>
           <!-- 액션 rotate, scale, ... -->
-          <!-- <span class="w-[70px] text-xs font-medium text-white shrink-0">
-                {{ getActionTypeString(data.actionType) }}
-              </span> -->
-        </div>
+          <span class="text-xs font-medium basis-1/2">
+            {{ getActionTypeString(data.actionType) }}
+          </span>
+        </p>
         <button
           @click.stop="deleteAction(data)"
           class="px-2 text-gray-400 rounded hover:text-red-400"

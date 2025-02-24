@@ -29,15 +29,15 @@ const toggleLayersMinimized = () => {
     <Header />
     <!-- Layers -->
     <section
-      class="transition-all duration-300"
-      :class="[isLayersMinimized ? 'w-[0px]' : 'w-[15%]']"
+      class="transition-[width] duration-300 flex-shrink-0"
+      :class="[isLayersMinimized ? 'w-0' : 'w-[15%]']"
     >
       <Layers />
     </section>
     <!-- Main editor area -->
     <section
-      class="w-[65%] relative border-r border-[#333333]"
-      :class="[isLayersMinimized ? 'w-[calc(100%-15%)]' : 'w-[65%]']"
+      class="transition-[width] duration-300 relative border-r border-[#333333] flex-grow"
+      :style="{ width: isLayersMinimized ? '85%' : '65%' }"
     >
       <!-- minimized toggle button -->
       <div
@@ -69,7 +69,7 @@ const toggleLayersMinimized = () => {
       </div>
     </section>
     <!-- Animation controller -->
-    <section class="bg-[#252526] w-[20%] min-w-[342px] shrink-0">
+    <section class="bg-[#252526] w-[20%] min-w-[342px] flex-shrink-0">
       <div class="overflow-x-clip">
         <AnimationController />
       </div>
