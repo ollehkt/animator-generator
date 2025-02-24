@@ -80,7 +80,7 @@ const handleObjectPointerDown = (event, object) => {
   }
 }
 
-// svg 위에서 이동 이벤트
+// svg 위에서 이동 이벤트 => 이동 리사이즈 모두 처리
 const handlePointerMove = (event) => {
   if (!isDragging.value && !isResizing.value) return
   if (!selectedObject.value) return
@@ -94,18 +94,15 @@ const handlePointerMove = (event) => {
   svgPoint.y = event.clientY
   const transformedPoint = svgPoint.matrixTransform(svgRef.value.getScreenCTM().inverse())
 
-  // 움직인 값대로 오브젝트 위치 업데이트
+  // DRAG => 움직인 값대로 오브젝트 위치 업데이트
   if (isDragging.value) {
     selectedObject.value.position.x = Math.round(transformedPoint.x - dragOffset.value.x)
     selectedObject.value.position.y = Math.round(transformedPoint.y - dragOffset.value.y)
     return
   }
 
+  // RESIZE => 움직인 값대로 오브젝트 리사이즈
   if (isResizing.value) {
-   
-    const deltaX = Number(transformedPoint.x - resizeStartDimensions.value.x)
-    const deltaY = Number(transformedPoint.y - resizeStartDimensions.value.y)
-
     // Handle circle resizing
     if (
       selectedObject.value.objectType === 'diagram' &&
@@ -114,69 +111,18 @@ const handlePointerMove = (event) => {
       viewportStore.handleCircleResize(transformedPoint, activeHandle.value)
       return
     } else {
-      // Complete image and text resizing for all handles
-      // console.log('handleNO Iam not circle=>', activeHandle.value)
-      switch (activeHandle.value) {
-        case 0: // Top-left
-          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
-          selectedObject.value.size.height = Math.max(
-            20,
-            resizeStartDimensions.value.height - deltaY
-          )
-          selectedObject.value.position.x = transformedPoint.x
-          selectedObject.value.position.y = transformedPoint.y
-          break
-        case 1: // Top-center
-          selectedObject.value.size.height = Math.max(
-            20,
-            resizeStartDimensions.value.height - deltaY
-          )
-          selectedObject.value.position.y = transformedPoint.y
-          break
-        case 2: // Top-right
-          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
-          selectedObject.value.size.height = Math.max(
-            20,
-            resizeStartDimensions.value.height - deltaY
-          )
-          selectedObject.value.position.y = transformedPoint.y
-          break
-        case 3: // Middle-right
-          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
-          break
-        case 4: // Bottom-right
-          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width + deltaX)
-          selectedObject.value.size.height = Math.max(
-            20,
-            resizeStartDimensions.value.height + deltaY
-          )
-          break
-        case 5: // Bottom-center
-          selectedObject.value.size.height = Math.max(
-            20,
-            resizeStartDimensions.value.height + deltaY
-          )
-          break
-        case 6: // Bottom-left
-          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
-          selectedObject.value.size.height = Math.max(
-            20,
-            resizeStartDimensions.value.height + deltaY
-          )
-          selectedObject.value.position.x = transformedPoint.x
-          break
-        case 7: // Middle-left
-          selectedObject.value.size.width = Math.max(20, resizeStartDimensions.value.width - deltaX)
-          selectedObject.value.position.x = transformedPoint.x
-          break
-      }
+      viewportStore.handleImageResize(
+        transformedPoint,
+        resizeStartDimensions.value,
+        activeHandle.value
+      )
+      return
     }
   }
 }
 
 // 가이드라인 rect 포인터다운이벤트
 const startResize = (event, object, handleIndex) => {
-  console.log('startResize')
   event.stopPropagation()
   isResizing.value = true
   activeHandle.value = handleIndex
@@ -185,11 +131,10 @@ const startResize = (event, object, handleIndex) => {
   resizeStartDimensions.value = {
     x: object.position.x,
     y: object.position.y,
-    ...(object.objectType === 'image' ||
-      (object.objectType === 'text' && {
-        width: object.size.width,
-        height: object.size.height,
-      })),
+    ...((object.objectType === 'image' || object.objectType === 'text') && {
+      width: object.size.width,
+      height: object.size.height,
+    }),
     ...(object.objectType === 'diagram' &&
       object.diagramType === 'circle' && {
         radius: object.radius,
