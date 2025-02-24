@@ -30,7 +30,7 @@ const objects = ref([
         animation: [
           {
             triggerTarget: 'svg-da3k1nk5ljk2l4-34nkl1j3-123',
-            actionType: 'size',
+            actionType: 'display',
             points: null,
             ease: 'linear',
             duration: 0.9,
@@ -39,8 +39,7 @@ const objects = ref([
             direction: 'normal',
             fillMode: null,
             actionSetting: {
-              width: 500,
-              height: 300,
+              isHidden: true,
             },
           },
         ],
@@ -89,6 +88,10 @@ const executeAnimation = (objectId, animation) => {
   if (!element) {
     console.log('Element not found:', objectId)
     return
+  }
+
+  const getCircleElement = (element) => {
+    return element.firstElementChild
   }
 
   // 애니메이션을 실행할 객체의 objectData 찾기
@@ -210,19 +213,13 @@ const executeAnimation = (objectId, animation) => {
       break
 
     case 'color':
-      const colorTargetId = animation.triggerTarget || objectId
-      const colorTargetElement = document.getElementById(colorTargetId)
-      if (!colorTargetElement) return
-
-      const colorCircleElement = colorTargetElement.querySelector('circle')
-      if (!colorCircleElement) return
-      colorCircleElement.animate(
-        [
-          { fill: colorCircleElement.getAttribute('fill') },
-          { fill: animation.actionSetting.color },
-        ],
+      const colorElement = getCircleElement(element)
+      if (!colorElement) return
+      colorElement.animate(
+        [{ fill: colorElement.getAttribute('fill') }, { fill: animation.actionSetting.color }],
         animationConfig
       )
+
       break
 
     case 'size': {
