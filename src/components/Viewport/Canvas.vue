@@ -110,8 +110,15 @@ const handlePointerMove = (event) => {
     ) {
       viewportStore.handleCircleResize(transformedPoint, activeHandle.value)
       return
-    } else {
+    } else if (selectedObject.value.objectType === 'image') {
       viewportStore.handleImageResize(
+        transformedPoint,
+        resizeStartDimensions.value,
+        activeHandle.value
+      )
+      return
+    } else {
+      viewportStore.handleTextResize(
         transformedPoint,
         resizeStartDimensions.value,
         activeHandle.value
@@ -202,8 +209,7 @@ const getHandlePositions = (object) => {
     const width = Number(object.size.width) || 0
     const height = Number(object.size.height) || 0
     const x = Number(object.position.x) || 0
-    const y =
-      object.objectType === 'text' ? Number(object.position.y) - height : Number(object.position.y)
+    const y = Number(object.position.y) || 0
 
     return [
       { x, y }, // Top-left
@@ -265,6 +271,8 @@ const getHandlePositions = (object) => {
           :class="{ 'cursor-move': true }"
         />
 
+        <!-- preserveAspectRatio="xMidYMid meet" : keep ratio -->
+        <!-- 원본이미지 비율 무시: preserveAspectRatio="none" -->
         <image
           v-if="object.objectType === 'image'"
           :x="Number(object.position.x) || 0"
@@ -282,13 +290,27 @@ const getHandlePositions = (object) => {
           v-if="object.objectType === 'text'"
           :x="object.position.x"
           :y="object.position.y"
-          :fill="object.fillStyle"
+          :fill="object.fillStyle || '#000'"
+          dominant-baseline="hanging"
+          text-anchor="start"
           @pointerdown="(e) => handleObjectPointerDown(e, object)"
           @click="(e) => handleClick(e, object)"
           :class="{ 'cursor-move': true }"
         >
           {{ object.text }}
         </text>
+
+        <!-- <text
+          v-if="object.objectType === 'text'"
+          :x="object.position.x"
+          :y="object.position.y"
+          :fill="object.fillStyle"
+          @pointerdown="(e) => handleObjectPointerDown(e, object)"
+          @click="(e) => handleClick(e, object)"
+          :class="{ 'cursor-move': true }"
+        >
+          {{ object.text }}
+        </text> -->
         <!-- dashed line and handler -->
         <ObjectHandle
           v-if="selectedObject === object"

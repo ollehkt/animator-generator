@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { HANDLE_SIZE } from '@/helpers/consts'
 
 const props = defineProps({
@@ -19,6 +20,33 @@ const props = defineProps({
     required: true,
   },
 })
+
+// const actualImageDimensions = computed(() => {
+//   if (props.object.objectType !== 'image') return null
+
+//   const width = props.object.size.width
+//   const height = props.object.size.height
+//   const aspectRatio = width / height
+
+//   // 이미지가 세로로 긴 경우
+//   if (aspectRatio < 1) {
+//     return {
+//       width: height * aspectRatio,
+//       height: height,
+//       offsetX: (width - height * aspectRatio) / 2,
+//       offsetY: 0,
+//     }
+//   }
+//   // 이미지가 가로로 긴 경우
+//   else {
+//     return {
+//       width: width,
+//       height: width / aspectRatio,
+//       offsetX: 0,
+//       offsetY: (height - width / aspectRatio) / 2,
+//     }
+//   }
+// })
 </script>
 
 <template>
@@ -52,6 +80,18 @@ const props = defineProps({
 
   <rect
     v-if="object.objectType === 'image' || object.objectType === 'text'"
+    :x="object.position.x"
+    :y="object.position.y"
+    :width="object.size.width"
+    :height="object.size.height"
+    fill="none"
+    stroke="#4a9eff"
+    stroke-width="1"
+    stroke-dasharray="4 2"
+  />
+
+  <!-- 예전꺼 <rect
+    v-if="object.objectType === 'image' || object.objectType === 'text'"
     :x="handlePositions[0].x"
     :y="handlePositions[0].y"
     :width="handlePositions[2].x - handlePositions[0].x"
@@ -60,7 +100,7 @@ const props = defineProps({
     stroke="#4a9eff"
     stroke-width="1"
     stroke-dasharray="4 2"
-  />
+  /> -->
 </template>
 
 <style scoped>
