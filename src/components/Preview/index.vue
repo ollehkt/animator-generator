@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
@@ -12,7 +12,7 @@ const objects = ref([
       objectType: 'diagram',
       diagramType: 'circle',
       url: '',
-      text: '',
+      text: '타원입니다',
       points: {
         x: 220,
         y: 200,
@@ -51,6 +51,143 @@ const objects = ref([
       },
     ],
   },
+  {
+    objectData: {
+      uuid: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
+      objectType: 'diagram',
+      diagramType: 'circle',
+      url: '',
+      text: '',
+      points: {
+        x: 220,
+        y: 200,
+      },
+      style: {
+        background: '#825feb',
+        opacity: 100,
+        color: '#825feb',
+      },
+      size: {
+        width: 150,
+        height: 200,
+      },
+    },
+    animationData: [
+      {
+        triggerType: 'click',
+        animation: [
+          {
+            triggerTarget: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
+            actionType: 'move',
+            points: [
+              {
+                x: 120,
+                y: 100,
+              },
+              {
+                x: 300,
+                y: 100,
+              },
+              {
+                x: 400,
+                y: 100,
+              },
+              {
+                x: 100,
+                y: 100,
+              },
+              {
+                x: 300,
+                y: 100,
+              },
+            ],
+            ease: 'linear',
+            duration: 2,
+            delay: 0,
+            count: 0,
+            direction: 'normal',
+            fillMode: null,
+            loop: true,
+            actionSetting: {
+              moveType: 'line',
+              curviness: 1.5,
+            },
+          },
+          {
+            triggerTarget: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
+            actionType: 'size',
+            points: null,
+            ease: 'linear',
+            duration: 2,
+            delay: 0,
+            count: null,
+            direction: 'normal',
+            fillMode: null,
+            actionSetting: {
+              color: '#ffe400',
+            },
+          },
+        ],
+        isSimultaneousness: true,
+        callbackFunction: null,
+      },
+    ],
+  },
+  // {
+  //   objectData: {
+  //     uuid: null,
+  //     objectType: 'diagram',
+  //     diagramType: 'circle',
+  //     url: '',
+  //     text: '',
+  //     points: {
+  //       x: 220,
+  //       y: 200,
+  //     },
+  //     style: {
+  //       background: '#825feb',
+  //       opacity: 100,
+  //       color: '#825feb',
+  //     },
+  //     size: {
+  //       width: 150,
+  //       height: 200,
+  //     },
+  //   },
+  //   animationData: [
+  //     {
+  //       triggerType: 'click',
+  //       animation: [
+  //         {
+  //           triggerTarget: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
+  //           actionType: 'move',
+  //           points: [
+  //             {
+  //               x: 120,
+  //               y: 100,
+  //             },
+  //             {
+  //               x: 300,
+  //               y: 100,
+  //             },
+  //           ],
+  //           ease: 'linear',
+  //           duration: 2,
+  //           delay: 0,
+  //           count: null,
+  //           direction: 'normal',
+  //           fillMode: null,
+  //           actionSetting: {
+  //             moveType: 'line',
+  //             curviness: 1.5,
+  //           },
+  //         },
+  //       ],
+  //       isSimultaneousness: true,
+  //       callbackFunction: null,
+  //     },
+  //   ],
+  // },
 ])
 const svgRef = ref(null)
 const elementRefs = ref({})
@@ -64,6 +201,7 @@ const setRef = (el, objectId) => {
 
 const handleTrigger = (objectId, triggerType) => {
   const targetObject = objects.value.find((obj) => obj.objectData.uuid === objectId)
+
   if (!targetObject) return
 
   // animationData에서 해당 트리거 타입에 맞는 애니메이션 찾기
@@ -373,22 +511,6 @@ const executeAnimation = (objectId, animation) => {
   }
 }
 
-// 키보드 이벤트 처리를 위한 새로운 메서드
-const handleKeyEvent = (event, eventType) => {
-  objects.value.forEach((object) => {
-    const matchingAnimation = object.animationData.find((data) => {
-      if (eventType === 'keyup' && data.triggerType === 'keyup') {
-        return data.keyCode === event.key
-      }
-      return data.triggerType === eventType
-    })
-
-    if (matchingAnimation) {
-      handleTrigger(object.objectData.uuid, eventType)
-    }
-  })
-}
-
 // 이미지 위치 업데이트 헬퍼 함수
 const updateElementPosition = (element, objectData) => {
   const { points, size, objectType } = objectData
@@ -417,10 +539,41 @@ const updateElementPosition = (element, objectData) => {
 }
 
 // 컴포넌트 마운트 시 load 이벤트 트리거
+
+const handleKeyEvent = (event, eventType) => {
+  objects.value.forEach((object) => {
+    const matchingAnimation = object.animationData.find((data) => {
+      if (data.triggerType === eventType) {
+        return data.keyCode === String(event.keyCode) || data.keyCode === event.key
+      }
+      return false
+    })
+
+    if (matchingAnimation) {
+      handleTrigger(object.objectData.uuid, eventType)
+    }
+  })
+}
+
 onMounted(() => {
   objects.value.forEach((object) => {
     handleTrigger(object.objectData.uuid, 'load')
   })
+  window.addEventListener('keypress', (event) => {
+    handleKeyEvent(event, 'keypress')
+  })
+  window.addEventListener('keydown', (event) => {
+    handleKeyEvent(event, 'keydown')
+  })
+  window.addEventListener('keyup', (event) => {
+    handleKeyEvent(event, 'keyup')
+  })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keypress', handleKeyEvent)
+  window.removeEventListener('keydown', handleKeyEvent)
+  window.removeEventListener('keyup', handleKeyEvent)
 })
 </script>
 
@@ -494,6 +647,7 @@ onMounted(() => {
           @focus="handleTrigger(object.objectData.uuid, 'focus')"
           @blur="handleTrigger(object.objectData.uuid, 'blur')"
           tabindex="0"
+          class="cursor-pointer outline-none"
         >
           {{ object.objectData.text }}
         </text>
