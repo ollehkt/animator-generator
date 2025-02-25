@@ -10,7 +10,6 @@ export const useProjectsStore = defineStore('projects', () => {
   const hasProjects = computed(() => projects.value && projects.value.length > 0)
   const showProejctSetting = ref(false)
 
-
   const toggleProjectSetting = () => {
     showProejctSetting.value = !showProejctSetting.value
   }
@@ -20,7 +19,7 @@ export const useProjectsStore = defineStore('projects', () => {
 
     try {
       const response = await api.get(API_ROUTES.PROJECTS.LIST)
-      console.log("response", response)
+      // console.log("response", response)
       projects.value = response
     } catch (err) {
       error.value = err.message || 'Failed to fetch projects'
@@ -29,7 +28,21 @@ export const useProjectsStore = defineStore('projects', () => {
     }
   }
 
-  
+  const postProject = async (params) => {
+    isLoading.value = true
+    error.value = null
+
+    try {
+      const response = await api.post(API_ROUTES.PROJECTS.CREATE, params)
+
+      console.log('response', response)
+      return response
+    } catch (err) {
+      error.value = err.message || 'Failed to create project'
+    } finally {
+      isLoading.value = false
+    }
+  }
 
   return {
     projects,
@@ -37,6 +50,7 @@ export const useProjectsStore = defineStore('projects', () => {
     showProejctSetting,
     error,
     getProjectList,
+    postProject,
     toggleProjectSetting,
     hasProjects,
   }

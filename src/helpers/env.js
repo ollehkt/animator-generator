@@ -13,6 +13,7 @@ export const ENV = {
 export const API_ROUTES = {
   PROJECTS: {
     LIST: '/project',
+    CREATE: '/project',
     DETAIL: (id) => `/project/${id}`,
   }
 }

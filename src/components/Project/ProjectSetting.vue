@@ -18,22 +18,29 @@ const selectPreset = (preset) => {
   selectedPreset.value = preset.name
 }
 
-
-const saveProjectSettings = () => {
-  if(!title.value) return alert('프로젝트 이름을 입력해주세요.')
-  if(!selectedPreset.value) return alert('프로젝트 프리셋을 선택해주세요.')
+const saveProjectSettings = async () => {
+  if (!title.value) return alert('프로젝트 이름을 입력해주세요.')
+  if (!selectedPreset.value) return alert('프로젝트 프리셋을 선택해주세요.')
 
   const params = {
-    title: title.value,
-    // preset: selectedPreset.value,
-    size: {
-      width: presets.find(preset => preset.name === selectedPreset.value).width,
-      height: presets.find(preset => preset.name === selectedPreset.value).height,
+    projectName: title.value,
+    canvas: {
+      width: presets.find((preset) => preset.name === selectedPreset.value).width,
+      height: presets.find((preset) => preset.name === selectedPreset.value).height,
     },
+    jsonData: {},
   }
-  console.log(params)
-  alert('프로젝트 생성 완료시 처리')
-  projectsStore.toggleProjectSetting()
+  try {
+    const result =  await projectsStore.postProject(params)
+    console.log("result", result)
+    if(result.projectNo) {
+
+      projectsStore.toggleProjectSetting()
+      projectsStore.getProjectList()
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 // Define emits
@@ -46,7 +53,10 @@ const emit = defineEmits(['close', 'save'])
       <!-- Header -->
       <div class="flex items-center justify-between p-4 bg-gray-700 rounded-t-lg">
         <h2 class="font-semibold">프로젝트 설정</h2>
-        <button @click="projectsStore.toggleProjectSetting" class="text-gray-500 transition-colors hover:text-gray-200">
+        <button
+          @click="projectsStore.toggleProjectSetting"
+          class="text-gray-500 transition-colors hover:text-gray-200"
+        >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
@@ -98,14 +108,8 @@ const emit = defineEmits(['close', 'save'])
         >
           닫기
         </button>
-        <button
-          @click="saveProjectSettings"
-          class="btn-primary"
-        >
-          프로젝트 생성
-        </button>
+        <button @click="saveProjectSettings" class="btn-primary">프로젝트 생성</button>
       </div>
     </div>
   </div>
 </template>
-
