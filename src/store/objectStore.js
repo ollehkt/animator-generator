@@ -191,13 +191,13 @@ export const useObjectStore = defineStore('object', () => {
   // 오브젝트 이름 업데이트
   const updateObjectName = (objectId, newName) => {
     // todo object.name을 정적으로 사용하는 곳 모두 수정 (액션리스트...?)
-    
+
     const object = objects.value.find((obj) => obj.id === objectId)
     if (object) {
       object.name = newName
 
       // 오브젝트 액션리스트 name 수정
-      
+
       object.objectActionList.forEach((action) => {
         const actionTarget = action.actionTargetList.find((target) => target.id === objectId)
         if (actionTarget) {
@@ -294,6 +294,14 @@ export const useObjectStore = defineStore('object', () => {
     objectStartFrom.value = startFrom
   }
 
+  // In your object store
+  const updateObjectText = (id, newText) => {
+    const object = objects.value.find((obj) => obj.id === id)
+    if (object) {
+      object.text = newText
+    }
+  }
+
   return {
     // State
     objects,
@@ -315,5 +323,6 @@ export const useObjectStore = defineStore('object', () => {
     updateObjectAnimation,
     deleteObjectAnimation,
     alignObject,
+    updateObjectText,
   }
 })
