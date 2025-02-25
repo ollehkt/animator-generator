@@ -201,8 +201,6 @@ const setRef = (el, objectId) => {
 
 const handleTrigger = (objectId, triggerType) => {
   const targetObject = objects.value.find((obj) => obj.objectData.uuid === objectId)
-
-  const targetObject = objects.value.find((obj) => obj.objectData.uuid === objectId)
   if (!targetObject) return
 
   // animationData에서 해당 트리거 타입에 맞는 애니메이션 찾기
