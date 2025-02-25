@@ -15,8 +15,7 @@ onMounted(async () => {
 })
 </script>
 <template>
-  에디터 화면 =>>>> path: '/project/:id'
-  <ProjectSetting v-if="showProejctSetting" />
+  
   <div
     v-if="projects.totalCount > 0"
     class="grid grid-cols-[repeat(auto-fill,minmax(374px,1fr))] auto-rows-max gap-6"
@@ -103,5 +102,8 @@ onMounted(async () => {
   <div v-else class="flex flex-col items-center justify-center h-full gap-6 pb-10">
     <div class="text-gray-400">No projects found 🔍</div>
     <button @click="projectsStore.toggleProjectSetting" class="btn-primary">프로젝트 생성</button>
+    <router-link to="/project/projetid" class="btn-dark">에디터화면은 paht: /project/:id 입니다</router-link>
   </div>
+  <ProjectSetting v-if="showProejctSetting" />
+
 </template>
