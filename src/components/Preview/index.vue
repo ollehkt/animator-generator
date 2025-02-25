@@ -51,6 +51,20 @@ const objects = ref([
               curviness: 1.5,
             },
           },
+          {
+            triggerTarget: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
+            actionType: 'scale',
+            points: null,
+            ease: 'linear',
+            duration: 2,
+            delay: 0,
+            count: null,
+            direction: 'normal',
+            fillMode: null,
+            actionSetting: {
+              scaleMagnification: 1.5,
+            },
+          },
         ],
         isSimultaneousness: true,
         callbackFunction: null,
@@ -135,6 +149,7 @@ const executeAnimation = (objectId, animation) => {
     delay: (animation.delay || 0) * 1000,
     iterations: animation.count || 1,
     direction: animation.direction || 'normal',
+    composite: 'add',
   }
 
   switch (animation.actionType) {
