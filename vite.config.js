@@ -25,10 +25,12 @@ export default defineConfig(({ command, mode, ssrBuild }) => {
     return {
       plugins: [vue()],
       server: {
-        // https: {
-        //   key: fs.readFileSync('./.cert/key.pem'),
-        //   cert: fs.readFileSync('./.cert/cert.pem'),
-        // },
+        host: 'localhost',
+        port: 3000,
+        https: {
+          key: fs.readFileSync('./.cert/key.pem'),
+          cert: fs.readFileSync('./.cert/cert.pem'),
+        },
       },
       resolve: {
         alias: {

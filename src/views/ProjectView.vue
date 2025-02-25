@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useProjectsStore } from '@/store'
 
 const router = useRouter()
 const projects = ref([
@@ -22,14 +23,20 @@ const projects = ref([
   },
 ])
 
-const handleProjectClick = (projectId) => {
-  return
-  router.push(`/projects/${projectId}`)
-}
+onMounted(() => { 
+  const projectsStore = useProjectsStore()
+  projectsStore.getProjectList()
+})
+
+// const handleProjectClick = (projectId) => {
+//   return
+//   router.push(`/projects/${projectId}`)
+// }
 </script>
 
 <template>
   <div class="h-full p-8">
+    hihihihi
     <div class="grid grid-cols-[repeat(auto-fill,minmax(374px,1fr))] auto-rows-max gap-6">
       <div
         v-for="project in projects"

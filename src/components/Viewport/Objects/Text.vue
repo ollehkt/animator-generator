@@ -31,8 +31,9 @@ defineProps({
 })
 </script>
 <template>
+  <text>{{ editingObjectId }}</text>
   <text
-    v-if="object.objectType === 'text' && editingObjectId !== object.id"
+    v-if="editingObjectId !== object.id"
     :x="object.position.x"
     :y="object.position.y"
     :fill="object.fillStyle || '#000'"
@@ -44,11 +45,12 @@ defineProps({
     :class="{ 'cursor-move': true }"
   >
     {{ object.text }}
+    {{ editingObjectId }}
   </text>
 
   <!-- Editable text -->
   <foreignObject
-    v-if="object.objectType === 'text' && editingObjectId === object.id"
+    v-if="editingObjectId === object.id"
     :x="object.position.x"
     :y="object.position.y"
     :width="object.size.width || 200"

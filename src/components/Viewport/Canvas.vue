@@ -242,7 +242,6 @@ const handleDoubleClick = (event, object) => {
   nextTick(() => {
     const textarea = document.querySelector(`#text-edit-${object.id}`)
     if (textarea) {
-      alert('ckwdma')
       textarea.focus()
       textarea.select()
     }

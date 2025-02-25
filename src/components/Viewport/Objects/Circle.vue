@@ -12,11 +12,10 @@ defineProps({
     type: Function,
     required: true,
   },
-});
+})
 </script>
 <template>
   <ellipse
-   
     :cx="object.position.x"
     :cy="object.position.y"
     :rx="object.radiusX || object.radius"

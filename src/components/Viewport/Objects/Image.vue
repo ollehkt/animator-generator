@@ -19,7 +19,6 @@ defineProps({
   <!-- preserveAspectRatio="xMidYMid meet" : keep ratio -->
   <!-- 원본이미지 비율 무시: preserveAspectRatio="none" -->
   <image
-    v-if="object.objectType === 'image'"
     preserveAspectRatio="xMidYMid meet"
     :x="Number(object.position.x) || 0"
     :y="Number(object.position.y) || 0"
