@@ -10,13 +10,12 @@ export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   linkActiveClass: 'active',
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'home',
-    //   component: MainView,
-    // },
     {
       path: '/',
+      redirect: '/project',
+    },
+    {
+      path: '/project/:id',
       name: 'editor',
       component: EditorView,
     },

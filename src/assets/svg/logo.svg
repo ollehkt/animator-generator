@@ -3,19 +3,22 @@
 <path d="M15.1083 6.77614C14.8578 3.21621 11.868 0.333051 8.16351 0.0697712C7.34123 0.0116235 6.54586 0.0810777 5.79421 0.260366C5.48312 0.334666 5.33514 0.675476 5.49994 0.938756L12.7626 12.5408C14.3348 11.1162 15.2697 9.05036 15.1083 6.77775V6.77614Z" fill="#CCC"/>
 <path d="M1.95018 2.50228C0.668841 3.89783 -0.0609518 5.77148 0.0903877 7.80988C0.35271 11.3472 3.31896 14.211 6.99988 14.4888C8.04076 14.5679 9.0396 14.4387 9.96109 14.1464L2.71529 2.56851C2.54881 2.30361 2.16374 2.27131 1.95186 2.50228H1.95018Z" fill="#CCC"/>
 <path d="M12.7626 12.5408C11.9709 13.2572 11.0197 13.8106 9.96277 14.1464L11.8764 15.8133C12.0529 15.9667 12.3119 15.9942 12.5187 15.8811L13.1359 15.5435C13.3511 15.4256 13.457 15.1866 13.3965 14.9556L12.7642 12.5392C12.7637 12.5397 12.7631 12.5403 12.7626 12.5408Z" fill="#CCC"/>
-
-<!-- F -->
-<path d="M25 3.5V13.5M25 3.5H35M25 8.5H33" stroke="#CCC" stroke-width="2.5" stroke-linecap="round"/>
-
-<!-- R -->
-<path d="M40 3.5V13.5M40 3.5H47C49 3.5 50 4.5 50 6.5C50 8.5 49 9.5 47 9.5H40M47 9.5L51 13.5" stroke="#CCC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-
-<!-- A -->
-<path d="M55 13.5L60 3.5L65 13.5M57 10H63" stroke="#CCC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-
 <!-- M -->
-<path d="M70 13.5V3.5L75 10L80 3.5V13.5" stroke="#CCC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M25 13.5V3.5L30 10L35 3.5V13.5" stroke="#CCC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
 
-<!-- E -->
-<path d="M85 3.5V13.5M85 3.5H95M85 8.5H93M85 13.5H95" stroke="#CCC" stroke-width="2.5" stroke-linecap="round"/>
+<!-- O -->
+<path d="M40 8.5C40 5.5 42 3.5 45 3.5C48 3.5 50 5.5 50 8.5C50 11.5 48 13.5 45 13.5C42 13.5 40 11.5 40 8.5Z" stroke="#CCC" stroke-width="2.5" stroke-linecap="round"/>
+
+<!-- T -->
+<path d="M55 3.5H65M60 3.5V13.5" stroke="#CCC" stroke-width="2.5" stroke-linecap="round"/>
+
+<!-- I -->
+<path d="M70 3.5V13.5" stroke="#CCC" stroke-width="2.5" stroke-linecap="round"/>
+
+<!-- O -->
+<path d="M75 8.5C75 5.5 77 3.5 80 3.5C83 3.5 85 5.5 85 8.5C85 11.5 83 13.5 80 13.5C77 13.5 75 11.5 75 8.5Z" stroke="#CCC" stroke-width="2.5" stroke-linecap="round"/>
+
+<!-- N -->
+<path d="M90 13.5V3.5L100 13.5V3.5" stroke="#CCC" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
 </svg>

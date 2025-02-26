@@ -18,6 +18,7 @@
   .input-dark {
     @apply text-xs p-2 !h-8 bg-[#252526] border border-[#333] rounded text-white pl-3 outline-none;
   }
+
   .input-dark:disabled {
     @apply bg-[#333] text-gray-400 opacity-50 cursor-not-allowed;
     -webkit-user-select: none;
@@ -26,6 +27,12 @@
     user-select: none;
     pointer-events: none;
   }
+
+  .input-white {
+    @apply text-xs p-2 !h-8 bg-[#FFF] border border-[#dcdcdc] text-black rounded pl-3 outline-none 
+focus:border-[#4F46E5] focus:ring-2 focus:ring-[#4F46E5]/20;
+  }
+
   .input-color {
     @apply text-xs !h-8 bg-[#252526] border border-[#333] rounded text-white pl-3 outline-none;
   }

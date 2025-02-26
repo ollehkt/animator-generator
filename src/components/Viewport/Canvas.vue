@@ -1,10 +1,13 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useObjectStore, useControllerStore, useViewportStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { HANDLE_SIZE, HANDLE_POSITIONS } from '@/helpers/consts'
-import ObjectHandle from './ObjectHandle.vue'
 
+import ObjectHandle from './ObjectHandle.vue'
+import Circle from './Objects/Circle.vue'
+import Image from './Objects/Image.vue'
+import Text from './Objects/Text.vue'
 const props = defineProps({
   width: {
     type: Number,
@@ -30,6 +33,8 @@ const isResizing = ref(false)
 const dragOffset = ref({ x: 0, y: 0 })
 const resizeStartDimensions = ref(null)
 const activeHandle = ref(null)
+const isEditing = ref(false)
+const editingObjectId = ref(null)
 
 const MOVE_DEBOUNCE = 5 // milliseconds
 let lastMoveTime = 0
@@ -110,8 +115,15 @@ const handlePointerMove = (event) => {
     ) {
       viewportStore.handleCircleResize(transformedPoint, activeHandle.value)
       return
-    } else {
+    } else if (selectedObject.value.objectType === 'image') {
       viewportStore.handleImageResize(
+        transformedPoint,
+        resizeStartDimensions.value,
+        activeHandle.value
+      )
+      return
+    } else {
+      viewportStore.handleTextResize(
         transformedPoint,
         resizeStartDimensions.value,
         activeHandle.value
@@ -202,8 +214,7 @@ const getHandlePositions = (object) => {
     const width = Number(object.size.width) || 0
     const height = Number(object.size.height) || 0
     const x = Number(object.position.x) || 0
-    const y =
-      object.objectType === 'text' ? Number(object.position.y) - height : Number(object.position.y)
+    const y = Number(object.position.y) || 0
 
     return [
       { x, y }, // Top-left
@@ -218,6 +229,32 @@ const getHandlePositions = (object) => {
   }
 
   return []
+}
+
+const handleDoubleClick = (event, object) => {
+  if (object?.objectType !== 'text') return
+
+  event.stopPropagation()
+  isEditing.value = true
+  editingObjectId.value = object.id
+
+  // Need to wait for foreignObject to render
+  nextTick(() => {
+    const textarea = document.querySelector(`#text-edit-${object.id}`)
+    if (textarea) {
+      textarea.focus()
+      textarea.select()
+    }
+  })
+}
+
+const finishEditing = (object) => {
+  isEditing.value = false
+  editingObjectId.value = null
+}
+
+const handleTextChange = (object, event) => {
+  objectStore.updateObjectText(object.id, event.target.value)
 }
 </script>
 <template>
@@ -252,43 +289,31 @@ const getHandlePositions = (object) => {
     <!-- Objects -->
     <template v-for="object in objects" :key="object.id">
       <g :id="object.id" v-show="object.isVisible">
-        <!-- Change circle to ellipse -->
-        <ellipse
+        <Circle
           v-if="object.objectType === 'diagram' && object.diagramType === 'circle'"
-          :cx="object.position.x"
-          :cy="object.position.y"
-          :rx="object.radiusX || object.radius"
-          :ry="object.radiusY || object.radius"
-          :fill="object.fillStyle"
-          @pointerdown="(e) => handleObjectPointerDown(e, object)"
-          @click="(e) => handleClick(e, object)"
-          :class="{ 'cursor-move': true }"
+          :object="object"
+          :handle-object-pointer-down="handleObjectPointerDown"
+          :handle-click="handleClick"
         />
 
-        <image
+        <Image
           v-if="object.objectType === 'image'"
-          :x="Number(object.position.x) || 0"
-          :y="Number(object.position.y) || 0"
-          :width="Number(object.size.width) || 100"
-          :height="Number(object.size.height) || 100"
-          :href="object.url"
-          preserveAspectRatio="xMidYMid meet"
-          @pointerdown="(e) => handleObjectPointerDown(e, object)"
-          @click="(e) => handleClick(e, object)"
-          :class="{ 'cursor-move': true }"
+          :object="object"
+          :handle-object-pointer-down="handleObjectPointerDown"
+          :handle-click="handleClick"
         />
 
-        <text
+        <Text
           v-if="object.objectType === 'text'"
-          :x="object.position.x"
-          :y="object.position.y"
-          :fill="object.fillStyle"
-          @pointerdown="(e) => handleObjectPointerDown(e, object)"
-          @click="(e) => handleClick(e, object)"
-          :class="{ 'cursor-move': true }"
-        >
-          {{ object.text }}
-        </text>
+          :object="object"
+          :editing-object-id="editingObjectId"
+          :handle-object-pointer-down="handleObjectPointerDown"
+          :handle-click="handleClick"
+          :handle-double-click="handleDoubleClick"
+          :finish-editing="finishEditing"
+          :handle-text-change="handleTextChange"
+        />
+
         <!-- dashed line and handler -->
         <ObjectHandle
           v-if="selectedObject === object"
@@ -301,3 +326,11 @@ const getHandlePositions = (object) => {
     </template>
   </svg>
 </template>
+
+<style scoped>
+textarea {
+  font-family: inherit;
+  line-height: inherit;
+  font-size: inherit;
+}
+</style>

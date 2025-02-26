@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 export const useViewportStore = defineStore('viewport', () => {
-  // 원형 리사이즈
+  // Circle Object Resize
   const handleCircleResize = (transformedPoint, handleIndex) => {
     const objectStore = useObjectStore()
     const { selectedObject } = storeToRefs(objectStore)
@@ -31,20 +31,22 @@ export const useViewportStore = defineStore('viewport', () => {
     }
   }
 
-  //handleImageResize
+  // Image Object Resize
   const handleImageResize = (transformedPoint, resizeStartDimensions, handleIndex) => {
     const objectStore = useObjectStore()
     const { selectedObject } = storeToRefs(objectStore)
 
     // X축 핸들 시작 위치 계산
-    const handleStartX = handleIndex === 2 || handleIndex === 3 || handleIndex === 4 
-        ? resizeStartDimensions.x + resizeStartDimensions.width  // 오른쪽 핸들
-        : resizeStartDimensions.x  // 왼쪽 핸들
+    const handleStartX =
+      handleIndex === 2 || handleIndex === 3 || handleIndex === 4
+        ? resizeStartDimensions.x + resizeStartDimensions.width // 오른쪽 핸들
+        : resizeStartDimensions.x // 왼쪽 핸들
 
     // Y축 핸들 시작 위치 계산 수정
-    const handleStartY = handleIndex === 4 || handleIndex === 5 || handleIndex === 6
-        ? resizeStartDimensions.y + resizeStartDimensions.height  // 아래쪽 핸들
-        : resizeStartDimensions.y  // 위쪽 핸들
+    const handleStartY =
+      handleIndex === 4 || handleIndex === 5 || handleIndex === 6
+        ? resizeStartDimensions.y + resizeStartDimensions.height // 아래쪽 핸들
+        : resizeStartDimensions.y // 위쪽 핸들
 
     // 실제 이동 거리 계산
     const deltaX = transformedPoint.x - handleStartX
@@ -91,8 +93,97 @@ export const useViewportStore = defineStore('viewport', () => {
         break
     }
   }
+
+  // Text Obejct Resize
+  const handleTextResize = (transformedPoint, resizeStartDimensions, handleIndex) => {
+    const objectStore = useObjectStore()
+    const { selectedObject } = storeToRefs(objectStore)
+
+    // Calculate handle start positions
+    const handleStartX =
+      handleIndex === 2 || handleIndex === 3 || handleIndex === 4
+        ? resizeStartDimensions.x + resizeStartDimensions.width // right handles
+        : resizeStartDimensions.x // left handles
+
+    const handleStartY =
+      handleIndex === 4 || handleIndex === 5 || handleIndex === 6
+        ? resizeStartDimensions.y + resizeStartDimensions.height // bottom handles
+        : resizeStartDimensions.y // top handles
+
+    // Only adjust width for horizontal handles
+    if (handleIndex === 3 || handleIndex === 7) {
+      if (handleIndex === 3) {
+        // Right handle
+        selectedObject.value.size.width = Math.max(20, transformedPoint.x - resizeStartDimensions.x)
+      } else {
+        // Left handle
+        const newWidth = Math.max(
+          20,
+          resizeStartDimensions.x + resizeStartDimensions.width - transformedPoint.x
+        )
+        selectedObject.value.position.x = transformedPoint.x
+        selectedObject.value.size.width = newWidth
+      }
+      return
+    }
+
+    // Handle vertical resizing
+    if (handleIndex === 1 || handleIndex === 5) {
+      const deltaY = transformedPoint.y - handleStartY
+      if (handleIndex === 1) {
+        // Top handle
+        const newHeight = Math.max(20, resizeStartDimensions.height - deltaY)
+        selectedObject.value.position.y = transformedPoint.y
+        selectedObject.value.size.height = newHeight
+      } else {
+        // Bottom handle
+        selectedObject.value.size.height = Math.max(
+          20,
+          resizeStartDimensions.height +
+            (transformedPoint.y - (resizeStartDimensions.y + resizeStartDimensions.height))
+        )
+      }
+      return
+    }
+
+    // For corner handles, adjust both width and height
+    const deltaX = transformedPoint.x - handleStartX
+    const deltaY = transformedPoint.y - handleStartY
+
+    switch (handleIndex) {
+      case 0: // Top-left
+        selectedObject.value.position.x = transformedPoint.x
+        selectedObject.value.position.y = transformedPoint.y
+        selectedObject.value.size.width = Math.max(20, resizeStartDimensions.width - deltaX)
+        selectedObject.value.size.height = Math.max(20, resizeStartDimensions.height - deltaY)
+        break
+      case 2: // Top-right
+        selectedObject.value.position.y = transformedPoint.y
+        selectedObject.value.size.width = Math.max(20, resizeStartDimensions.width + deltaX)
+        selectedObject.value.size.height = Math.max(20, resizeStartDimensions.height - deltaY)
+        break
+      case 4: // Bottom-right
+        selectedObject.value.size.width = Math.max(20, resizeStartDimensions.width + deltaX)
+        selectedObject.value.size.height = Math.max(
+          20,
+          resizeStartDimensions.height +
+            (transformedPoint.y - (resizeStartDimensions.y + resizeStartDimensions.height))
+        )
+        break
+      case 6: // Bottom-left
+        selectedObject.value.position.x = transformedPoint.x
+        selectedObject.value.size.width = Math.max(20, resizeStartDimensions.width - deltaX)
+        selectedObject.value.size.height = Math.max(
+          20,
+          resizeStartDimensions.height +
+            (transformedPoint.y - (resizeStartDimensions.y + resizeStartDimensions.height))
+        )
+        break
+    }
+  }
   return {
     handleCircleResize,
     handleImageResize,
+    handleTextResize,
   }
 })
