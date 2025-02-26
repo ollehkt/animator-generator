@@ -55,7 +55,6 @@ const objects = ref([
 ])
 const svgRef = ref(null)
 const elementRefs = ref({})
-const animationExecuted = ref({})
 
 const setRef = (el, objectId) => {
   if (el) {
@@ -64,13 +63,6 @@ const setRef = (el, objectId) => {
 }
 
 const handleTrigger = (objectId, triggerType, isParent = false) => {
-  // 이벤트 타입에 따른 콘솔 출력 추가
-  if (['mouseover', 'mouseenter', 'mouseleave', 'mouseout'].includes(triggerType)) {
-    console.log(
-      ` Event: ${triggerType}, Object ID: ${objectId}, Source: ${isParent ? 'Parent' : 'Child'}`
-    )
-  }
-
   const targetObject = objects.value.find((obj) => obj.objectData.uuid === objectId)
   if (!targetObject) return
 
@@ -88,14 +80,9 @@ const handleTrigger = (objectId, triggerType, isParent = false) => {
     })
   } else {
     // 순차적으로 실행
-    matchingAnimations.animation.forEach((anim, index) => {
-      if (animationExecuted.value[objectId] && !anim.loop) return
+    matchingAnimations.animation.forEach((anim) => {
       executeAnimation(anim.triggerTarget || objectId, anim)
     })
-
-    if (matchingAnimations.animation.length > 0) {
-      animationExecuted.value[objectId] = true
-    }
   }
 
   // 콜백 함수 실행
