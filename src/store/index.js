@@ -7,12 +7,4 @@ import { useViewportStore } from './viewport.store'
 import { useProjectsStore } from './project.store'
 const pinia = createPinia()
 
-export {
-  pinia,
-  useObjectStore,
-  useControllerStore,
-  usePreviewStore,
-  useAnimationStore,
-  useViewportStore,
-  useProjectsStore,
-}
+export { pinia, useObjectStore, useControllerStore, usePreviewStore, useAnimationStore, useViewportStore, useProjectsStore }
