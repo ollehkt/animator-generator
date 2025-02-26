@@ -8,51 +8,6 @@ const objectStore = useObjectStore()
 const objects = ref([
   {
     objectData: {
-      uuid: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
-      objectType: 'diagram',
-      diagramType: 'circle',
-      url: '',
-      text: '타원입니다',
-      points: {
-        x: 220,
-        y: 200,
-      },
-      style: {
-        background: '#825feb',
-        opacity: 100,
-        color: '#825feb',
-      },
-      size: {
-        width: 140,
-        height: 100,
-      },
-    },
-    animationData: [
-      {
-        triggerType: 'click',
-        animation: [
-          {
-            triggerTarget: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
-            actionType: 'rotate',
-            points: null,
-            ease: 'ease-in-out',
-            duration: 2,
-            delay: 0,
-            count: null,
-            loop: false,
-            fillMode: null,
-            actionSetting: {
-              degree: 45,
-            },
-          },
-        ],
-        isSimultaneousness: true,
-        callbackFunction: null,
-      },
-    ],
-  },
-  {
-    objectData: {
       uuid: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
       objectType: 'diagram',
       diagramType: 'circle',
@@ -65,7 +20,7 @@ const objects = ref([
       style: {
         background: '#825feb',
         opacity: 100,
-        color: '#825feb',
+        // color: '#825feb',
       },
       size: {
         width: 150,
@@ -74,7 +29,7 @@ const objects = ref([
     },
     animationData: [
       {
-        triggerType: 'click',
+        triggerType: 'contextmenu',
         animation: [
           {
             triggerTarget: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
@@ -133,6 +88,56 @@ const objects = ref([
       },
     ],
   },
+  {
+    objectData: {
+      uuid: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
+      objectType: 'text',
+      // diagramType: 'circle',
+      // objectType: 'image',
+      diagramType: null,
+      // url: 'https://questbook-prod-bucket.s3.ap-northeast-2.amazonaws.com/user/1/Questbook_test_2024-12-17-14-09-497.png',
+      url: '',
+      text: '타원입니다',
+      points: {
+        x: 220,
+        y: 200,
+      },
+      style: {
+        // background: '#825feb',
+        opacity: 100,
+        color: '#000000',
+      },
+      size: {
+        width: 140,
+        height: 100,
+      },
+    },
+    animationData: [
+      {
+        triggerType: 'click',
+        // keyCode: '49',
+        animation: [
+          {
+            triggerTarget: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
+            actionType: 'rotate',
+            points: null,
+            ease: 'ease-in-out',
+            duration: 2,
+            delay: 0,
+            count: null,
+            loop: false,
+            fillMode: null,
+            actionSetting: {
+              degree: 45,
+            },
+          },
+        ],
+        isSimultaneousness: true,
+        callbackFunction: null,
+      },
+    ],
+  },
+
   // {
   //   objectData: {
   //     uuid: null,
@@ -199,7 +204,14 @@ const setRef = (el, objectId) => {
   }
 }
 
-const handleTrigger = (objectId, triggerType) => {
+const handleTrigger = (objectId, triggerType, isParent = false) => {
+  // 이벤트 타입에 따른 콘솔 출력 추가
+  if (['mouseover', 'mouseenter', 'mouseleave', 'mouseout'].includes(triggerType)) {
+    console.log(
+      ` Event: ${triggerType}, Object ID: ${objectId}, Source: ${isParent ? 'Parent' : 'Child'}`
+    )
+  }
+
   const targetObject = objects.value.find((obj) => obj.objectData.uuid === objectId)
   if (!targetObject) return
 
@@ -595,15 +607,15 @@ onUnmounted(() => {
           :rx="object.objectData.size.width / 2"
           :ry="object.objectData.size.height / 2"
           :fill="object.objectData.style.background"
-          @click.stop="handleTrigger(object.objectData.uuid, 'click')"
-          @dblclick.stop="handleTrigger(object.objectData.uuid, 'dblclick')"
+          @click="handleTrigger(object.objectData.uuid, 'click')"
+          @dblclick="handleTrigger(object.objectData.uuid, 'dblclick')"
           @mouseenter.stop="handleTrigger(object.objectData.uuid, 'mouseenter')"
           @mouseleave.stop="handleTrigger(object.objectData.uuid, 'mouseleave')"
           @mouseover="handleTrigger(object.objectData.uuid, 'mouseover')"
           @mouseout="handleTrigger(object.objectData.uuid, 'mouseout')"
           @mouseup="handleTrigger(object.objectData.uuid, 'mouseup')"
           @mousedown="handleTrigger(object.objectData.uuid, 'mousedown')"
-          @contextmenu.stop="handleTrigger(object.objectData.uuid, 'contextmenu')"
+          @contextmenu.prevent="handleTrigger(object.objectData.uuid, 'contextmenu')"
           tabindex="0"
           @focus.stop="handleTrigger(object.objectData.uuid, 'focus')"
           @blur.stop="handleTrigger(object.objectData.uuid, 'blur')"
@@ -626,8 +638,9 @@ onUnmounted(() => {
           @mouseleave.stop="handleTrigger(object.objectData.uuid, 'mouseleave')"
           @mouseover="handleTrigger(object.objectData.uuid, 'mouseover')"
           @mouseout="handleTrigger(object.objectData.uuid, 'mouseout')"
-          @mouseup="handleTrigger(object.objectData.uuid, 'mouse-up')"
+          @mouseup="handleTrigger(object.objectData.uuid, 'mouseup')"
           @mousedown="handleTrigger(object.objectData.uuid, 'mousedown')"
+          @contextmenu.prevent="handleTrigger(object.objectData.uuid, 'contextmenu')"
           @focus.stop="handleTrigger(object.objectData.uuid, 'focus')"
           @blur.stop="handleTrigger(object.objectData.uuid, 'blur')"
           @focusin="handleTrigger(object.objectData.uuid, 'focusin')"
@@ -649,6 +662,7 @@ onUnmounted(() => {
           @mouseout="handleTrigger(object.objectData.uuid, 'mouseout')"
           @mouseup="handleTrigger(object.objectData.uuid, 'mouseup')"
           @mousedown="handleTrigger(object.objectData.uuid, 'mousedown')"
+          @contextmenu.prevent="handleTrigger(object.objectData.uuid, 'contextmenu')"
           @focus.stop="handleTrigger(object.objectData.uuid, 'focus')"
           @blur.stop="handleTrigger(object.objectData.uuid, 'blur')"
           @focusin="handleTrigger(object.objectData.uuid, 'focusin')"
