@@ -1,17 +1,20 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useObjectStore, useControllerStore } from '@/store'
+import { useObjectStore, useControllerStore, useViewportStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 import Canvas from './Canvas.vue'
 import ZoomControls from './ZoomControls.vue'
 
 const canvasRef = ref(null)
+
 const controllerStore = useControllerStore()
 const objectStore = useObjectStore()
+const viewportStore = useViewportStore()
 
 const { isSettingTrigger } = storeToRefs(controllerStore)
-const { selectedObject, canvasSelected } = storeToRefs(objectStore)
+const { selectedObject } = storeToRefs(objectStore)
+const { canvasSize } = storeToRefs(viewportStore)
 
 // Add zoom state and controls
 const zoom = ref(1)
@@ -132,7 +135,7 @@ onUnmounted(() => {
         🚩
         <em class="text-xs not-italic">(0, 0)</em>
       </span>
-      <Canvas :width="720" :height="452" />
+      <Canvas :width="canvasSize?.width" :height="canvasSize?.height" />
     </div>
   </div>
 </template>

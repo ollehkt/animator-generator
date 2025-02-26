@@ -16,9 +16,11 @@ const controllerStore = useControllerStore()
 const previewStore = usePreviewStore()
 const projectsStore = useProjectsStore()
 const { showSourcePreview, isLayersMinimized } = storeToRefs(controllerStore)
-const { objectJson } = storeToRefs(previewStore)
+const { projectDetail } = storeToRefs(projectsStore)
 const route = useRoute()
 const viewportRef = ref(null)
+
+const isLoaded = ref(false)
 
 const toggleLayersMinimized = () => {
   controllerStore.toggleLayersMinimized()
@@ -26,12 +28,14 @@ const toggleLayersMinimized = () => {
 
 onMounted(async () => {
   const result = await projectsStore.getProjectDetail(route.params.id)
-  console.log('result', result)
+  if (result) {
+    isLoaded.value = true
+  }
 })
 </script>
 
 <template>
-  <div class="flex h-full pt-[50px] bg-[#1e1e1e] overflow-hidden">
+  <div v-if="isLoaded" class="flex h-full pt-[50px] bg-[#1e1e1e] overflow-hidden">
     <SourcePreview v-if="showSourcePreview" />
 
     <Header />
@@ -53,7 +57,7 @@ onMounted(async () => {
         @click="toggleLayersMinimized"
         class="absolute cursor-pointer z-10 text-sm left-[18px] top-[48px] flex items-center justify-between gap-2 p-2 px-4 border bg-[#333]/80 backdrop-blur-sm border-gray-700 rounded-xl shadow-lg"
       >
-        <p class="font-medium">Project Title</p>
+      <p class="font-medium">{{ projectDetail.projectName }}</p>
         <button class="">
           <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
             <path

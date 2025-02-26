@@ -3,6 +3,16 @@ import { defineStore } from 'pinia'
 import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 export const useViewportStore = defineStore('viewport', () => {
+
+  const canvasSize = ref({
+    width: 720,
+    height: 452,
+  })
+
+  const setCanvasSize = (width, height) => {
+    canvasSize.value.width = width
+    canvasSize.value.height = height
+  }
   // Circle Object Resize
   const handleCircleResize = (transformedPoint, handleIndex) => {
     const objectStore = useObjectStore()
@@ -163,6 +173,8 @@ export const useViewportStore = defineStore('viewport', () => {
     }
   }
   return {
+    canvasSize,
+    setCanvasSize,
     handleCircleResize,
     handleImageResize,
     handleTextResize,

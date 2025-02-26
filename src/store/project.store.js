@@ -2,14 +2,14 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { API_ROUTES } from '@/helpers/env'
 import { api } from '@/helpers/api'
+import { useViewportStore } from './viewport.store'
 
 export const useProjectsStore = defineStore('projects', () => {
   const projects = ref([])
+  const projectDetail = ref(null)
   const isLoading = ref(false)
   const error = ref(null)
-  const hasProjects = computed(() => projects.value && projects.value.length > 0)
   const showProejctSetting = ref(false)
-
   const toggleProjectSetting = () => {
     showProejctSetting.value = !showProejctSetting.value
   }
@@ -36,6 +36,8 @@ export const useProjectsStore = defineStore('projects', () => {
    * @GET /project/:id
    */
   const getProjectDetail = async (no) => {
+    const viewportStore = useViewportStore()
+
     // Convert to number and validate
     const projectNo = parseInt(no, 10)
     
@@ -49,6 +51,8 @@ export const useProjectsStore = defineStore('projects', () => {
 
     try {
       const response = await api.get(API_ROUTES.PROJECTS.DETAIL(projectNo))
+      projectDetail.value = response
+      viewportStore.setCanvasSize(response.canvas.width, response.canvas.height)
       return response
     } catch (err) {
       error.value = err.message || 'Failed to fetch project detail'
@@ -78,6 +82,7 @@ export const useProjectsStore = defineStore('projects', () => {
 
   return {
     projects,
+    projectDetail,
     isLoading,
     showProejctSetting,
     error,
@@ -85,6 +90,5 @@ export const useProjectsStore = defineStore('projects', () => {
     getProjectDetail,
     postProject,
     toggleProjectSetting,
-    hasProjects,
   }
 })

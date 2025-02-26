@@ -11,11 +11,11 @@ import Text from './Objects/Text.vue'
 const props = defineProps({
   width: {
     type: Number,
-    default: 800,
+    default: 720,
   },
   height: {
     type: Number,
-    default: 400,
+    default: 452,
   },
   backgroundColor: {
     type: String,

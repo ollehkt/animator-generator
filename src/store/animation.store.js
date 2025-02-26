@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
-
+import { ref } from 'vue'
 export const useAnimationStore = defineStore('animation', () => {
+  const animationJSON = ref(null)
+  
   const createAnimationConfig = (
     triggerType,
     triggerTarget,
@@ -38,6 +40,7 @@ export const useAnimationStore = defineStore('animation', () => {
           animData.opacityEnd = animConfig.opacityEnd
           break
       }
+      console.log('animData', animData)
       return animData
     })
 
