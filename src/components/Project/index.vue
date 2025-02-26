@@ -128,7 +128,7 @@ onMounted(async () => {
         </div>
       </div>
       <button
-        @click="projectsStore.toggleProjectSetting"
+        @click="projectsStore.toggleProjectSetting()"
         class="flex items-center justify-center gap-4 p-2 transition-colors border border-gray-200 rounded-lg hover:bg-gray-700"
       >
         <svg

@@ -5,6 +5,7 @@ import { usePreviewStore } from './preview.store'
 import { useAnimationStore } from './animation.store'
 import { useViewportStore } from './viewport.store'
 import { useProjectsStore } from './project.store'
+import { useDataStore } from './data.store'
 const pinia = createPinia()
 
 export { 
@@ -14,5 +15,6 @@ export {
   usePreviewStore, 
   useAnimationStore, 
   useViewportStore, 
-  useProjectsStore 
+  useProjectsStore,
+  useDataStore
 }

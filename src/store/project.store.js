@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { API_ROUTES } from '@/helpers/apiRoutes'
 import { api } from '@/helpers/api'
-import { useViewportStore } from './viewport.store'
+import { useObjectStore, useViewportStore } from '@/store'
+import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
 export const useProjectsStore = defineStore('projects', () => {
@@ -48,6 +49,7 @@ export const useProjectsStore = defineStore('projects', () => {
 
     try {
       const response = await api.get(API_ROUTES.PROJECTS.LIST)
+      
       projects.value = response
     } catch (err) {
       error.value = err.message || 'Failed to fetch projects'
@@ -68,11 +70,12 @@ export const useProjectsStore = defineStore('projects', () => {
     try {
       const response = await api.get(API_ROUTES.PROJECTS.DETAIL(no))
       projectDetail.value = response
+
       /**
        * todo => sampleJaon 형태 UI에 사용하는 구조로 변형
-       * 
-       *  */ 
-      
+       *
+       *  */
+
       viewportStore.setCanvasSize(response.canvas.width, response.canvas.height)
 
       return response
@@ -88,17 +91,23 @@ export const useProjectsStore = defineStore('projects', () => {
   /**
    * @PUT /project/:id
    */
-  const updateProject = async (no, params) => {
+  const updateProject = async (no, params, isToggle = false) => {
+    console.log('🟢🟢🟢 프로젝트 업데이트 =>', params)
     isLoading.value = true
     error.value = null
+    // return
     try {
       const response = await api.put(API_ROUTES.PROJECTS.UPDATE(no), params)
       if (response) {
         getProjectDetail(no)
-        toggleProjectSetting()
+        if (isToggle) {
+          console.log('🟢🟢🟢 프로젝트 설정은 기본적으로 false')
+          toggleProjectSetting()
+        }
       }
       return response
     } catch (err) {
+      console.error('🔴', err)
       error.value = err.message || 'Failed to update project'
     } finally {
       isLoading.value = false
@@ -125,6 +134,8 @@ export const useProjectsStore = defineStore('projects', () => {
       isLoading.value = false
     }
   }
+
+  
 
   return {
     projects,

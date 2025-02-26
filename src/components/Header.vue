@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { useControllerStore, useObjectStore, useProjectsStore } from '@/store'
+import { useControllerStore, useObjectStore, useProjectsStore, useDataStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { OBJECT_ALIGN } from '@/helpers/consts'
 
@@ -8,6 +8,7 @@ const router = useRouter()
 const objectStore = useObjectStore()
 const controllerStore = useControllerStore()
 const projectsStore = useProjectsStore()
+const dataStore = useDataStore()
 const { showSourcePreview } = storeToRefs(controllerStore)
 const { selectedObject } = storeToRefs(objectStore)
 const { objects } = storeToRefs(objectStore)
@@ -51,7 +52,9 @@ const headerButtons = [
 ]
 
 const handleSave = () => {
-  alert('save')
+  alert('저장')
+  // test
+  // dataStore.formatObjectData(objects.value)
 }
 
 const loadProject = () => {

@@ -89,7 +89,7 @@ onUnmounted(() => {
         <Toolbox class="absolute transform -translate-x-1/2 bottom-4 left-1/2" />
         <!-- PROJECT 설정 버튼 -->
         <button
-          @click="projectsStore.toggleProjectSetting"
+          @click="projectsStore.toggleProjectSetting()"
           class="group absolute z-10 flex items-center justify-center w-10 h-10 border bg-[#333]/80 border-gray-700 rounded-full shadow-md group bottom-8 right-6 hover:bg-[#4F46E5]/60 transition-colors duration-200"
         >
           <svg

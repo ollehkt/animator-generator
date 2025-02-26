@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useControllerStore, useAnimationStore } from '@/store'
+import { useControllerStore, useAnimationStore, useDataStore, useProjectsStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 export const useObjectStore = defineStore('object', () => {
@@ -10,7 +10,7 @@ export const useObjectStore = defineStore('object', () => {
   const selectedObject = ref(null)
   const objectStartFrom = ref(null)
   const viewportActionList = ref([])
-
+  const dataStore = useDataStore()
   const generateUniqueId = (object) => {
     let fullId, shortId
     const objectName = object.diagramType || object.objectType
@@ -28,6 +28,10 @@ export const useObjectStore = defineStore('object', () => {
      * objectJson 에서 objectData에 해당하는 부분
      * objectActionList는 animationData 부분
      */
+    const dataStore = useDataStore()
+    const projectStore = useProjectsStore()
+    const { projectDetail } = storeToRefs(projectStore)
+
     const { fullId, shortId } = generateUniqueId(object)
 
     const newObject = {
@@ -39,14 +43,12 @@ export const useObjectStore = defineStore('object', () => {
     }
 
     objects.value.push(newObject)
+    // TODO: 이 오브젝트 변환 => UDPATE "jsonData": {},
+    const jsonArray = dataStore.formatObjectData(newObject)
+    projectStore.updateProject(projectDetail.value.projectNo, {
+      jsonData: JSON.stringify(jsonArray),
+    })
 
-    // 트리거타겟객체도 동기화
-    // const controllerStore = useControllerStore()
-    // const { selectedTriggerTarget } = storeToRefs(controllerStore)
-    // selectedTriggerTarget.value.push({
-    //   id: newObject.id,
-    //   name: newObject.name,
-    // })
     return newObject.id
   }
 

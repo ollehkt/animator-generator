@@ -69,10 +69,11 @@ const updateProjectSettings = async (e) => {
       width: presets.find((preset) => preset.name === selectedPreset.value).width,
       height: presets.find((preset) => preset.name === selectedPreset.value).height,
     },
-    jsonData: {},
+    // jsonData: {},
   }
   try {
-    await projectsStore.updateProject(projectDetail.value.projectNo, params)
+    await projectsStore.updateProject(projectDetail.value.projectNo, params, true)
+
   } catch (error) {
     console.error(error)
   }
