@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { api } from '@/helpers/api'
 import { API_ROUTES } from '@/helpers/env'
+import { api } from '@/helpers/api'
 
 export const useProjectsStore = defineStore('projects', () => {
   const projects = ref([])
@@ -13,6 +13,10 @@ export const useProjectsStore = defineStore('projects', () => {
   const toggleProjectSetting = () => {
     showProejctSetting.value = !showProejctSetting.value
   }
+
+  /**
+   * @GET /project
+   */
   const getProjectList = async (params = {}) => {
     isLoading.value = true
     error.value = null
@@ -28,6 +32,34 @@ export const useProjectsStore = defineStore('projects', () => {
     }
   }
 
+  /**
+   * @GET /project/:id
+   */
+  const getProjectDetail = async (no) => {
+    // Convert to number and validate
+    const projectNo = parseInt(no, 10)
+    
+    if (isNaN(projectNo)) {
+      error.value = 'Invalid project number'
+      return
+    }
+
+    isLoading.value = true
+    error.value = null
+
+    try {
+      const response = await api.get(API_ROUTES.PROJECTS.DETAIL(projectNo))
+      return response
+    } catch (err) {
+      error.value = err.message || 'Failed to fetch project detail'
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
+   * @POST /project
+   */
   const postProject = async (params) => {
     isLoading.value = true
     error.value = null
@@ -50,6 +82,7 @@ export const useProjectsStore = defineStore('projects', () => {
     showProejctSetting,
     error,
     getProjectList,
+    getProjectDetail,
     postProject,
     toggleProjectSetting,
     hasProjects,

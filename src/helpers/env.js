@@ -15,5 +15,7 @@ export const API_ROUTES = {
     LIST: '/project',
     CREATE: '/project',
     DETAIL: (id) => `/project/${id}`,
+    UPDATE: (id) => `/project/${id}`,
+    DELETE: (id) => `/project/${id}`,
   }
 }

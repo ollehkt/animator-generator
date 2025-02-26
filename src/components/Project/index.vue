@@ -10,6 +10,10 @@ const projectsStore = useProjectsStore()
 
 const { projects, showProejctSetting } = storeToRefs(projectsStore)
 
+const handleProjectClick = (project) => {
+  router.push(`/project/${project.projectNo}`)
+}
+
 onMounted(async () => {
   await projectsStore.getProjectList()
 })
@@ -17,6 +21,7 @@ onMounted(async () => {
 <template>
   <div class="w-[1280px] mx-auto py-10 h-full">
     <button @click="router.back()" class="border-none btn-dark">뒤로가기</button>
+    <!-- LIST -->
     <div
       v-if="projects.totalCount > 0"
       class="grid grid-cols-[repeat(auto-fill,minmax(374px,1fr))] auto-rows-[218px] gap-6 mt-6 h-full"
@@ -25,7 +30,7 @@ onMounted(async () => {
         v-for="project in projects.list"
         :key="project.id"
         class="p-6 transition-colors border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-700"
-        @click="handleProjectClick(project.id)"
+        @click="handleProjectClick(project)"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +123,7 @@ onMounted(async () => {
           />
         </svg>
 
-        프로젝트 생성
+        새 프로젝트 생성
       </button>
     </div>
     <div v-else class="flex flex-col items-center justify-center h-full gap-6 pb-10">
