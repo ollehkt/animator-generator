@@ -31,7 +31,7 @@ const objects = ref([
     },
     animationData: [
       {
-        triggerType: 'click',
+        triggerType: 'contextmenu',
         animation: [
           {
             triggerTarget: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
@@ -71,6 +71,61 @@ const objects = ref([
       },
     ],
   },
+  // {
+  //   objectData: {
+  //     uuid: null,
+  //     objectType: 'diagram',
+  //     diagramType: 'circle',
+  //     url: '',
+  //     text: '',
+  //     points: {
+  //       x: 220,
+  //       y: 200,
+  //     },
+  //     style: {
+  //       background: '#825feb',
+  //       opacity: 100,
+  //       color: '#825feb',
+  //     },
+  //     size: {
+  //       width: 150,
+  //       height: 200,
+  //     },
+  //   },
+  //   animationData: [
+  //     {
+  //       triggerType: 'click',
+  //       animation: [
+  //         {
+  //           triggerTarget: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
+  //           actionType: 'move',
+  //           points: [
+  //             {
+  //               x: 120,
+  //               y: 100,
+  //             },
+  //             {
+  //               x: 300,
+  //               y: 100,
+  //             },
+  //           ],
+  //           ease: 'linear',
+  //           duration: 2,
+  //           delay: 0,
+  //           count: null,
+  //           direction: 'normal',
+  //           fillMode: null,
+  //           actionSetting: {
+  //             moveType: 'line',
+  //             curviness: 1.5,
+  //           },
+  //         },
+  //       ],
+  //       isSimultaneousness: true,
+  //       callbackFunction: null,
+  //     },
+  //   ],
+  // },
 ])
 const svgRef = ref(null)
 const elementRefs = ref({})
@@ -82,9 +137,15 @@ const setRef = (el, objectId) => {
   }
 }
 
-const handleTrigger = (objectId, triggerType) => {
-  const targetObject = objects.value.find((obj) => obj.objectData.uuid === objectId)
+const handleTrigger = (objectId, triggerType, isParent = false) => {
+  // 이벤트 타입에 따른 콘솔 출력 추가
+  if (['mouseover', 'mouseenter', 'mouseleave', 'mouseout'].includes(triggerType)) {
+    console.log(
+      ` Event: ${triggerType}, Object ID: ${objectId}, Source: ${isParent ? 'Parent' : 'Child'}`
+    )
+  }
 
+  const targetObject = objects.value.find((obj) => obj.objectData.uuid === objectId)
   if (!targetObject) return
 
   // animationData에서 해당 트리거 타입에 맞는 애니메이션 찾기
@@ -477,20 +538,20 @@ onUnmounted(() => {
           :rx="object.objectData.size.width / 2"
           :ry="object.objectData.size.height / 2"
           :fill="object.objectData.style.background"
-          @click.stop="handleTrigger(object.objectData.uuid, 'click')"
-          @dblclick.stop="handleTrigger(object.objectData.uuid, 'dblclick')"
-          @mouseenter="handleTrigger(object.objectData.uuid, 'mouseenter')"
-          @mouseleave="handleTrigger(object.objectData.uuid, 'mouseleave')"
+          @click="handleTrigger(object.objectData.uuid, 'click')"
+          @dblclick="handleTrigger(object.objectData.uuid, 'dblclick')"
+          @mouseenter.stop="handleTrigger(object.objectData.uuid, 'mouseenter')"
+          @mouseleave.stop="handleTrigger(object.objectData.uuid, 'mouseleave')"
           @mouseover="handleTrigger(object.objectData.uuid, 'mouseover')"
           @mouseout="handleTrigger(object.objectData.uuid, 'mouseout')"
           @mouseup="handleTrigger(object.objectData.uuid, 'mouseup')"
           @mousedown="handleTrigger(object.objectData.uuid, 'mousedown')"
-          @contextmenu.stop="handleTrigger(object.objectData.uuid, 'contextmenu')"
+          @contextmenu.prevent="handleTrigger(object.objectData.uuid, 'contextmenu')"
           tabindex="0"
-          @focus="handleTrigger(object.objectData.uuid, 'focus')"
+          @focus.stop="handleTrigger(object.objectData.uuid, 'focus')"
+          @blur.stop="handleTrigger(object.objectData.uuid, 'blur')"
           @focusin="handleTrigger(object.objectData.uuid, 'focusin')"
           @focusout="handleTrigger(object.objectData.uuid, 'focusout')"
-          @blur="handleTrigger(object.objectData.uuid, 'blur')"
         />
 
         <!-- Image -->
@@ -504,12 +565,17 @@ onUnmounted(() => {
           preserveAspectRatio="xMidYMid meet"
           @click="handleTrigger(object.objectData.uuid, 'click')"
           @dblclick="handleTrigger(object.objectData.uuid, 'dblclick')"
-          @mouseenter="handleTrigger(object.objectData.uuid, 'mouseover')"
-          @mouseleave="handleTrigger(object.objectData.uuid, 'mouseleave')"
-          @mouseup="handleTrigger(object.objectData.uuid, 'mouse-up')"
+          @mouseenter.stop="handleTrigger(object.objectData.uuid, 'mouseenter')"
+          @mouseleave.stop="handleTrigger(object.objectData.uuid, 'mouseleave')"
+          @mouseover="handleTrigger(object.objectData.uuid, 'mouseover')"
+          @mouseout="handleTrigger(object.objectData.uuid, 'mouseout')"
+          @mouseup="handleTrigger(object.objectData.uuid, 'mouseup')"
           @mousedown="handleTrigger(object.objectData.uuid, 'mousedown')"
-          @focus="handleTrigger(object.objectData.uuid, 'focus')"
-          @blur="handleTrigger(object.objectData.uuid, 'blur')"
+          @contextmenu.prevent="handleTrigger(object.objectData.uuid, 'contextmenu')"
+          @focus.stop="handleTrigger(object.objectData.uuid, 'focus')"
+          @blur.stop="handleTrigger(object.objectData.uuid, 'blur')"
+          @focusin="handleTrigger(object.objectData.uuid, 'focusin')"
+          @focusout="handleTrigger(object.objectData.uuid, 'focusout')"
           tabindex="0"
         />
 
@@ -521,14 +587,19 @@ onUnmounted(() => {
           :fill="object.objectData.style.color || '#000'"
           @click="handleTrigger(object.objectData.uuid, 'click')"
           @dblclick="handleTrigger(object.objectData.uuid, 'dblclick')"
-          @mouseenter="handleTrigger(object.objectData.uuid, 'mouseover')"
-          @mouseleave="handleTrigger(object.objectData.uuid, 'mouseleave')"
-          @mouseup="handleTrigger(object.objectData.uuid, 'mouse-up')"
+          @mouseenter.stop="handleTrigger(object.objectData.uuid, 'mouseenter')"
+          @mouseleave.stop="handleTrigger(object.objectData.uuid, 'mouseleave')"
+          @mouseover="handleTrigger(object.objectData.uuid, 'mouseover')"
+          @mouseout="handleTrigger(object.objectData.uuid, 'mouseout')"
+          @mouseup="handleTrigger(object.objectData.uuid, 'mouseup')"
           @mousedown="handleTrigger(object.objectData.uuid, 'mousedown')"
-          @focus="handleTrigger(object.objectData.uuid, 'focus')"
-          @blur="handleTrigger(object.objectData.uuid, 'blur')"
+          @contextmenu.prevent="handleTrigger(object.objectData.uuid, 'contextmenu')"
+          @focus.stop="handleTrigger(object.objectData.uuid, 'focus')"
+          @blur.stop="handleTrigger(object.objectData.uuid, 'blur')"
+          @focusin="handleTrigger(object.objectData.uuid, 'focusin')"
+          @focusout="handleTrigger(object.objectData.uuid, 'focusout')"
           tabindex="0"
-          class="cursor-pointer outline-none"
+          class="cursor-pointer"
         >
           {{ object.objectData.text }}
         </text>
