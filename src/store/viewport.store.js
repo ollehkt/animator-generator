@@ -122,10 +122,15 @@ export const useViewportStore = defineStore('viewport', () => {
 
     // Only adjust width for horizontal handles
     if (handleIndex === 3 || handleIndex === 7) {
-      if (handleIndex === 3) { // Right handle
+      if (handleIndex === 3) {
+        // Right handle
         selectedObject.value.size.width = Math.max(20, transformedPoint.x - resizeStartDimensions.x)
-      } else { // Left handle
-        const newWidth = Math.max(20, (resizeStartDimensions.x + resizeStartDimensions.width) - transformedPoint.x)
+      } else {
+        // Left handle
+        const newWidth = Math.max(
+          20,
+          resizeStartDimensions.x + resizeStartDimensions.width - transformedPoint.x
+        )
         selectedObject.value.position.x = transformedPoint.x
         selectedObject.value.size.width = newWidth
       }
@@ -135,12 +140,18 @@ export const useViewportStore = defineStore('viewport', () => {
     // Handle vertical resizing
     if (handleIndex === 1 || handleIndex === 5) {
       const deltaY = transformedPoint.y - handleStartY
-      if (handleIndex === 1) { // Top handle
+      if (handleIndex === 1) {
+        // Top handle
         const newHeight = Math.max(20, resizeStartDimensions.height - deltaY)
         selectedObject.value.position.y = transformedPoint.y
         selectedObject.value.size.height = newHeight
-      } else { // Bottom handle
-        selectedObject.value.size.height = Math.max(20, resizeStartDimensions.height + (transformedPoint.y - (resizeStartDimensions.y + resizeStartDimensions.height)))
+      } else {
+        // Bottom handle
+        selectedObject.value.size.height = Math.max(
+          20,
+          resizeStartDimensions.height +
+            (transformedPoint.y - (resizeStartDimensions.y + resizeStartDimensions.height))
+        )
       }
       return
     }
@@ -163,12 +174,20 @@ export const useViewportStore = defineStore('viewport', () => {
         break
       case 4: // Bottom-right
         selectedObject.value.size.width = Math.max(20, resizeStartDimensions.width + deltaX)
-        selectedObject.value.size.height = Math.max(20, resizeStartDimensions.height + (transformedPoint.y - (resizeStartDimensions.y + resizeStartDimensions.height)))
+        selectedObject.value.size.height = Math.max(
+          20,
+          resizeStartDimensions.height +
+            (transformedPoint.y - (resizeStartDimensions.y + resizeStartDimensions.height))
+        )
         break
       case 6: // Bottom-left
         selectedObject.value.position.x = transformedPoint.x
         selectedObject.value.size.width = Math.max(20, resizeStartDimensions.width - deltaX)
-        selectedObject.value.size.height = Math.max(20, resizeStartDimensions.height + (transformedPoint.y - (resizeStartDimensions.y + resizeStartDimensions.height)))
+        selectedObject.value.size.height = Math.max(
+          20,
+          resizeStartDimensions.height +
+            (transformedPoint.y - (resizeStartDimensions.y + resizeStartDimensions.height))
+        )
         break
     }
   }
