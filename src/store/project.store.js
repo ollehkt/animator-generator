@@ -12,7 +12,6 @@ export const useProjectsStore = defineStore('projects', () => {
   const error = ref(null)
   const showProejctSetting = ref(false)
 
-  
   const toggleProjectSetting = () => {
     showProejctSetting.value = !showProejctSetting.value
   }
@@ -63,25 +62,22 @@ export const useProjectsStore = defineStore('projects', () => {
   const getProjectDetail = async (no) => {
     const viewportStore = useViewportStore()
 
-    // Convert to number and validate
-    const projectNo = parseInt(no, 10)
-
-    if (isNaN(projectNo)) {
-      error.value = 'Invalid project number'
-      return
-    }
-
     isLoading.value = true
     error.value = null
 
     try {
-      const response = await api.get(API_ROUTES.PROJECTS.DETAIL(projectNo))
+      const response = await api.get(API_ROUTES.PROJECTS.DETAIL(no))
       projectDetail.value = response
+      /**
+       * todo => sampleJaon 형태 UI에 사용하는 구조로 변형
+       * 
+       *  */ 
+      
       viewportStore.setCanvasSize(response.canvas.width, response.canvas.height)
 
       return response
     } catch (err) {
-      console.error('🔴', err)   
+      console.error('🔴', err)
       error.value = err.message || 'Failed to fetch project detail'
       return err
     } finally {
@@ -97,12 +93,12 @@ export const useProjectsStore = defineStore('projects', () => {
     error.value = null
     try {
       const response = await api.put(API_ROUTES.PROJECTS.UPDATE(no), params)
-      if(response){
+      if (response) {
         getProjectDetail(no)
         toggleProjectSetting()
       }
       return response
-    } catch (err) { 
+    } catch (err) {
       error.value = err.message || 'Failed to update project'
     } finally {
       isLoading.value = false
