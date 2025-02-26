@@ -48,8 +48,8 @@ const emit = defineEmits(['close', 'save'])
 </script>
 
 <template>
-  <div class="fixed inset-0 z-50 flex items-center justify-center">
-    <div class="bg-white rounded-lg w-[520px] overflow-hidden">
+  <div class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[2px]">
+    <div class="rounded-lg w-[540px] overflow-hidden">
       <!-- Header -->
       <div class="flex items-center justify-between p-4 bg-gray-700 rounded-t-lg">
         <h2 class="font-semibold">프로젝트 설정</h2>
@@ -57,7 +57,7 @@ const emit = defineEmits(['close', 'save'])
           @click="projectsStore.toggleProjectSetting"
           class="text-gray-500 transition-colors hover:text-gray-200"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -69,7 +69,7 @@ const emit = defineEmits(['close', 'save'])
       </div>
 
       <!-- Body -->
-      <div class="p-6 space-y-6">
+      <div class="p-6 space-y-6 bg-white">
         <!-- Project Title -->
         <div class="space-y-2">
           <label class="block text-sm font-medium text-gray-700">프로젝트 이름</label>
@@ -101,7 +101,7 @@ const emit = defineEmits(['close', 'save'])
       </div>
 
       <!-- Footer -->
-      <div class="flex justify-end gap-6 p-4 border-t">
+      <div class="flex justify-end gap-6 p-4 bg-white border-t">
         <button
           @click="projectsStore.toggleProjectSetting"
           class="px-4 py-2 text-sm text-gray-600 transition-colors hover:text-gray-800"

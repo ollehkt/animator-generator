@@ -14,6 +14,12 @@ const handleProjectClick = (project) => {
   router.push(`/project/${project.projectNo}`)
 }
 
+const deleteProject =  (project) => {
+  if (confirm('Are you sure you want to delete this project?')) {
+    projectsStore.deleteProject(project.projectNo)
+  }
+}
+
 onMounted(async () => {
   await projectsStore.getProjectList()
 })
@@ -29,9 +35,26 @@ onMounted(async () => {
       <div
         v-for="project in projects.list"
         :key="project.id"
-        class="p-6 transition-colors border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-700"
+        class="relative p-6 transition-colors border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-700 group"
         @click="handleProjectClick(project)"
       >
+        <!-- Delete Icon -->
+        <button
+          @click.stop="deleteProject(project)"
+          class="absolute hidden text-gray-400 top-3 right-3 hover:text-red-500 group-hover:block"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

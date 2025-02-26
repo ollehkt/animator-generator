@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { API_CONFIG } from './env'
+import { API_CONFIG } from './apiRoutes'
 
 const api = axios.create({
   baseURL: API_CONFIG.API_URL,
