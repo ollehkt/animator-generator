@@ -87,6 +87,26 @@ export const useProjectsStore = defineStore('projects', () => {
   }
 
   /**
+   * @PUT /project/:id
+   */
+  const updateProject = async (no, params) => {
+    isLoading.value = true
+    error.value = null
+    try {
+      const response = await api.put(API_ROUTES.PROJECTS.UPDATE(no), params)
+      if(response){
+        getProjectDetail(no)
+        toggleProjectSetting()
+      }
+      return response
+    } catch (err) { 
+      error.value = err.message || 'Failed to update project'
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  /**
    * @DELETE /project/:id
    */
   const deleteProject = async (no) => {
@@ -116,6 +136,7 @@ export const useProjectsStore = defineStore('projects', () => {
     postProject,
     getProjectList,
     getProjectDetail,
+    updateProject,
     deleteProject,
     toggleProjectSetting,
     initProjectDetail,

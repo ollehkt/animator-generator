@@ -1,12 +1,18 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useProjectsStore } from '@/store'
 import { storeToRefs } from 'pinia'
+
 const projectsStore = useProjectsStore()
 const title = ref('')
 const selectedPreset = ref('')
+const titleInputRef = ref(null)
 
 const { projectDetail } = storeToRefs(projectsStore)
+
+const isEditSetting = computed(() => {
+  return !!projectDetail.value
+})
 
 const presets = [
   { name: 'Web Slide', width: 1280, height: 720 },
@@ -26,16 +32,16 @@ const saveProjectSettings = async () => {
   const params = {
     projectName: title.value,
     canvas: {
+      preset: selectedPreset.value,
       width: presets.find((preset) => preset.name === selectedPreset.value).width,
       height: presets.find((preset) => preset.name === selectedPreset.value).height,
     },
     jsonData: {},
   }
   try {
-    const result =  await projectsStore.postProject(params)
-    console.log("result", result)
-    if(result.projectNo) {
-
+    const result = await projectsStore.postProject(params)
+    console.log('result', result)
+    if (result.projectNo) {
       projectsStore.toggleProjectSetting()
       projectsStore.getProjectList()
     }
@@ -44,18 +50,56 @@ const saveProjectSettings = async () => {
   }
 }
 
-const isEditSetting = computed(() => {
-  return !!projectDetail.value
+const updateProjectSettings = async (e) => {
+  if (!title.value) {
+    alert('프로젝트 이름을 입력해주세요.')
+    titleInputRef.value.focus()
+    return
+  }
+
+  const params = {
+    projectName: title.value,
+    canvas: {
+      preset: selectedPreset.value,
+      width: presets.find((preset) => preset.name === selectedPreset.value).width,
+      height: presets.find((preset) => preset.name === selectedPreset.value).height,
+    },
+    jsonData: {},
+  }
+  try {
+    await projectsStore.updateProject(projectDetail.value.projectNo, params)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+const handleButtonClick = () => {
+  if (isEditSetting.value) {
+    updateProjectSettings()
+  } else {
+    saveProjectSettings()
+  }
+}
+
+onMounted(() => {
+  if (!!projectDetail.value) {
+    title.value = projectDetail.value.projectName
+    selectedPreset.value = projectDetail.value.canvas.preset
+  }
+  if (!title.value) {
+    titleInputRef.value.focus()
+  }
 })
 </script>
 
 <template>
-  <div class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[2px] shadow-lg bg-black/20 bg-opacity-70 text-gray-300">
-    <div class="rounded-lg w-[540px] overflow-hidden bg-gray-800">
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[2px] shadow-lg bg-black/20 bg-opacity-70 text-gray-300"
+  >
+    <div class="rounded-lg w-[540px] overflow-hidden">
       <!-- Header -->
-      <div class="flex items-center justify-between p-4 bg-gray-900 rounded-t-lg">
+      <div class="flex items-center justify-between p-4 bg-gray-700 rounded-t-lg">
         <h2 class="font-semibold">프로젝트 설정</h2>
-        {{ isEditSetting }}
         <button
           @click="projectsStore.toggleProjectSetting"
           class="text-gray-400 transition-colors hover:text-white"
@@ -79,6 +123,7 @@ const isEditSetting = computed(() => {
           <input
             type="text"
             v-model="title"
+            ref="titleInputRef"
             class="w-full !h-10 px-3 py-2 bg-gray-700 text-white border border-gray-600 rounded"
             placeholder="Enter project title"
           />
@@ -93,7 +138,10 @@ const isEditSetting = computed(() => {
               :key="preset.name"
               @click="selectPreset(preset)"
               class="p-4 transition-colors border rounded-lg cursor-pointer hover:border-indigo-500"
-              :class="{ 'border-indigo-500 bg-indigo-900': selectedPreset === preset.name, 'border-gray-600': selectedPreset !== preset.name }"
+              :class="{
+                'border-indigo-500 bg-indigo-900': selectedPreset === preset.name,
+                'border-gray-600': selectedPreset !== preset.name,
+              }"
             >
               <div class="mb-2 bg-gray-700 rounded aspect-video"></div>
               <p class="font-medium text-gray-300">{{ preset.name }}</p>
@@ -104,14 +152,19 @@ const isEditSetting = computed(() => {
       </div>
 
       <!-- Footer -->
-      <div class="flex justify-end gap-6 p-4 bg-gray-900 border-t border-gray-700">
+      <div class="flex justify-end gap-6 p-4 bg-gray-700 border-t border-gray-600">
         <button
           @click="projectsStore.toggleProjectSetting"
           class="px-4 py-2 text-sm text-gray-400 transition-colors hover:text-white"
         >
           닫기
         </button>
-        <button @click="saveProjectSettings" class="px-4 py-2 text-sm text-white bg-indigo-600 rounded hover:bg-indigo-500">프로젝트 생성</button>
+        <button
+          @click="handleButtonClick"
+          class="px-4 py-2 text-sm text-white bg-indigo-600 rounded hover:bg-indigo-500"
+        >
+          {{ isEditSetting ? '프로젝트 수정' : '프로젝트 생성' }}
+        </button>
       </div>
     </div>
   </div>
