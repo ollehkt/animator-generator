@@ -8,11 +8,11 @@ const objectStore = useObjectStore()
 const objects = ref([
   {
     objectData: {
-      uuid: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
-      objectType: 'text',
+      uuid: 'svg-da3k1nk5ljk2l4-34nkl1j3-123',
+      objectType: 'image',
       diagramType: null,
-      url: '',
-      text: '텍스트를 입력하세요',
+      url: 'https://questbook-prod-bucket.s3.ap-northeast-2.amazonaws.com/user/1/Questbook_test_2024-12-17-14-09-497.png',
+      text: '',
       points: {
         x: 100,
         y: 100,
@@ -20,49 +20,30 @@ const objects = ref([
       style: {
         background: '#825feb',
         opacity: 100,
-        color: '#825feb',
+        color: '#424242',
       },
       size: {
         width: 200,
         height: 200,
       },
-      radiusX: 121.37890625,
-      radiusY: 49.66796875,
     },
     animationData: [
       {
-        triggerType: 'contextmenu',
+        triggerType: 'click',
         animation: [
           {
-            triggerTarget: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
+            triggerTarget: 'svg-da3k1nk5ljk2l4-34nkl1j3-123',
             actionType: 'move',
-            points: [
-              { x: 100, y: 100 },
-              { x: 100, y: 200 },
-            ],
+            points: [{ x: 200, y: 200 }],
             ease: 'linear',
-            duration: 2,
+            duration: 1,
             delay: 0,
-            count: null,
+            count: 'infinite',
             direction: 'normal',
-            fillMode: null,
+            fillMode: 'forwards',
             actionSetting: {
               moveType: 'line',
               curviness: 1.5,
-            },
-          },
-          {
-            triggerTarget: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
-            actionType: 'scale',
-            points: null,
-            ease: 'linear',
-            duration: 2,
-            delay: 0,
-            count: null,
-            direction: 'normal',
-            fillMode: null,
-            actionSetting: {
-              scaleMagnification: 1.5,
             },
           },
         ],
@@ -71,65 +52,9 @@ const objects = ref([
       },
     ],
   },
-  // {
-  //   objectData: {
-  //     uuid: null,
-  //     objectType: 'diagram',
-  //     diagramType: 'circle',
-  //     url: '',
-  //     text: '',
-  //     points: {
-  //       x: 220,
-  //       y: 200,
-  //     },
-  //     style: {
-  //       background: '#825feb',
-  //       opacity: 100,
-  //       color: '#825feb',
-  //     },
-  //     size: {
-  //       width: 150,
-  //       height: 200,
-  //     },
-  //   },
-  //   animationData: [
-  //     {
-  //       triggerType: 'click',
-  //       animation: [
-  //         {
-  //           triggerTarget: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
-  //           actionType: 'move',
-  //           points: [
-  //             {
-  //               x: 120,
-  //               y: 100,
-  //             },
-  //             {
-  //               x: 300,
-  //               y: 100,
-  //             },
-  //           ],
-  //           ease: 'linear',
-  //           duration: 2,
-  //           delay: 0,
-  //           count: null,
-  //           direction: 'normal',
-  //           fillMode: null,
-  //           actionSetting: {
-  //             moveType: 'line',
-  //             curviness: 1.5,
-  //           },
-  //         },
-  //       ],
-  //       isSimultaneousness: true,
-  //       callbackFunction: null,
-  //     },
-  //   ],
-  // },
 ])
 const svgRef = ref(null)
 const elementRefs = ref({})
-const animationExecuted = ref({})
 
 const setRef = (el, objectId) => {
   if (el) {
@@ -138,13 +63,6 @@ const setRef = (el, objectId) => {
 }
 
 const handleTrigger = (objectId, triggerType, isParent = false) => {
-  // 이벤트 타입에 따른 콘솔 출력 추가
-  if (['mouseover', 'mouseenter', 'mouseleave', 'mouseout'].includes(triggerType)) {
-    console.log(
-      ` Event: ${triggerType}, Object ID: ${objectId}, Source: ${isParent ? 'Parent' : 'Child'}`
-    )
-  }
-
   const targetObject = objects.value.find((obj) => obj.objectData.uuid === objectId)
   if (!targetObject) return
 
@@ -162,14 +80,9 @@ const handleTrigger = (objectId, triggerType, isParent = false) => {
     })
   } else {
     // 순차적으로 실행
-    matchingAnimations.animation.forEach((anim, index) => {
-      if (animationExecuted.value[objectId] && !anim.loop) return
+    matchingAnimations.animation.forEach((anim) => {
       executeAnimation(anim.triggerTarget || objectId, anim)
     })
-
-    if (matchingAnimations.animation.length > 0) {
-      animationExecuted.value[objectId] = true
-    }
   }
 
   // 콜백 함수 실행
@@ -208,9 +121,10 @@ const executeAnimation = (objectId, animation) => {
     easing: animation.ease || 'linear',
     fill: animation.fillMode || 'forwards',
     delay: (animation.delay || 0) * 1000,
-    iterations: animation.count || 1,
+    iterations:
+      animation.count === 'infinite' ? Infinity : animation.count ? parseInt(animation.count) : 1,
     direction: animation.direction || 'normal',
-    composite: 'add',
+    composite: animation.fillMode === 'forwards' ? 'replace' : 'add',
   }
 
   switch (animation.actionType) {
