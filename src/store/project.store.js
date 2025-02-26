@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { API_ROUTES } from '@/helpers/apiRoutes'
 import { api } from '@/helpers/api'
 import { useViewportStore } from './viewport.store'
+import { useRouter } from 'vue-router'
 
 export const useProjectsStore = defineStore('projects', () => {
   const projects = ref([])
@@ -80,7 +81,9 @@ export const useProjectsStore = defineStore('projects', () => {
 
       return response
     } catch (err) {
+      console.error('🔴', err)   
       error.value = err.message || 'Failed to fetch project detail'
+      return err
     } finally {
       isLoading.value = false
     }

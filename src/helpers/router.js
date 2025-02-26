@@ -4,6 +4,7 @@ import {
   EditorView,
   PreviewView,
   ProjectView,
+  NotFoundView,
 } from '@/views'
 
 export const router = createRouter({
@@ -28,6 +29,11 @@ export const router = createRouter({
       path: '/preview',
       name: 'preview',
       component: PreviewView,
+    },
+    {
+      path: '/not-found',
+      name: 'not-found',
+      component: NotFoundView,
     },
   ],
 })

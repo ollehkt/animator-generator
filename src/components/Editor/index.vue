@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useObjectStore, useControllerStore, usePreviewStore, useProjectsStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
@@ -19,6 +19,7 @@ const projectsStore = useProjectsStore()
 const { showSourcePreview, isLayersMinimized } = storeToRefs(controllerStore)
 const { projectDetail, showProejctSetting } = storeToRefs(projectsStore)
 const route = useRoute()
+const router = useRouter()
 const viewportRef = ref(null)
 
 const isLoaded = ref(false)
@@ -29,8 +30,10 @@ const toggleLayersMinimized = () => {
 
 onMounted(async () => {
   const result = await projectsStore.getProjectDetail(route.params.id)
-  if (result) {
+  if (result.projectNo) {
     isLoaded.value = true
+  } else {
+    router.push('/not-found')
   }
 })
 
