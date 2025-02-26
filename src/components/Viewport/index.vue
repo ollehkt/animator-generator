@@ -60,26 +60,26 @@ const handleKeyDown = (event) => {
   switch (event.key) {
     case 'ArrowLeft':
       objectStore.updateObjectPosition(selectedObject.value.id, {
-        x: selectedObject.value.x - moveAmount,
-        y: selectedObject.value.y,
+        x: selectedObject.value.position.x - moveAmount,
+        y: selectedObject.value.position.y,
       })
       break
     case 'ArrowRight':
       objectStore.updateObjectPosition(selectedObject.value.id, {
-        x: selectedObject.value.x + moveAmount,
-        y: selectedObject.value.y,
+        x: selectedObject.value.position.x + moveAmount,
+        y: selectedObject.value.position.y,
       })
       break
     case 'ArrowUp':
       objectStore.updateObjectPosition(selectedObject.value.id, {
-        x: selectedObject.value.x,
-        y: selectedObject.value.y - moveAmount,
+        x: selectedObject.value.position.x,
+        y: selectedObject.value.position.y - moveAmount,
       })
       break
     case 'ArrowDown':
       objectStore.updateObjectPosition(selectedObject.value.id, {
-        x: selectedObject.value.x,
-        y: selectedObject.value.y + moveAmount,
+        x: selectedObject.value.position.x,
+        y: selectedObject.value.position.y + moveAmount,
       })
       break
   }
