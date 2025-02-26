@@ -8,69 +8,52 @@ const objectStore = useObjectStore()
 const objects = ref([
   {
     objectData: {
-      uuid: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
-      objectType: 'diagram',
-      diagramType: 'circle',
+      uuid: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
+      objectType: 'text',
+      diagramType: null,
       url: '',
-      text: '',
+      text: '텍스트를 입력하세요',
       points: {
-        x: 220,
-        y: 200,
+        x: 100,
+        y: 100,
       },
       style: {
         background: '#825feb',
         opacity: 100,
-        // color: '#825feb',
+        color: '#825feb',
       },
       size: {
-        width: 150,
+        width: 200,
         height: 200,
       },
+      radiusX: 121.37890625,
+      radiusY: 49.66796875,
     },
     animationData: [
       {
         triggerType: 'contextmenu',
         animation: [
           {
-            triggerTarget: 'circle-20a0bba6-c2a6-495d-b2e6-b8dbcddf1c1e',
+            triggerTarget: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
             actionType: 'move',
             points: [
-              {
-                x: 120,
-                y: 100,
-              },
-              {
-                x: 300,
-                y: 100,
-              },
-              {
-                x: 400,
-                y: 100,
-              },
-              {
-                x: 100,
-                y: 100,
-              },
-              {
-                x: 300,
-                y: 100,
-              },
+              { x: 100, y: 100 },
+              { x: 100, y: 200 },
             ],
             ease: 'linear',
             duration: 2,
             delay: 0,
-            count: 0,
+            count: null,
             direction: 'normal',
             fillMode: null,
-            loop: true,
             actionSetting: {
               moveType: 'line',
               curviness: 1.5,
             },
           },
           {
-            triggerTarget: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
-            actionType: 'size',
+            triggerTarget: 'text-4df82a71-e2d1-4340-9054-69ebc39bb9bf',
+            actionType: 'scale',
             points: null,
             ease: 'linear',
             duration: 2,
@@ -79,7 +62,7 @@ const objects = ref([
             direction: 'normal',
             fillMode: null,
             actionSetting: {
-              color: '#ffe400',
+              scaleMagnification: 1.5,
             },
           },
         ],
@@ -88,56 +71,6 @@ const objects = ref([
       },
     ],
   },
-  {
-    objectData: {
-      uuid: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
-      objectType: 'text',
-      // diagramType: 'circle',
-      // objectType: 'image',
-      diagramType: null,
-      // url: 'https://questbook-prod-bucket.s3.ap-northeast-2.amazonaws.com/user/1/Questbook_test_2024-12-17-14-09-497.png',
-      url: '',
-      text: '타원입니다',
-      points: {
-        x: 220,
-        y: 200,
-      },
-      style: {
-        // background: '#825feb',
-        opacity: 100,
-        color: '#000000',
-      },
-      size: {
-        width: 140,
-        height: 100,
-      },
-    },
-    animationData: [
-      {
-        triggerType: 'click',
-        // keyCode: '49',
-        animation: [
-          {
-            triggerTarget: 'circle-25d46a09-4bc0-4dfc-96f7-21ee3daa522d',
-            actionType: 'rotate',
-            points: null,
-            ease: 'ease-in-out',
-            duration: 2,
-            delay: 0,
-            count: null,
-            loop: false,
-            fillMode: null,
-            actionSetting: {
-              degree: 45,
-            },
-          },
-        ],
-        isSimultaneousness: true,
-        callbackFunction: null,
-      },
-    ],
-  },
-
   // {
   //   objectData: {
   //     uuid: null,
@@ -277,6 +210,7 @@ const executeAnimation = (objectId, animation) => {
     delay: (animation.delay || 0) * 1000,
     iterations: animation.count || 1,
     direction: animation.direction || 'normal',
+    composite: 'add',
   }
 
   switch (animation.actionType) {
@@ -533,11 +467,8 @@ const updateElementPosition = (element, objectData) => {
       break
 
     case 'text':
-      // text는 중앙 정렬을 위해 text-anchor="middle" 속성이 필요
       element.setAttribute('x', points.x)
       element.setAttribute('y', points.y)
-      element.setAttribute('text-anchor', 'middle')
-      element.setAttribute('dominant-baseline', 'middle')
       break
 
     case 'diagram':

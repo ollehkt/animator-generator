@@ -1,0 +1,37 @@
+image: atlassian/default-image:4
+
+options:
+  docker: true
+  size: 2x
+definitions:
+  services:
+      docker:
+         memory: 2048
+
+pipelines:
+  branches:
+    main:
+      - step:
+          name: Docker build & push
+          size: 2x
+          script:
+            - export IMAGE_NAME=$NCLOUD_CR_URL/$APPLICATION_NAME:$BITBUCKET_COMMIT
+            - docker build -t $APPLICATION_NAME .
+            - docker tag $APPLICATION_NAME $IMAGE_NAME
+            - echo "$NCLOUD_KEY" | docker login -u $NCLOUD_ID $NCLOUD_CR_URL --password-stdin
+            - docker push $IMAGE_NAME
+          services:
+            - docker
+          caches:
+            - docker
+      - step:
+          name: Deploy
+          deployment: production
+          script:
+            - sed -i "s|{{image}}|$NCLOUD_PRI_URL/$APPLICATION_NAME:$BITBUCKET_COMMIT|g" kube-deployment.yml
+            - pipe: atlassian/kubectl-run:1.1.2
+              variables:
+                KUBE_CONFIG: $KUBE_CONFIG_DEFAULT
+                KUBECTL_COMMAND: 'apply'
+                RESOURCE_PATH: 'kube-deployment.yml'
+                KUBECTL_APPLY_ARGS: '-f'
