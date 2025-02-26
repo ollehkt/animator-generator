@@ -10,8 +10,14 @@ export const useProjectsStore = defineStore('projects', () => {
   const isLoading = ref(false)
   const error = ref(null)
   const showProejctSetting = ref(false)
+
+  
   const toggleProjectSetting = () => {
     showProejctSetting.value = !showProejctSetting.value
+  }
+
+  const initProjectDetail = () => {
+    projectDetail.value = null
   }
 
   /**
@@ -71,6 +77,7 @@ export const useProjectsStore = defineStore('projects', () => {
       const response = await api.get(API_ROUTES.PROJECTS.DETAIL(projectNo))
       projectDetail.value = response
       viewportStore.setCanvasSize(response.canvas.width, response.canvas.height)
+
       return response
     } catch (err) {
       error.value = err.message || 'Failed to fetch project detail'
@@ -111,5 +118,6 @@ export const useProjectsStore = defineStore('projects', () => {
     getProjectDetail,
     deleteProject,
     toggleProjectSetting,
+    initProjectDetail,
   }
 })

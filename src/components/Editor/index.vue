@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useObjectStore, useControllerStore, usePreviewStore, useProjectsStore } from '@/store'
 import { storeToRefs } from 'pinia'
@@ -10,13 +10,14 @@ import Layers from '@/components/Layers/index.vue'
 import AnimationController from '@/components/AnimationController/index.vue'
 import Toolbox from '@/components/Toolbox/index.vue'
 
+import ProjectSetting from '@/components/Project/ProjectSetting.vue'
 import SourcePreview from '@/components/SourcePreview.vue'
 
 const controllerStore = useControllerStore()
 const previewStore = usePreviewStore()
 const projectsStore = useProjectsStore()
 const { showSourcePreview, isLayersMinimized } = storeToRefs(controllerStore)
-const { projectDetail } = storeToRefs(projectsStore)
+const { projectDetail, showProejctSetting } = storeToRefs(projectsStore)
 const route = useRoute()
 const viewportRef = ref(null)
 
@@ -31,6 +32,11 @@ onMounted(async () => {
   if (result) {
     isLoaded.value = true
   }
+})
+
+onUnmounted(() => {
+  projectsStore.initProjectDetail()
+  // todo => 프로젝트 디테일 초기화
 })
 </script>
 
@@ -87,4 +93,5 @@ onMounted(async () => {
       </div>
     </section>
   </div>
+  <ProjectSetting v-if="showProejctSetting"/>
 </template>
