@@ -38,7 +38,7 @@ const objects = ref([
             ease: 'linear',
             duration: 1,
             delay: 0,
-            count: 'infinite',
+            count: '1',
             direction: 'normal',
             fillMode: 'forwards',
             actionSetting: {
@@ -46,8 +46,20 @@ const objects = ref([
               curviness: 1.5,
             },
           },
+          {
+            triggerTarget: 'svg-da3k1nk5ljk2l4-34nkl1j3-123',
+            actionType: 'scale',
+            points: null,
+            ease: 'linear',
+            duration: 1,
+            delay: 0,
+            count: '1',
+            direction: 'normal',
+            fillMode: 'forwards',
+            actionSetting: { scaleMagnification: 1.5 },
+          },
         ],
-        isSimultaneousness: true,
+        isSimultaneousness: false,
         callbackFunction: null,
       },
     ],
@@ -80,9 +92,19 @@ const handleTrigger = (objectId, triggerType, isParent = false) => {
     })
   } else {
     // 순차적으로 실행
-    matchingAnimations.animation.forEach((anim) => {
-      executeAnimation(anim.triggerTarget || objectId, anim)
-    })
+    let delay = 0
+    matchingAnimations.animation.reduce(async (promise, anim) => {
+      await promise // 이전 애니메이션 완료 대기
+      const currentDelay = delay
+      delay += (anim.duration || 1) * 1000 // 다음 애니메이션을 위한 딜레이 누적
+
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          executeAnimation(anim.triggerTarget || objectId, anim)
+          resolve()
+        }, currentDelay)
+      })
+    }, Promise.resolve())
   }
 
   // 콜백 함수 실행
@@ -192,34 +214,41 @@ const executeAnimation = (objectId, animation) => {
           ? createLineKeyframes(startPoint, endPoint)
           : createCurveKeyframes(startPoint, endPoint, animation.actionSetting.curviness || 1)
 
-      moveTargetElement.animate(keyframes, animationConfig)
+      element.animate(keyframes, animationConfig)
 
       break
     }
 
-    case 'scale':
+    case 'scale': {
+      const targetElement = getCircleElement(element)
       const scale = animation.actionSetting.scaleMagnification
-      element.animate(
+      targetElement.animate(
         [
-          { transformOrigin: getTransformOriginCenter(element), transform: 'scale(1)' },
-          { transformOrigin: getTransformOriginCenter(element), transform: `scale(${scale})` },
-        ],
-        animationConfig
-      )
-      break
-
-    case 'rotate':
-      element.animate(
-        [
-          { transformOrigin: getTransformOriginCenter(element), transform: 'rotate(0deg)' },
+          { transformOrigin: getTransformOriginCenter(targetElement), transform: 'scale(1)' },
           {
-            transform: `rotate(${animation.actionSetting.degree}deg)`,
-            transformOrigin: getTransformOriginCenter(element),
+            transformOrigin: getTransformOriginCenter(targetElement),
+            transform: `scale(${scale})`,
           },
         ],
         animationConfig
       )
       break
+    }
+
+    case 'rotate': {
+      const targetElement = getCircleElement(element)
+      targetElement.animate(
+        [
+          { transformOrigin: getTransformOriginCenter(targetElement), transform: 'rotate(0deg)' },
+          {
+            transform: `rotate(${animation.actionSetting.degree}deg)`,
+            transformOrigin: getTransformOriginCenter(targetElement),
+          },
+        ],
+        animationConfig
+      )
+      break
+    }
 
     case 'opacity':
       element.animate(
