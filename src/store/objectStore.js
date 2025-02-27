@@ -229,7 +229,11 @@ export const useObjectStore = defineStore('object', () => {
     }
   }
 
+  /**
+   * 이 액션을 저장할때 호출되는 함수
+   */
   const updateObjectAnimation = () => {
+    /** TODO UPDATE api animationData  */
     const controllerStore = useControllerStore()
     const animationStore = useAnimationStore()
     const {
@@ -277,8 +281,10 @@ export const useObjectStore = defineStore('object', () => {
     // console.log('newAnimation', newAnimation)
 
     if (isViewportAction.value) {
+      // 페이지 로드 애니메이션
       viewportActionList.value.push(newAnimation)
     } else {
+      // 오브젝트 애니메이션
       const objectId = selectedObject.value?.id
       const targetObject = objects.value.find((obj) => obj.id === objectId)
       if (targetObject) {

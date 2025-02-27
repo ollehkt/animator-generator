@@ -3,9 +3,12 @@ import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 export const useDataStore = defineStore('data', () => {
+  /**
+   * UI DATA => API FORMATTING
+   * 프리뷰에 필요한 데이터 형태로 포맷팅
+   * @returns sampleJson => 🟠 objectData 에 해당
+   */
   const formatObjectData = () => {
-    // objects value => sample object data 로 변환
-
     const objectStore = useObjectStore()
     const { objects } = storeToRefs(objectStore)
 
@@ -33,15 +36,27 @@ export const useDataStore = defineStore('data', () => {
     return formattedObjects
   }
 
-  // API JSON => UI JSON 형식으로 변환
+  /**
+   * UI DATA => API FORMATTING
+   * 프리뷰에 필요한 데이터 형태로 포맷팅
+   * @returns sampleJson => 🟠 animationData 에 해당
+   */
+  const formatAnimationData = () => {
+    // const objectStore = useObjectStore()
+    // const { objects } = storeToRefs(objectStore)
+  }
+
+  /**
+   * API => UI DATA FORMATTING
+   * API Reponse jsonData => ObectStore 🟠objects JSON 형식으로 변환
+   * @param {Array} data
+   */
   const setObjectsData = (data) => {
     const objectStore = useObjectStore()
     if (!Array.isArray(data)) {
       console.error('Expected data to be an array, but got:', data)
-      return // Exit early if data is not an array
     }
 
-    console.log('api data=>>>>>>>>>>>>>>>>>>>>>>>>', data)
     const formattedObjects = data.map((item) => {
       const obj = item.objectData // Access the objectData property
       return {
@@ -65,6 +80,7 @@ export const useDataStore = defineStore('data', () => {
           ...(obj.objectType == 'url' && { url: obj.url }),
         }),
         isVisible: true,
+        objectActionList: [], // todo 액션 데이터 포맷 및 추가
       }
     })
     objectStore.setObjects(formattedObjects)
@@ -101,6 +117,7 @@ export const useDataStore = defineStore('data', () => {
   // }
   return {
     formatObjectData,
+    formatAnimationData,
     setObjectsData,
   }
 })

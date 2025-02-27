@@ -52,9 +52,7 @@ const headerButtons = [
 ]
 
 const handleSave = () => {
-  alert('저장')
-  // test
-  // dataStore.formatObjectData(objects.value)
+  projectsStore.saveCurrentProject()
 }
 
 const loadProject = () => {

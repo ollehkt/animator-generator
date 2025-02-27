@@ -1,6 +1,11 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useObjectStore, useControllerStore, useViewportStore, useProjectsStore } from '@/store'
+import {
+  useObjectStore,
+  useControllerStore,
+  useViewportStore,
+  useProjectsStore,
+} from '@/store'
 import { storeToRefs } from 'pinia'
 
 import Canvas from './Canvas.vue'
@@ -44,6 +49,12 @@ const handleKeyDown = (event) => {
     event.target.tagName === 'TEXTAREA' ||
     event.target.isContentEditable
   ) {
+    return
+  }
+
+  if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+    event.preventDefault()
+    projectsStore.saveCurrentProject()
     return
   }
 

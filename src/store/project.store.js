@@ -2,9 +2,8 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { API_ROUTES } from '@/helpers/apiRoutes'
 import { api } from '@/helpers/api'
-import { useObjectStore, useViewportStore, useDataStore } from '@/store'
+import { useViewportStore, useDataStore } from '@/store'
 import { storeToRefs } from 'pinia'
-import { useRouter } from 'vue-router'
 
 export const useProjectsStore = defineStore('projects', () => {
   const projects = ref([])
@@ -19,6 +18,21 @@ export const useProjectsStore = defineStore('projects', () => {
 
   const initProjectDetail = () => {
     projectDetail.value = null
+  }
+
+  const saveCurrentProject = () => {
+    // todo
+    // 현재 오브젝트 상태 각 오브젝트 애니메이션모두 가공해서 업데이트
+    const projectNo = projectDetail.value.projectNo
+
+    const dataStore = useDataStore()
+    const test = dataStore.formatObjectData()
+
+    const params = {
+      jsonData: test,
+    }
+    console.log('🟢🟢🟢 현재 프로젝트 저장', params)
+    updateProject(projectNo, params)
   }
 
   /**
@@ -96,7 +110,6 @@ export const useProjectsStore = defineStore('projects', () => {
    * @PUT /project/:id
    */
   const updateProject = async (no, params, isToggle = false) => {
-    // console.log('🟢🟢🟢 프로젝트 업데이트 =>', params)
     const viewportStore = useViewportStore()
     isLoading.value = true
     error.value = null
@@ -147,6 +160,7 @@ export const useProjectsStore = defineStore('projects', () => {
     isLoading,
     showProejctSetting,
     error,
+    saveCurrentProject,
     postProject,
     getProjectList,
     getProjectDetail,
