@@ -3,7 +3,7 @@ import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 export const useDataStore = defineStore('data', () => {
-  const formatObjectData = (data) => {
+  const formatObjectData = () => {
     // objects value => sample object data 로 변환
 
     const objectStore = useObjectStore()

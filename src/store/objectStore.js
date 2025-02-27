@@ -48,7 +48,7 @@ export const useObjectStore = defineStore('object', () => {
 
     objects.value.push(newObject)
     // TODO: 이 오브젝트 변환 => UDPATE "jsonData": {},
-    const jsonArray = dataStore.formatObjectData(newObject)
+    const jsonArray = dataStore.formatObjectData()
     projectStore.updateProject(projectDetail.value.projectNo, {
       jsonData: jsonArray,
     })
@@ -79,6 +79,8 @@ export const useObjectStore = defineStore('object', () => {
   const removeObject = (objectId) => {
     // todo actionTargetList 에서 같은 ID 삭제
     const controllerStore = useControllerStore()
+    const projectStore = useProjectsStore()
+    const { projectDetail } = storeToRefs(projectStore)
     const { isSettingTrigger } = storeToRefs(controllerStore)
 
     // objects 에서 삭제
@@ -108,6 +110,11 @@ export const useObjectStore = defineStore('object', () => {
           // actionTargetList가 완전히 비어있는 action만 제거
           .filter((action) => action.actionTargetList.length > 0)
       }
+    })
+
+    const jsonArray = dataStore.formatObjectData()
+    projectStore.updateProject(projectDetail.value.projectNo, {
+      jsonData: jsonArray,
     })
 
     isSettingTrigger.value = false
