@@ -49,6 +49,7 @@ export const useDataStore = defineStore('data', () => {
 
     targetObject.objectActionList.forEach((obj) => {
       const actionList = obj.actionTargetList.map((target) => ({
+        actionTargetId: target.id,
         triggerTarget: obj.triggerTarget || null, // 이게 굳이 필요한가 object uuid인데??
         actionType: obj.actionType,
         points: obj.points,
@@ -57,8 +58,10 @@ export const useDataStore = defineStore('data', () => {
         count: obj.count,
         direction: obj.direction,
         fillMode: obj.fillMode || null,
+        ...(obj.actionType === 'rotate' && { rotate: obj.rotate }),
+        ...(obj.actionType === 'scale' && { scaleStart: obj.scaleStart, scaleEnd: obj.scaleEnd }),
+        ...(obj.actionType === 'opacity' && { opacityStart: obj.opacityStart, opacityEnd: obj.opacityEnd }),
         // actionSetting: obj.actionSetting,
-        actionTargetId: target.id
       }))
 
       const triggerType = obj.triggerType
@@ -75,38 +78,7 @@ export const useDataStore = defineStore('data', () => {
     return formattedAnimationData
   }
 
-  // const formatAnimationData = (targetObject) => {
-
-  //   const formattedAnimationData = []
-
-  //   targetObject.objectActionList.forEach((obj) => {
-  //     const actionList = obj.animation.map((action) => ({
-  //       triggerTarget: action.triggerTarget,
-  //       actionType: action.actionType,
-  //       points: action.points,
-  //       ease: action.ease,
-  //       duration: action.duration,
-  //       delay: action.delay,
-  //       count: action.count || null, // Default to null if not provided
-  //       direction: action.direction || null, // Default to null if not provided
-  //       fillMode: action.fillMode || null, // Default to null if not provided
-  //     }))
-
-  //     // Assuming you want to use the triggerType from the first action in the list
-  //     const triggerType =
-  //       obj.objectActionList.length > 0 ? obj.objectActionList[0].triggerType : null
-
-  //     // Push the formatted object with the required structure
-  //     formattedAnimationData.push({
-  //       triggerType: triggerType,
-  //       animation: actionList.length > 0 ? actionList : [], // Return empty array if no actions
-  //       isSimultaneousness: obj.isSimultaneousness || true, // Default to true if not provided
-  //       callbackFunction: obj.callbackFunction || 'preprocessTestFunction', // Default to a function name if not provided
-  //     })
-  //   })
-
-  //   return formattedAnimationData.length > 0 ? formattedAnimationData : []
-  // }
+  
 
   /**
    * API => UI DATA FORMATTING

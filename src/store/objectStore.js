@@ -235,7 +235,8 @@ export const useObjectStore = defineStore('object', () => {
   const updateObjectAnimation = () => {
     /** TODO UPDATE api animationData  */
     const controllerStore = useControllerStore()
-    const animationStore = useAnimationStore()
+    const projectStore = useProjectsStore()
+    const { projectDetail } = storeToRefs(projectStore)
     const {
       selectedTriggerType,
       selectedTriggerTarget,
@@ -272,20 +273,10 @@ export const useObjectStore = defineStore('object', () => {
           y: animationConfig.value.y,
         },
       ],
+      ...(selectedActionType.value === 'rotate' && { rotate: animationConfig.value.rotate }),
+      ...(selectedActionType.value === 'scale' && { scaleStart: animationConfig.value.scaleStart, scaleEnd: animationConfig.value.scaleEnd }),
+      ...(selectedActionType.value === 'opacity' && { opacityStart: animationConfig.value.opacityStart, opacityEnd: animationConfig.value.opacityEnd }),
     }
-    console.log('actions', actions)
-
-    // console.log('actions', actions)
-
-    // const newAnimation = animationStore.createAnimationConfig(
-    //   selectedTriggerType.value,
-    //   selectedTriggerTarget.value,
-    //   actionTargetList.value,
-    //   selectedActionType.value,
-    //   animationConfig.value
-    // )
-
-    // console.log('newAnimation', newAnimation)
 
     if (isViewportAction.value) {
       // 페이지 로드 애니메이션
@@ -299,6 +290,11 @@ export const useObjectStore = defineStore('object', () => {
       }
     }
     controllerStore.isSettingTrigger = false
+
+    const jsonArray = dataStore.formatObjectData()
+    projectStore.updateProject(projectDetail.value.projectNo, {
+      jsonData: jsonArray,
+    })
   }
 
   const deleteObjectAnimation = (actionIndex) => {
