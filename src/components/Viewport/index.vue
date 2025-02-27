@@ -18,7 +18,7 @@ const { selectedObject } = storeToRefs(objectStore)
 const { canvasSize } = storeToRefs(viewportStore)
 
 // Add zoom state and controls
-const zoom = ref(1)
+const zoom = ref(0.5)
 const MIN_ZOOM = 0.5 //50%
 const MAX_ZOOM = 2 //200%
 
@@ -39,8 +39,6 @@ const handleGlobalClick = (event) => {
 }
 
 const handleKeyDown = (event) => {
-  // console.log('🔴', event.key)
-
   if (
     event.target.tagName === 'INPUT' ||
     event.target.tagName === 'TEXTAREA' ||
