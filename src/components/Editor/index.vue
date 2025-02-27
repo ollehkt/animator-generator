@@ -29,11 +29,15 @@ const toggleLayersMinimized = () => {
 }
 
 onMounted(async () => {
-  const result = await projectsStore.getProjectDetail(route.params.id)
-  if (result.projectNo) {
-    isLoaded.value = true
-  } else {
-    router.push('/not-found')
+  try {
+    const result = await projectsStore.getProjectDetail(route.params.id)
+    if (result.projectNo) {
+      isLoaded.value = true
+    }
+  } catch (error) {
+    if (error.status === 404) {
+      router.push('/not-found')
+    }
   }
 })
 

@@ -12,11 +12,11 @@ export const useDataStore = defineStore('data', () => {
     const formattedObjects = objects.value.map((obj) => ({
       objectData: {
         uuid: obj.id, // Map 'id' to 'uuid'
-        objcetName: obj.name, // Assuming 'name' is the desired object name
+        objectName: obj.name, // Assuming 'name' is the desired object name
         objectType: obj.objectType,
         diagramType: obj.diagramType,
-        url: null, // Assuming no URL is provided
-        text: null, // Assuming no text is provided
+        url: obj.url || null, // Assuming no URL is provided
+        text: obj.text || null, // Assuming no text is provided
         position: obj.position,
         style: {
           background: obj.fillStyle,
@@ -34,19 +34,47 @@ export const useDataStore = defineStore('data', () => {
   }
 
   // API JSON => UI JSON 형식으로 변환
-  const setObjectsJsonData = (data) => {
-    console.log('data =>', data)
-  }
+  const setObjectsData = (data) => {
+    const objectStore = useObjectStore()
+    if (!Array.isArray(data)) {
+      console.error('Expected data to be an array, but got:', data)
+      return // Exit early if data is not an array
+    }
 
-  const parseStringToObjectJSON = (data) => {
-    return JSON.parse(data)
+    console.log('api data=>>>>>>>>>>>>>>>>>>>>>>>>', data)
+    const formattedObjects = data.map((item) => {
+      const obj = item.objectData // Access the objectData property
+      return {
+        id: obj.uuid, // Map 'id' to 'uuid'
+        name: obj.objectName, // Assuming 'name' is the desired object name
+        objectType: obj.objectType,
+        ...(obj.objectType === 'diagram' && { diagramType: obj.diagramType }),
+        position: {
+          x: obj.position.x,
+          y: obj.position.y,
+        },
+        ...(obj.objectType === 'diagram' && { fillStyle: obj.style.background }),
+        ...(obj.objectType === 'diagram' &&
+          obj.diagramType === 'circle' && { radius: obj.size.width / 2 }), // Assuming radius is half of width
+        ...(obj.objectType !== 'diagram' && {
+          size: {
+            width: obj.size.width,
+            height: obj.size.height,
+          },
+          ...(obj.objectType == 'text' && { text: obj.text }),
+          ...(obj.objectType == 'url' && { url: obj.url }),
+        }),
+        isVisible: true,
+      }
+    })
+    objectStore.setObjects(formattedObjects)
   }
 
   /** 단수의 특정 Object 데이터를 포맷팅 하는 함수 */
   // const formatObjectData = (obj) => {
   //   const objectData = {
   //     uuid: obj.id, // Map 'id' to 'uuid'
-  //     objcetName: obj.name, // Assuming 'name' is the desired object name
+  //     objectName: obj.name, // Assuming 'name' is the desired object name
   //     objectType: obj.objectType,
   //     diagramType: obj.diagramType,
   //     url: null, // Assuming no URL is provided
@@ -73,7 +101,6 @@ export const useDataStore = defineStore('data', () => {
   // }
   return {
     formatObjectData,
-    parseStringToObjectJSON,
-    setObjectsJsonData,
+    setObjectsData,
   }
 })

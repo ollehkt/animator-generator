@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { API_ROUTES } from '@/helpers/apiRoutes'
 import { api } from '@/helpers/api'
-import { useObjectStore, useViewportStore } from '@/store'
+import { useObjectStore, useViewportStore, useDataStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
@@ -49,7 +49,7 @@ export const useProjectsStore = defineStore('projects', () => {
 
     try {
       const response = await api.get(API_ROUTES.PROJECTS.LIST)
-      
+
       projects.value = response
     } catch (err) {
       error.value = err.message || 'Failed to fetch projects'
@@ -60,10 +60,13 @@ export const useProjectsStore = defineStore('projects', () => {
 
   /**
    * @GET /project/:id
+   * 프로젝트 상세 정보 조회
+   * 프로젝트 정보 (title, id, canvas info, object data)
+   * josnData => setting ui json
    */
   const getProjectDetail = async (no) => {
     const viewportStore = useViewportStore()
-
+    const dataStore = useDataStore()
     isLoading.value = true
     error.value = null
 
@@ -71,18 +74,19 @@ export const useProjectsStore = defineStore('projects', () => {
       const response = await api.get(API_ROUTES.PROJECTS.DETAIL(no))
       projectDetail.value = response
 
-      /**
-       * todo => sampleJaon 형태 UI에 사용하는 구조로 변형
-       *
-       *  */
+      try {
+        dataStore.setObjectsData(response.jsonData)
+      } catch (error) {
+        console.error('🔴: 데이타 셋팅 실패', error)
+      }
 
       viewportStore.setCanvasSize(response.canvas.width, response.canvas.height)
 
       return response
     } catch (err) {
-      console.error('🔴', err)
+      // console.error('🔴', err)
       error.value = err.message || 'Failed to fetch project detail'
-      return err
+      throw err
     } finally {
       isLoading.value = false
     }
@@ -92,16 +96,18 @@ export const useProjectsStore = defineStore('projects', () => {
    * @PUT /project/:id
    */
   const updateProject = async (no, params, isToggle = false) => {
-    console.log('🟢🟢🟢 프로젝트 업데이트 =>', params)
+    // console.log('🟢🟢🟢 프로젝트 업데이트 =>', params)
+    const viewportStore = useViewportStore()
     isLoading.value = true
     error.value = null
     // return
     try {
       const response = await api.put(API_ROUTES.PROJECTS.UPDATE(no), params)
       if (response) {
-        getProjectDetail(no)
+        projectDetail.value = response
+        viewportStore.setCanvasSize(response.canvas.width, response.canvas.height)
         if (isToggle) {
-          console.log('🟢🟢🟢 프로젝트 설정은 기본적으로 false')
+          // console.log('🟢🟢🟢 프로젝트 설정은 기본적으로 false')
           toggleProjectSetting()
         }
       }
@@ -134,8 +140,6 @@ export const useProjectsStore = defineStore('projects', () => {
       isLoading.value = false
     }
   }
-
-  
 
   return {
     projects,

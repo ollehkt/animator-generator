@@ -3,7 +3,7 @@
     {
       "objectData": {
         "uuid": "obj-a123",
-        "objcetName": "유저가지정한객체이름이들어갑니다ex 확인버튼",
+        "objectName": "유저가지정한객체이름이들어갑니다ex 확인버튼",
         "objectType": "diagram",
         "diagramType": "circle",
         "url": null,

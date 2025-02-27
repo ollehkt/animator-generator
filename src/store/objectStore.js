@@ -23,6 +23,10 @@ export const useObjectStore = defineStore('object', () => {
   }
 
   // Actions
+  const setObjects = (data) => {
+    objects.value = data
+  }
+
   const addObject = (object) => {
     /**
      * objectJson 에서 objectData에 해당하는 부분
@@ -46,7 +50,7 @@ export const useObjectStore = defineStore('object', () => {
     // TODO: 이 오브젝트 변환 => UDPATE "jsonData": {},
     const jsonArray = dataStore.formatObjectData(newObject)
     projectStore.updateProject(projectDetail.value.projectNo, {
-      jsonData: JSON.stringify(jsonArray),
+      jsonData: jsonArray,
     })
 
     return newObject.id
@@ -312,6 +316,7 @@ export const useObjectStore = defineStore('object', () => {
     objectStartFrom,
     viewportActionList,
     // Actions
+    setObjects,
     addObject,
     addMedia,
     removeObject,
