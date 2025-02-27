@@ -1,39 +1,38 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useControllerStore } from '@/store'
+import { useControllerStore, useProjectsStore } from '@/store'
 import { storeToRefs } from 'pinia'
 
 const controllerStore = useControllerStore()
 const { showSourcePreview } = storeToRefs(controllerStore)
+const projectStore = useProjectsStore()
+const { projectDetail } = storeToRefs(projectStore)
 
 const code = ref('')
 
 onMounted(() => {
-  code.value = `THIS IS FAKE CODE =>>>>>>>> @keyframes slideIn {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-.animated-element {
-  animation: slideIn 0.5s ease-out forwards;
-}
-
-/* Hover animation */
-.button-hover {
-  transition: all 0.3s ease;
-}
-
-.button-hover:hover {
-  transform: scale(1.1);
-  background-color: #4a90e2;
-  color: white;
-}`
+  //   code.value = `THIS IS FAKE CODE =>>>>>>>> @keyframes slideIn {
+  //   0% {
+  //     transform: translateX(-100%);
+  //     opacity: 0;
+  //   }
+  //   100% {
+  //     transform: translateX(0);
+  //     opacity: 1;
+  //   }
+  // }
+  // .animated-element {
+  //   animation: slideIn 0.5s ease-out forwards;
+  // }
+  // /* Hover animation */
+  // .button-hover {
+  //   transition: all 0.3s ease;
+  // }
+  // .button-hover:hover {
+  //   transform: scale(1.1);
+  //   background-color: #4a90e2;
+  //   color: white;
+  // }`
 })
 const closeSourcePreview = () => {
   showSourcePreview.value = false
@@ -41,7 +40,7 @@ const closeSourcePreview = () => {
 </script>
 
 <template>
-  <div class="absolute top-[102px] shadow-xl right-6 w-full max-w-4xl mx-auto z-[100]">
+  <div class="absolute top-[102px] shadow-xl right-6 w-full max-w-4xl mx-auto z-[100] select-text">
     <div class="bg-[#1e1e1e] rounded-lg shadow-lg overflow-hidden border border-[#333333]">
       <div class="bg-[#2d2d2d] px-4 py-2 flex items-center gap-2">
         <div @click="closeSourcePreview" class="flex gap-2">
@@ -78,13 +77,13 @@ const closeSourcePreview = () => {
         </svg>
       </div>
       <!-- Code Editor Area -->
-      <div class="p-4">
-        <textarea
-          v-model="code"
-          class="w-full min-h-[600px] bg-[#1e1e1e] text-gray-100 font-mono text-sm p-2 outline-none resize-none"
-          placeholder="Paste your code here..."
-          spellcheck="false"
-        ></textarea>
+      <div class="p-4 max-h-[600px] overflow-y-auto">
+        <pre class="w-full  bg-[#1e1e1e] font-mono text-sm text-gray-100 p-2">
+{
+  jsonData:{{ JSON.stringify(projectDetail.jsonData, null, 2) }}
+}
+          </pre
+        >
       </div>
     </div>
   </div>
