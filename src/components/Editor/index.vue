@@ -17,7 +17,7 @@ const controllerStore = useControllerStore()
 const previewStore = usePreviewStore()
 const projectsStore = useProjectsStore()
 const { showSourcePreview, isLayersMinimized } = storeToRefs(controllerStore)
-const { projectDetail, showProejctSetting } = storeToRefs(projectsStore)
+const { projectDetail, showProejctSetting, isSaving } = storeToRefs(projectsStore)
 const route = useRoute()
 const router = useRouter()
 const viewportRef = ref(null)
@@ -124,6 +124,9 @@ onUnmounted(() => {
         <AnimationController />
       </div>
     </section>
+    <p v-if="isSaving" class="absolute bottom-4 right-4 bg-[#1e1e1e] text-gray-400 text-center text-sm">
+      저장되었습니다
+    </p>
   </div>
   <ProjectSetting v-if="showProejctSetting" />
 </template>

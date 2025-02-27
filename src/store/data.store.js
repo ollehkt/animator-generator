@@ -66,12 +66,11 @@ export const useDataStore = defineStore('data', () => {
 
       const triggerType = obj.triggerType
 
-      // Push the formatted object with the required structure
       formattedAnimationData.push({
         triggerType: triggerType,
-        animation: actionList.length > 0 ? actionList : [], // Return empty array if no actions
-        isSimultaneousness: obj.isSimultaneousness || true, // Default to true if not provided
-        callbackFunction: obj.callbackFunction || 'preprocessTestFunction', // Default to a function name if not provided
+        animation: actionList.length > 0 ? actionList : [], 
+        isSimultaneousness: obj.isSimultaneousness || true, 
+        callbackFunction: obj.callbackFunction || 'preprocessTestFunction', 
       })
     })
 
@@ -121,34 +120,34 @@ export const useDataStore = defineStore('data', () => {
   }
 
   /** 단수의 특정 Object 데이터를 포맷팅 하는 함수 */
-  // const formatObjectData = (obj) => {
-  //   const objectData = {
-  //     uuid: obj.id, // Map 'id' to 'uuid'
-  //     objectName: obj.name, // Assuming 'name' is the desired object name
-  //     objectType: obj.objectType,
-  //     diagramType: obj.diagramType,
-  //     url: null, // Assuming no URL is provided
-  //     text: null, // Assuming no text is provided
-  //     position: obj.position,
-  //     style: {
-  //       background: obj.fillStyle,
-  //       color: obj.fillStyle,
-  //       opacity: 100, // Assuming full opacity
-  //     },
-  //     size: {
-  //       width: obj.size ? obj.size.width : obj.radius * 2,
-  //       height: obj.size ? obj.size.height : obj.radius * 2,
-  //     },
-  //   }
+  const formatSingularObjectData = (obj) => {
+    const objectData = {
+      uuid: obj.id, 
+      objectName: obj.name, 
+      objectType: obj.objectType,
+      diagramType: obj.diagramType,
+      url: null, 
+      text: null, 
+      position: obj.position,
+      style: {
+        background: obj.fillStyle,
+        color: obj.fillStyle,
+        opacity: 100, 
+      },
+      size: {
+        width: obj.size ? obj.size.width : obj.radius * 2,
+        height: obj.size ? obj.size.height : obj.radius * 2,
+      },
+    }
 
-  //   const formattedObject = {
-  //     objectData,
-  //     animationData: [], // Assuming no animation data is provided
-  //   }
+    const formattedObject = {
+      objectData,
+      animationData: [], 
+    }
 
-  //   // console.log(formattedObject, '🟢🟢🟢')
-  //   return formattedObject
-  // }
+    // console.log(formattedObject, '🟢🟢🟢')
+    return formattedObject
+  }
   return {
     formatObjectData,
     formatAnimationData,

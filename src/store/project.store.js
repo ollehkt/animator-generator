@@ -8,6 +8,7 @@ import { storeToRefs } from 'pinia'
 export const useProjectsStore = defineStore('projects', () => {
   const projects = ref([])
   const projectDetail = ref(null)
+  const isSaving = ref(false)
   const isLoading = ref(false)
   const error = ref(null)
   const showProejctSetting = ref(false)
@@ -20,7 +21,7 @@ export const useProjectsStore = defineStore('projects', () => {
     projectDetail.value = null
   }
 
-  const saveCurrentProject = () => {
+  const saveCurrentProject = async () => {
     // todo
     // 현재 오브젝트 상태 각 오브젝트 애니메이션모두 가공해서 업데이트
     const projectNo = projectDetail.value.projectNo
@@ -31,8 +32,13 @@ export const useProjectsStore = defineStore('projects', () => {
     const params = {
       jsonData: test,
     }
-    console.log('🟢🟢🟢 현재 프로젝트 저장', params)
-    updateProject(projectNo, params)
+    const result = await updateProject(projectNo, params)
+    if (result) {
+      isSaving.value = true
+      setTimeout(() => {
+        isSaving.value = false
+      }, 2000)
+    }
   }
 
   /**
@@ -157,6 +163,7 @@ export const useProjectsStore = defineStore('projects', () => {
   return {
     projects,
     projectDetail,
+    isSaving,
     isLoading,
     showProejctSetting,
     error,
