@@ -15,6 +15,7 @@ const {
   isViewportAction,
   selectedTriggerType,
 } = storeToRefs(controllerStore)
+
 const { objects, selectedObject } = storeToRefs(objectStore)
 
 const triggerConfig = ref(TRIGGER_CONFIG)
@@ -113,6 +114,7 @@ const handleChangeActionTarget = (index, event) => {
 }
 
 onMounted(() => {
+  if(selectedTriggerTarget)
   if (actionTargetList.value.length === 0 && objects.value.length > 0) {
     controllerStore.addActionTarget({
       id: objects.value[0].id,

@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
@@ -9,6 +9,14 @@ export const useControllerStore = defineStore('controller', () => {
   // const state
   const objectStore = useObjectStore()
   const { selectedObject, objects } = storeToRefs(objectStore)
+
+  watch(selectedObject, (newValue) => {
+    if (newValue) {
+      selectedTriggerTarget.value = newValue.id
+    } else {
+      selectedTriggerTarget.value = null
+    }
+  })
 
   // state
   // const activeTab = ref({ //컨트롤러 탭 변경 있었을 경우 사용 현재 없음
@@ -82,6 +90,7 @@ export const useControllerStore = defineStore('controller', () => {
     selectedTriggerType.value = 'click'
     selectedTriggerTarget.value = null
     selectedActionType.value = 'translate'
+    actionTargetList.value = []
   }
 
   // 애니메이션이 실제로 적용되는 객채

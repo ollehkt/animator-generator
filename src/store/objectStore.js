@@ -259,36 +259,43 @@ export const useObjectStore = defineStore('object', () => {
       triggerType: selectedTriggerType.value,
       triggerTarget: selectedTriggerTarget.value,
       actionType: selectedActionType.value,
-      actionTargetList: actionTargetList.value,
-      isSimultaneousness: true,
-      callbackFunction: null,
+      actionTargetList: [...actionTargetList.value],
       ease: animationConfig.value.easing,
       duration: animationConfig.value.duration,
       delay: animationConfig.value.delay,
       fillMode: null,
+      isSimultaneousness: true,
+      callbackFunction: null,
+      points: [
+        {
+          x: animationConfig.value.x,
+          y: animationConfig.value.y,
+        },
+      ],
     }
+    console.log('actions', actions)
 
     // console.log('actions', actions)
 
-    const newAnimation = animationStore.createAnimationConfig(
-      selectedTriggerType.value,
-      selectedTriggerTarget.value,
-      actionTargetList.value,
-      selectedActionType.value,
-      animationConfig.value
-    )
+    // const newAnimation = animationStore.createAnimationConfig(
+    //   selectedTriggerType.value,
+    //   selectedTriggerTarget.value,
+    //   actionTargetList.value,
+    //   selectedActionType.value,
+    //   animationConfig.value
+    // )
 
     // console.log('newAnimation', newAnimation)
 
     if (isViewportAction.value) {
       // 페이지 로드 애니메이션
-      viewportActionList.value.push(newAnimation)
+      viewportActionList.value.push(actions)
     } else {
       // 오브젝트 애니메이션
       const objectId = selectedObject.value?.id
       const targetObject = objects.value.find((obj) => obj.id === objectId)
       if (targetObject) {
-        targetObject.objectActionList.push(newAnimation)
+        targetObject.objectActionList.push(actions)
       }
     }
     controllerStore.isSettingTrigger = false
