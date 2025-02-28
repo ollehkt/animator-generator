@@ -14,24 +14,28 @@ export const useDataStore = defineStore('data', () => {
 
     const formattedObjects = objects.value.map((obj) => ({
       objectData: {
-        uuid: obj.id, // Map 'id' to 'uuid'
-        objectName: obj.name, // Assuming 'name' is the desired object name
+        uuid: obj.id,
+        objectName: obj.name,
         objectType: obj.objectType,
         diagramType: obj.diagramType,
-        url: obj.url || null, // Assuming no URL is provided
-        text: obj.text || null, // Assuming no text is provided
+        url: obj.url || null,
+        text: obj.text || null,
         position: obj.position,
         style: {
           background: obj.fillStyle,
           color: obj.fillStyle,
-          opacity: 100, // Assuming full opacity
+          opacity: obj.opacity,
         },
         size: {
-          width: obj.size ? obj.size.width : obj.radius * 2,
-          height: obj.size ? obj.size.height : obj.radius * 2,
+          width: obj.size ? obj.size.width : obj.radius.radiusX * 2,
+          height: obj.size ? obj.size.height : obj.radius.radiusY * 2,
+        },
+        radius: {
+          radiusX: obj.radius.radiusX,
+          radiusY: obj.radius.radiusY,
         },
       },
-      animationData: formatAnimationData(obj), // Assuming no animation data is provided
+      animationData: formatAnimationData(obj),
     }))
     return formattedObjects
   }
@@ -43,7 +47,7 @@ export const useDataStore = defineStore('data', () => {
    */
 
   const formatAnimationData = (targetObject) => {
-    if(targetObject.objectActionList.length === 0) return []
+    if (targetObject.objectActionList.length === 0) return []
 
     const formattedAnimationData = []
 
@@ -60,7 +64,10 @@ export const useDataStore = defineStore('data', () => {
         fillMode: obj.fillMode || null,
         ...(obj.actionType === 'rotate' && { rotate: obj.rotate }),
         ...(obj.actionType === 'scale' && { scaleStart: obj.scaleStart, scaleEnd: obj.scaleEnd }),
-        ...(obj.actionType === 'opacity' && { opacityStart: obj.opacityStart, opacityEnd: obj.opacityEnd }),
+        ...(obj.actionType === 'opacity' && {
+          opacityStart: obj.opacityStart,
+          opacityEnd: obj.opacityEnd,
+        }),
         // actionSetting: obj.actionSetting,
       }))
 
@@ -68,16 +75,14 @@ export const useDataStore = defineStore('data', () => {
 
       formattedAnimationData.push({
         triggerType: triggerType,
-        animation: actionList.length > 0 ? actionList : [], 
-        isSimultaneousness: obj.isSimultaneousness || true, 
-        callbackFunction: obj.callbackFunction || 'preprocessTestFunction', 
+        animation: actionList.length > 0 ? actionList : [],
+        isSimultaneousness: obj.isSimultaneousness || true,
+        callbackFunction: obj.callbackFunction || 'preprocessTestFunction',
       })
     })
 
     return formattedAnimationData
   }
-
-  
 
   /**
    * API => UI DATA FORMATTING
@@ -85,6 +90,7 @@ export const useDataStore = defineStore('data', () => {
    * @param {Array} data
    */
   const setObjectsData = (data) => {
+    console.log(data, '🟢🟢🟢')
     const objectStore = useObjectStore()
     if (!Array.isArray(data)) {
       console.error('Expected data to be an array, but got:', data)
@@ -96,14 +102,21 @@ export const useDataStore = defineStore('data', () => {
         id: obj.uuid, // Map 'id' to 'uuid'
         name: obj.objectName, // Assuming 'name' is the desired object name
         objectType: obj.objectType,
-        ...(obj.objectType === 'diagram' && { diagramType: obj.diagramType }),
         position: {
           x: obj.position.x,
           y: obj.position.y,
         },
+
+        ...(obj.objectType === 'diagram' && { diagramType: obj.diagramType }),
         ...(obj.objectType === 'diagram' && { fillStyle: obj.style.background }),
         ...(obj.objectType === 'diagram' &&
-          obj.diagramType === 'circle' && { radius: obj.size.width / 2 }), // Assuming radius is half of width
+          obj.diagramType === 'circle' && {
+            radius: {
+              radiusX: obj.radius.radiusX,
+              radiusY: obj.radius.radiusY,
+            },
+          }),
+        // image || text
         ...(obj.objectType !== 'diagram' && {
           size: {
             width: obj.size.width,
@@ -112,6 +125,7 @@ export const useDataStore = defineStore('data', () => {
           ...(obj.objectType == 'text' && { text: obj.text }),
           ...(obj.objectType == 'url' && { url: obj.url }),
         }),
+        opacity: obj.style.opacity,
         isVisible: true,
         objectActionList: [], // todo 액션 데이터 포맷 및 추가
       }
@@ -122,17 +136,17 @@ export const useDataStore = defineStore('data', () => {
   /** 단수의 특정 Object 데이터를 포맷팅 하는 함수 */
   const formatSingularObjectData = (obj) => {
     const objectData = {
-      uuid: obj.id, 
-      objectName: obj.name, 
+      uuid: obj.id,
+      objectName: obj.name,
       objectType: obj.objectType,
       diagramType: obj.diagramType,
-      url: null, 
-      text: null, 
+      url: null,
+      text: null,
       position: obj.position,
       style: {
         background: obj.fillStyle,
         color: obj.fillStyle,
-        opacity: 100, 
+        opacity: 100,
       },
       size: {
         width: obj.size ? obj.size.width : obj.radius * 2,
@@ -142,7 +156,7 @@ export const useDataStore = defineStore('data', () => {
 
     const formattedObject = {
       objectData,
-      animationData: [], 
+      animationData: [],
     }
 
     // console.log(formattedObject, '🟢🟢🟢')

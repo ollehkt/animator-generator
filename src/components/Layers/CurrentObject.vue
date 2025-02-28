@@ -22,8 +22,8 @@ const objectSize = computed(() => {
     }
     // If it's a regular circle with single radius
     return {
-      width: Math.round(selectedObject.value.radius * 2),
-      height: Math.round(selectedObject.value.radius * 2)
+      width: Math.round(selectedObject.value.radius.radiusX * 2),
+      height: Math.round(selectedObject.value.radius.radiusY * 2)
     }
   }
 

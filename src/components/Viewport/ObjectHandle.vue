@@ -70,8 +70,8 @@ const props = defineProps({
     v-if="object.objectType === 'diagram' && object.diagramType === 'circle'"
     :cx="object.position.x"
     :cy="object.position.y"
-    :rx="(object.radiusX || object.radius) + 2"
-    :ry="(object.radiusY || object.radius) + 2"
+    :rx="object.radius.radiusX + 2"
+    :ry="object.radius.radiusY + 2"
     fill="none"
     stroke="#4a9eff"
     stroke-width="1"
@@ -90,17 +90,7 @@ const props = defineProps({
     stroke-dasharray="4 2"
   />
 
-  <!-- 예전꺼 <rect
-    v-if="object.objectType === 'image' || object.objectType === 'text'"
-    :x="handlePositions[0].x"
-    :y="handlePositions[0].y"
-    :width="handlePositions[2].x - handlePositions[0].x"
-    :height="handlePositions[6].y - handlePositions[0].y"
-    fill="none"
-    stroke="#4a9eff"
-    stroke-width="1"
-    stroke-dasharray="4 2"
-  /> -->
+
 </template>
 
 <style scoped>

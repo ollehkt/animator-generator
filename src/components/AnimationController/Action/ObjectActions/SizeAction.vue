@@ -13,17 +13,15 @@ const objectSize = computed(() => {
 
   // Handle circle type object
   if (selectedObject.value.type === 'circle') {
-    // If the circle has radiusX and radiusY (ellipse)
-    if (selectedObject.value.radiusX && selectedObject.value.radiusY) {
+    if (selectedObject.value.radius) {
       return {
-        width: Math.round(selectedObject.value.radiusX * 2),
-        height: Math.round(selectedObject.value.radiusY * 2),
+        width: Math.round(selectedObject.value.radius.radiusX * 2),
+        height: Math.round(selectedObject.value.radius.radiusY * 2),
       }
     }
-    // If it's a regular circle with single radius
     return {
-      width: Math.round(selectedObject.value.radius * 2),
-      height: Math.round(selectedObject.value.radius * 2),
+      width: Math.round(selectedObject.value.radius.radiusX * 2),
+      height: Math.round(selectedObject.value.radius.radiusY * 2),
     }
   }
 

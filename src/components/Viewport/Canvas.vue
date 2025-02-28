@@ -53,7 +53,8 @@ const handleCursors = [
 
 const handleClick = (event, object) => {
   if (!object) return
-
+  // console.log(object, '🟢🟢🟢')
+  // return
   if (object) {
     event.stopPropagation()
     objectStore.selectObject(object.id)
@@ -135,6 +136,7 @@ const handlePointerMove = (event) => {
 
 // 가이드라인 rect 포인터다운이벤트
 const startResize = (event, object, handleIndex) => {
+  console.log("Resizine!!")
   event.stopPropagation()
   isResizing.value = true
   activeHandle.value = handleIndex
@@ -202,8 +204,8 @@ const getHandlePositions = (object) => {
   if (!object) return []
 
   if (object.objectType === 'diagram' && object.diagramType === 'circle') {
-    const rx = object.radiusX || object.radius
-    const ry = object.radiusY || object.radius
+    const rx = object.radius.radiusX
+    const ry = object.radius.radiusY
     return HANDLE_POSITIONS.map((pos) => ({
       x: object.position.x + pos.x * (rx + HANDLE_SIZE),
       y: object.position.y + pos.y * (ry + HANDLE_SIZE),

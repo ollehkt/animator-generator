@@ -98,8 +98,12 @@ const addShape = () => {
       x: 100,
       y: 100,
     },
-    radius: 30,
+    radius: {
+      radiusX: 30,
+      radiusY: 30,
+    },
     fillStyle: '#825feb',
+    opacity: 100,
   })
 }
 
