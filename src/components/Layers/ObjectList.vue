@@ -58,6 +58,17 @@ const handleNameUpdate = (object, event) => {
 const toggleVisibility = (object) => {
   objectStore.toggleVisibility(object.id)
 }
+
+/**
+ *  draggable="true"
+    @dragenter.prevent
+    @dragover.prevent
+    @mousedown="onMouseDown($event)"
+    @mouseup="onMouseUp($event)"
+    @dragstart="onDragStart($event, props.index, side)"
+    @drop.prevent="onDrop($event, props.index)"
+    @dragenter="onDragEnter($event, props.index)"
+ */
 </script>
 <template>
   <!-- LIST -->

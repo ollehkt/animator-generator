@@ -23,7 +23,7 @@ const { selectedObject } = storeToRefs(objectStore)
 const { canvasSize } = storeToRefs(viewportStore)
 
 // Add zoom state and controls
-const zoom = ref(0.5)
+const zoom = ref(0.8)
 const MIN_ZOOM = 0.5 //50%
 const MAX_ZOOM = 2 //200%
 

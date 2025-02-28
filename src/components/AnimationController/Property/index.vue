@@ -24,7 +24,7 @@ const { selectedObject } = storeToRefs(objectStore)
         v-else
         class="flex items-center justify-center h-20 text-xs text-gray-400 border border-gray-700 border-dashed rounded-md"
       >
-        선택된 객체가 없습니다
+        선택된 오브젝트가 없습니다
       </div>
     </div>
   </div>

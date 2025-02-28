@@ -6,6 +6,7 @@ import { useAnimationStore } from './animation.store'
 import { useViewportStore } from './viewport.store'
 import { useProjectsStore } from './project.store'
 import { useDataStore } from './data.store'
+import { useDNDStore } from './dnd.store'
 const pinia = createPinia()
 
 export { 
@@ -16,5 +17,6 @@ export {
   useAnimationStore, 
   useViewportStore, 
   useProjectsStore,
-  useDataStore
+  useDataStore,
+  useDNDStore
 }
