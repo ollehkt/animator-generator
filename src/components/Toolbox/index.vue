@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { OBJECT_TYPE } from '@/helpers/consts'
-import ToolType from '@/components/Toolbox/ToolType.vue'
+import ToolType from '@/components/Toolbox/ToolMenu.vue'
 
 const objectStore = useObjectStore()
 
@@ -14,6 +14,7 @@ const toolboxRef = ref(null)
 const showToolType = ref(false)
 const toolTypePosition = ref({ x: 0, y: 0 })
 
+/** 1차 버튼 */
 const handleObjectType = (type, event) => {
   const buttonElement = event.currentTarget
   const toolboxRect = toolboxRef.value.getBoundingClientRect()
@@ -43,6 +44,19 @@ const handleObjectType = (type, event) => {
     },
   }
   return action[type]()
+}
+
+/** 2차 버튼 메뉴 */
+const handleToolMenu = (type) => {
+  if (type === 'audio') {
+    // todo file input 추가
+    objectStore.addMedia({
+      type: 'audio',
+    })
+  } else {
+    alert('비디오처리', type)
+  }
+  showToolType.value = false
 }
 
 const handleFileChange = async (e) => {
@@ -122,17 +136,7 @@ const getObjectIcon = (type) => {
   }
 }
 
-const handlerToolType = (type) => {
-  if (type === 'audio') {
-    // todo file input 추가
-    objectStore.addMedia({
-      type: 'audio',
-    })
-  } else {
-    alert('비디오처리', type)
-  }
-  showToolType.value = false
-}
+
 </script>
 <template>
   <div
@@ -155,7 +159,7 @@ const handlerToolType = (type) => {
       :position="toolTypePosition"
       :show="showToolType"
       :close="closeToolType"
-      :handle-click="handlerToolType"
+      :handle-click="handleToolMenu"
     />
   </div>
 </template>
