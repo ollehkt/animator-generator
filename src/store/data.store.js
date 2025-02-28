@@ -25,6 +25,8 @@ export const useDataStore = defineStore('data', () => {
           background: obj.fillStyle,
           color: obj.fillStyle,
           opacity: obj.opacity,
+          centerPoint: obj.centerPoint,
+          rotationAngle: obj.rotationAngle,
         },
         size: {
           width: obj.size ? obj.size.width : obj.radius.radiusX * 2,
@@ -115,6 +117,10 @@ export const useDataStore = defineStore('data', () => {
               radiusX: obj.radius.radiusX,
               radiusY: obj.radius.radiusY,
             },
+            size: {
+              width: obj.radius.radiusX * 2,
+              height: obj.radius.radiusY * 2,
+            },
           }),
         // image || text
         ...(obj.objectType !== 'diagram' && {
@@ -127,6 +133,8 @@ export const useDataStore = defineStore('data', () => {
         }),
         opacity: obj.style.opacity,
         isVisible: true,
+        centerPoint: obj.style.centerPoint,
+        rotationAngle: obj.style.rotationAngle,
         objectActionList: [], // todo 액션 데이터 포맷 및 추가
       }
     })

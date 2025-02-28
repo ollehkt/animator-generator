@@ -20,14 +20,14 @@ const drawPreview = () => {
   const obj = selectedObject.value
   if (obj.objectType === 'diagram' && obj.diagramType === 'circle') {
     // Scale down the circle/ellipse to fit preview
-    const scale = 0.8
+    const scale = 0.6
     const centerX = canvas.width / 2
     const centerY = canvas.height / 2
     
     ctx.beginPath()
     // Use radiusX and radiusY if available, otherwise fallback to radius
-    const radiusX = (obj.radiusX || obj.radius) * scale
-    const radiusY = (obj.radiusY || obj.radius) * scale
+    const radiusX = (obj.radius.radiusX || obj.radius.radiusX) * scale
+    const radiusY = (obj.radius.radiusY || obj.radius.radiusY) * scale
     
     // Use ellipse method for drawing
     ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, Math.PI * 2)

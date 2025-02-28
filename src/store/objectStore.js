@@ -43,6 +43,12 @@ export const useObjectStore = defineStore('object', () => {
       name: `${object.diagramType || object.objectType}-${shortId}`,
       objectActionList: [], // tirgger, 타겟 객체, 액션, 액션타겟 정보
       isVisible: true,
+      centerPoint: {
+        x: 0,
+        y: 0,
+      },
+      rotationAngle: 0,
+      opacity: 100,
       ...object,
     }
 

@@ -2,7 +2,10 @@
 import { ref, computed } from 'vue'
 import { useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
+
 import RangeInput from '@/components/Common/RangeInput.vue'
+import StyleByObjects from './StyleByObjects.vue'
+
 const objectStore = useObjectStore()
 const { selectedObject } = storeToRefs(objectStore)
 
@@ -20,15 +23,20 @@ const updateOpacity = (value) => {
 }
 
 const updateDimension = (value, dimension) => {
-  if (selectedObject.value.objectType === 'diagram' && selectedObject.value.diagramType === 'circle') {
-    // 원형 
-    selectedObject.value.radius.radiusX = dimension === 'width' ? value / 2 : selectedObject.value.radius.radiusX;
-    selectedObject.value.radius.radiusY = dimension === 'height' ? value / 2 : selectedObject.value.radius.radiusY;
+  if (
+    selectedObject.value.objectType === 'diagram' &&
+    selectedObject.value.diagramType === 'circle'
+  ) {
+    // 원형
+    selectedObject.value.radius.radiusX =
+      dimension === 'width' ? value / 2 : selectedObject.value.radius.radiusX
+    selectedObject.value.radius.radiusY =
+      dimension === 'height' ? value / 2 : selectedObject.value.radius.radiusY
   } else {
     if (dimension === 'width') {
-      selectedObject.value.size.width = value;
+      selectedObject.value.size.width = value
     } else if (dimension === 'height') {
-      selectedObject.value.size.height = value;
+      selectedObject.value.size.height = value
     }
   }
 }
@@ -36,7 +44,7 @@ const updateDimension = (value, dimension) => {
 
 <template>
   <div class="space-y-4">
-    <!-- 중심점 객채 회전도-->
+    <!-- COMMON 중심점 객채 회전도-->
     <section class="flex flex-col gap-4">
       <!-- POSITION -->
       <div class="box-border flex gap-2">
@@ -52,7 +60,7 @@ const updateDimension = (value, dimension) => {
       <!-- SIZE || RADIUS -->
       <div class="box-border flex gap-2">
         <p class="flex flex-col gap-2 overflow-hidden">
-          <label class="pl-1 text-xs text-gray-400">너비</label>
+          <label class="pl-1 text-xs text-gray-400">Width</label>
           <input
             type="number"
             v-model="computedObjectSize.width"
@@ -61,7 +69,7 @@ const updateDimension = (value, dimension) => {
           />
         </p>
         <p class="flex flex-col gap-2 overflow-hidden">
-          <label class="pl-1 text-xs text-gray-400">높이</label>
+          <label class="pl-1 text-xs text-gray-400">Height</label>
           <input
             type="number"
             v-model="computedObjectSize.height"
@@ -82,22 +90,19 @@ const updateDimension = (value, dimension) => {
           />
         </p>
       </div>
-    </section>
-    <!-- 색상, 보더 -->
-    <section class="flex flex-col gap-4 border-t">
-      <div class="flex flex-col gap-2">
-        <label class="pl-1 text-xs text-gray-400">색상</label>
-        <p class="flex items-center gap-2">
-          <input
-            type="color"
-            v-model="selectedObject.fillStyle"
-            class="cursor-pointer w-10 !p-0 input-color"
-          />
-          <span class="font-mono text-xs text-gray-400 cursor-pointer">
-            {{ selectedObject.fillStyle }}
-          </span>
+      <!-- CENTER -->
+      <div class="box-border flex gap-2">
+        <p class="flex flex-col gap-2 overflow-hidden">
+          <label class="pl-1 text-xs text-gray-400">중심점 X</label>
+          <input type="number" v-model="selectedObject.centerPoint.x" class="input-dark" />
+        </p>
+        <p class="flex flex-col gap-2 overflow-hidden">
+          <label class="pl-1 text-xs text-gray-400">중심점 Y</label>
+          <input type="number" v-model="selectedObject.centerPoint.y" class="input-dark" />
         </p>
       </div>
     </section>
+    <!-- DYNAMIC STYLE -->
+    <StyleByObjects />
   </div>
 </template>

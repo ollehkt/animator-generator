@@ -90,6 +90,10 @@ const handleFileChange = async (e) => {
   reader.readAsDataURL(file)
 }
 
+/**
+ * 
+ * TODO: 공통 함수로 빼기 도형 타입 추가
+ */
 const addShape = () => {
   objectStore.addObject({
     objectType: 'diagram',
@@ -103,7 +107,6 @@ const addShape = () => {
       radiusY: 30,
     },
     fillStyle: '#825feb',
-    opacity: 100,
   })
 }
 
