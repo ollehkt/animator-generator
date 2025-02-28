@@ -118,7 +118,7 @@ label.customRange > .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 12px; /* Adjust width of the indicator */
-  height: 32px; /* Adjust height of the indicator */
+  height: 28px; /* Adjust height of the indicator */
   border: 6px solid #4f46e5;
   background: #4f46e5; /* Color of the indicator */
   border-radius: 20px; /* Make the indicator round */

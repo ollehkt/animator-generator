@@ -21,7 +21,7 @@ export const useControllerStore = defineStore('controller', () => {
   })
 
   // state
-  const activeTab = ref('action')
+  const activeTab = ref('property')
 
   const isLayersMinimized = ref(false)
   const isViewportAction = ref(true) // 오브젝트는 생성이나 선택전 뷰포트만 존재

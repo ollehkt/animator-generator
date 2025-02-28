@@ -30,10 +30,12 @@ export const useDataStore = defineStore('data', () => {
           width: obj.size ? obj.size.width : obj.radius.radiusX * 2,
           height: obj.size ? obj.size.height : obj.radius.radiusY * 2,
         },
-        radius: {
-          radiusX: obj.radius.radiusX,
-          radiusY: obj.radius.radiusY,
-        },
+        ...(obj.objectType === 'diagram' && obj.diagramType === 'circle' && {
+          radius: {
+            radiusX: obj.radius.radiusX,
+            radiusY: obj.radius.radiusY,
+          },
+        }),
       },
       animationData: formatAnimationData(obj),
     }))
@@ -90,7 +92,6 @@ export const useDataStore = defineStore('data', () => {
    * @param {Array} data
    */
   const setObjectsData = (data) => {
-    console.log(data, '🟢🟢🟢')
     const objectStore = useObjectStore()
     if (!Array.isArray(data)) {
       console.error('Expected data to be an array, but got:', data)
@@ -109,8 +110,7 @@ export const useDataStore = defineStore('data', () => {
 
         ...(obj.objectType === 'diagram' && { diagramType: obj.diagramType }),
         ...(obj.objectType === 'diagram' && { fillStyle: obj.style.background }),
-        ...(obj.objectType === 'diagram' &&
-          obj.diagramType === 'circle' && {
+        ...(obj.objectType === 'diagram' && obj.diagramType === 'circle' && {
             radius: {
               radiusX: obj.radius.radiusX,
               radiusY: obj.radius.radiusY,

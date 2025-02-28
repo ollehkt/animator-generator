@@ -49,6 +49,7 @@ export const useObjectStore = defineStore('object', () => {
     objects.value.push(newObject)
     // TODO: 이 오브젝트 변환 => UDPATE "jsonData": {},
     const jsonArray = dataStore.formatObjectData()
+    console.log(jsonArray, '🟢🟢🟢')
     projectStore.updateProject(projectDetail.value.projectNo, {
       jsonData: jsonArray,
     })

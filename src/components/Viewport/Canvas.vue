@@ -123,7 +123,7 @@ const handlePointerMove = (event) => {
         activeHandle.value
       )
       return
-    } else {
+    } else if (selectedObject.value.objectType === 'text') {
       viewportStore.handleTextResize(
         transformedPoint,
         resizeStartDimensions.value,
@@ -136,7 +136,6 @@ const handlePointerMove = (event) => {
 
 // 가이드라인 rect 포인터다운이벤트
 const startResize = (event, object, handleIndex) => {
-  console.log("Resizine!!")
   event.stopPropagation()
   isResizing.value = true
   activeHandle.value = handleIndex

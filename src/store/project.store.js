@@ -116,6 +116,8 @@ export const useProjectsStore = defineStore('projects', () => {
    * @PUT /project/:id
    */
   const updateProject = async (no, params, isToggle = false) => {
+    console.log('🟢🟢🟢 프로젝트 업데이트', params)
+
     const viewportStore = useViewportStore()
     isLoading.value = true
     error.value = null
@@ -126,7 +128,6 @@ export const useProjectsStore = defineStore('projects', () => {
         projectDetail.value = response
         viewportStore.setCanvasSize(response.canvas.width, response.canvas.height)
         if (isToggle) {
-          // console.log('🟢🟢🟢 프로젝트 설정은 기본적으로 false')
           toggleProjectSetting()
         }
       }
