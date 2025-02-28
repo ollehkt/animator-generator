@@ -59,6 +59,22 @@ const toggleVisibility = (object) => {
   objectStore.toggleVisibility(object.id)
 }
 
+const onDragStart = (e) => {
+  e.dataTransfer.setData('text/plain', 'some data'); // Set data
+}
+
+const onDragEnter = (e, targetIndex) => {
+  // 내가 가고 싶은 곳이야?
+  console.log('onDragEnter', targetIndex)
+}
+
+const onDrop = (e, targetIndex) => {
+  e.preventDefault(); // Prevent default behavior
+  const data = e.dataTransfer.getData('text/plain'); // Get data
+  console.log('Dropped data:', data);
+  console.log('onDrop 이것 무슨 인덱스니..?', targetIndex);
+}
+
 /**
  *  draggable="true"
     @dragenter.prevent
@@ -77,8 +93,12 @@ const toggleVisibility = (object) => {
     class="text-[#E5E5E5] bg-[#262626] border-t border-[#2A2A2A] rounded-sm"
   >
     <li
-      v-for="object in objects"
+      v-for="(object, index) in objects"
       :key="object.id"
+      draggable="true"
+      @dragstart="onDragStart($event)"
+      @dragenter.prevent="onDragEnter($event, index)"
+      @drop.prevent="onDrop($event, index)"
       @click="selectThisObject(object)"
       class="p-2 py-3 transition-all duration-200 text-sm text-[#CCC] shadow-inner cursor-pointer hover:bg-[#2F2F2F]"
       :class="{ 'bg-[#323232] text-white': selectedObject?.id === object.id }"

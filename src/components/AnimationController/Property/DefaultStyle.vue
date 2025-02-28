@@ -42,7 +42,7 @@ const updateDimension = (value, dimension) => {
 }
 
 const updateRotation = (value) => {
-  selectedObject.value.rotationAngle = value
+  selectedObject.value.rotationAngle = Number(value)
 }
 </script>
 

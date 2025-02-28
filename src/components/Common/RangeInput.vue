@@ -1,9 +1,9 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 
 const props = defineProps({
   rangeValue: {
-    type: Number,
+    type: [Number, String],
     default: 0,
   },
 
@@ -26,11 +26,13 @@ const props = defineProps({
 const rangeInput = ref(null)
 const indicator = ref(null)
 
+const numericRangeValue = computed(() => Number(props.rangeValue))
+
 const setRangeValue = (e) => {
   if (!rangeInput.value) return
 
   const target = rangeInput.value
-  const value = e?.target?.value ?? props.rangeValue
+  const value = e?.target?.value ?? numericRangeValue.value
 
   let gradientValue = 100 / target.attributes.max.value
   target.style.background =
@@ -70,15 +72,20 @@ const computedUnit = computed(() => {
 onMounted(() => {
   setRangeValue()
 })
+
+watch(numericRangeValue, (newVal) => {
+  setRangeValue()
+})
 </script>
 <template>
   <div class="flex gap-4">
+    <!-- BAR -->
     <label class="relative max-w-[90%] grow customRange">
       <input
         ref="rangeInput"
         @input="setRangeValue($event)"
         type="range"
-        :value="rangeValue"
+        :value="numericRangeValue"
         :min="0"
         :max="max"
         class="w-full slider"
@@ -90,7 +97,7 @@ onMounted(() => {
         @input="setRangeValue($event)"
         class="w-[84px] pr-8 input-dark "
         type="text"
-        :value="rangeValue"
+        :value="numericRangeValue"
       />
       <span 
         class="absolute text-sm -translate-y-1/2 top-1/2 right-2"
