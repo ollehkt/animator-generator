@@ -10,6 +10,8 @@ export const useControllerStore = defineStore('controller', () => {
   const objectStore = useObjectStore()
   const { selectedObject, objects } = storeToRefs(objectStore)
 
+
+  // 트리거 타겟 change 되기 전 값 할당하기 위함
   watch(selectedObject, (newValue) => {
     if (newValue) {
       selectedTriggerTarget.value = newValue.id
@@ -19,11 +21,8 @@ export const useControllerStore = defineStore('controller', () => {
   })
 
   // state
-  // const activeTab = ref({ //컨트롤러 탭 변경 있었을 경우 사용 현재 없음
-  //   // 객체속성
-  //   id: 'object',
-  //   label: 'Object',
-  // })
+  const activeTab = ref('action')
+
   const isLayersMinimized = ref(false)
   const isViewportAction = ref(true) // 오브젝트는 생성이나 선택전 뷰포트만 존재
 
@@ -115,6 +114,7 @@ export const useControllerStore = defineStore('controller', () => {
   }
 
   return {
+    activeTab,
     isLayersMinimized,
     isViewportAction, // 오브젝트가 없는데 액션추가 하면 화면 기준 액션 생성
     showSourcePreview,

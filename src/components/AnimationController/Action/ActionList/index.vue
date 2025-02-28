@@ -38,7 +38,7 @@ const handleAddAction = () => {
 <template>
   <div class="overflow-hidden text-gray-200 bg-gray-800 border border-gray-700 rounded-lg">
     <div class="flex items-center justify-between p-2 bg-gray-700 border-b border-gray-600">
-      <h3 class="m-0 text-xs font-medium">애니메이션 목록</h3>
+      <h3 class="m-0 text-xs font-medium">액션 목록</h3>
       <p class="pr-4 text-xs text-gray-400">
         {{ isViewportAction ? 'Viewport Action' : 'Object Action' }}
       </p>

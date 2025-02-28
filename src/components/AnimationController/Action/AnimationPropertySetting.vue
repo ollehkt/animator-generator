@@ -4,9 +4,9 @@ import { useControllerStore, useObjectStore } from '@/store'
 import { storeToRefs } from 'pinia'
 import { TRIGGER_CONFIG } from '@/helpers/consts'
 
-import PageAction from '../PageAction.vue'
-import ObjectAction from '../ObjectActions/index.vue'
-import MediaAction from '../MediaActions/index.vue'
+import PageAction from './PageAction.vue'
+import ObjectAction from './ObjectActions/index.vue'
+import MediaAction from './MediaActions/index.vue'
 import CommonProperty from './CommonProperty.vue'
 
 const controllerStore = useControllerStore()
