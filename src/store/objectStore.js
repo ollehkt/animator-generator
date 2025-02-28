@@ -150,10 +150,14 @@ export const useObjectStore = defineStore('object', () => {
 
   // 오브젝트 정렬
   const alignObject = (type) => {
+    
     if (!selectedObject.value) return
 
-    const canvasWidth = 720 // From Canvas.vue props default width
-    const canvasHeight = 452 // From Canvas.vue props default height
+    const projectStore = useProjectsStore()
+    const { projectDetail } = storeToRefs(projectStore)
+
+    const canvasWidth = projectDetail.value.canvas.width
+    const canvasHeight = projectDetail.value.canvas.height
 
     const object = selectedObject.value
     let newX = object.position.x
