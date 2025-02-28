@@ -40,11 +40,15 @@ const updateDimension = (value, dimension) => {
     }
   }
 }
+
+const updateRotation = (value) => {
+  selectedObject.value.rotationAngle = value
+}
 </script>
 
 <template>
   <div class="space-y-4">
-    <!-- COMMON 중심점 객채 회전도-->
+    <!-- COMMON 중심점 -->
     <section class="flex flex-col gap-4">
       <!-- POSITION -->
       <div class="box-border flex gap-2">
@@ -99,6 +103,18 @@ const updateDimension = (value, dimension) => {
         <p class="flex flex-col gap-2 overflow-hidden">
           <label class="pl-1 text-xs text-gray-400">중심점 Y</label>
           <input type="number" v-model="selectedObject.centerPoint.y" class="input-dark" />
+        </p>
+      </div>
+      <!-- ROTATION -->
+      <div class="box-border flex gap-2">
+        <p class="flex flex-col gap-2 overflow-hidden">
+          <label class="pl-1 text-xs text-gray-400">회전</label>
+          <RangeInput
+            :rangeValue="selectedObject.rotationAngle"
+            :updateRangeValue="updateRotation"
+            :max="360"
+            unit="°"
+          />
         </p>
       </div>
     </section>

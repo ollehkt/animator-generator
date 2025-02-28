@@ -18,18 +18,19 @@ const props = defineProps({
 const computedOpacity = computed(() => {
   return Math.min(Math.max(props.object.opacity / 100, 0), 1) // Convert to decimal
 })
-
 </script>
 <template>
-  <ellipse
-    :cx="object.position.x"
-    :cy="object.position.y"
-    :rx="object.radius.radiusX"
-    :ry="object.radius.radiusY"
-    :fill="object.fillStyle"
-    :opacity="computedOpacity"
-    @pointerdown="(e) => handleObjectPointerDown(e, object)"
-    @click="(e) => handleClick(e, object)"
-    :class="{ 'cursor-move': true }"
-  />
+  <g :transform="`rotate(${object.rotationAngle}, ${object.position.x}, ${object.position.y})`">
+    <ellipse
+      :cx="object.position.x"
+      :cy="object.position.y"
+      :rx="object.radius.radiusX"
+      :ry="object.radius.radiusY"
+      :fill="object.fillStyle"
+      :opacity="computedOpacity"
+      @pointerdown="(e) => handleObjectPointerDown(e, object)"
+      @click="(e) => handleClick(e, object)"
+      :class="{ 'cursor-move': true }"
+    />
+  </g>
 </template>

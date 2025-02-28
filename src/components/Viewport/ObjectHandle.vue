@@ -64,6 +64,7 @@ const props = defineProps({
     class="handle"
     :data-direction="handleCursors[index].split('-')[0]"
     @pointerdown="(e) => onStartResize(e, object, index)"
+    :transform="`rotate(${object.rotationAngle}, ${object.position.x}, ${object.position.y})`"
   />
   <!-- DASHED LINE -->
   <ellipse
@@ -76,6 +77,7 @@ const props = defineProps({
     stroke="#4a9eff"
     stroke-width="1"
     stroke-dasharray="4 2"
+    :transform="`rotate(${object.rotationAngle}, ${object.position.x}, ${object.position.y})`"
   />
 
   <rect

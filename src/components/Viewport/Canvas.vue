@@ -259,20 +259,26 @@ const handleTextChange = (object, event) => {
 }
 
 const centerX = computed(() => {
-  if (!selectedObject.value) return 0; // Fallback if no object is selected
-  if (selectedObject.value.objectType === 'diagram' && selectedObject.value.diagramType === 'circle') {
-    return selectedObject.value.position.x; // Center for circle
+  if (!selectedObject.value) return 0 // Fallback if no object is selected
+  if (
+    selectedObject.value.objectType === 'diagram' &&
+    selectedObject.value.diagramType === 'circle'
+  ) {
+    return selectedObject.value.position.x // Center for circle
   }
-  return selectedObject.value.position.x + (selectedObject.value.size.width / 2); // Center for image and text
-});
+  return selectedObject.value.position.x + selectedObject.value.size.width / 2 // Center for image and text
+})
 
 const centerY = computed(() => {
-  if (!selectedObject.value) return 0; // Fallback if no object is selected
-  if (selectedObject.value.objectType === 'diagram' && selectedObject.value.diagramType === 'circle') {
-    return selectedObject.value.position.y; // Center for circle
+  if (!selectedObject.value) return 0 // Fallback if no object is selected
+  if (
+    selectedObject.value.objectType === 'diagram' &&
+    selectedObject.value.diagramType === 'circle'
+  ) {
+    return selectedObject.value.position.y // Center for circle
   }
-  return selectedObject.value.position.y + (selectedObject.value.size.height / 2); // Center for image and text
-});
+  return selectedObject.value.position.y + selectedObject.value.size.height / 2 // Center for image and text
+})
 </script>
 <template>
   <svg
@@ -344,14 +350,7 @@ const centerY = computed(() => {
 
         <!-- Center marker for the object -->
         <g v-if="selectedObject === object">
-          <circle
-            :cx="centerX"
-            :cy="centerY"
-            r="6"
-            fill="none"
-            stroke="#000"
-            stroke-width="0.5"
-          />
+          <circle :cx="centerX" :cy="centerY" r="6" fill="none" stroke="#000" stroke-width="0.5" />
           <line
             :x1="centerX - 6"
             :y1="centerY - 6"
