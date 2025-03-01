@@ -9,13 +9,13 @@ const objects = ref([
   {
     objectData: {
       uuid: 'svg-da3k1nk5ljk2l4-34nkl1j3-123',
-      objectType: 'image',
-      diagramType: null,
+      objectType: 'diagram',
+      diagramType: 'circle',
       url: 'https://questbook-prod-bucket.s3.ap-northeast-2.amazonaws.com/user/1/Questbook_test_2024-12-17-14-09-497.png',
-      text: '',
+      text: 'heel sdjfklaj',
       points: {
-        x: 100,
-        y: 100,
+        x: 200,
+        y: 200,
       },
       style: {
         background: '#825feb',
@@ -23,7 +23,7 @@ const objects = ref([
         color: '#424242',
       },
       size: {
-        width: 200,
+        width: 100,
         height: 200,
       },
     },
@@ -33,17 +33,29 @@ const objects = ref([
         animation: [
           {
             triggerTarget: 'svg-da3k1nk5ljk2l4-34nkl1j3-123',
-            actionType: 'move',
-            points: [{ x: 200, y: 200 }],
+            actionType: 'rotate',
+            points: null,
+            ease: 'ease-in-out',
+            duration: 1,
+            delay: 0,
+            count: '1',
+            fillMode: 'forwards',
+            actionSetting: {
+              degree: 45,
+            },
+          },
+          {
+            triggerTarget: 'svg-da3k1nk5ljk2l4-34nkl1j3-123',
+            actionType: 'scale',
+            points: null,
             ease: 'linear',
             duration: 1,
             delay: 0,
-            count: 'infinite',
+            count: '1',
             direction: 'normal',
             fillMode: 'forwards',
             actionSetting: {
-              moveType: 'line',
-              curviness: 1.5,
+              scaleMagnification: 1.2,
             },
           },
         ],
@@ -99,7 +111,7 @@ const getTransformOriginCenter = (element) => {
   return `${centerX}px ${centerY}px`
 }
 
-const getCircleElement = (element) => {
+const getFirstChildElement = (element) => {
   return element.firstElementChild
 }
 
@@ -114,8 +126,6 @@ const executeAnimation = (objectId, animation) => {
   const targetObject = objects.value.find((obj) => obj.objectData.uuid === objectId)
   if (!targetObject) return
 
-  const bbox = element.getBBox()
-
   const animationConfig = {
     duration: (animation.duration || 1) * 1000,
     easing: animation.ease || 'linear',
@@ -124,27 +134,18 @@ const executeAnimation = (objectId, animation) => {
     iterations:
       animation.count === 'infinite' ? Infinity : animation.count ? parseInt(animation.count) : 1,
     direction: animation.direction || 'normal',
-    composite: animation.fillMode === 'forwards' ? 'replace' : 'add',
+    composite: 'add',
   }
 
   switch (animation.actionType) {
     case 'move': {
-      const moveTargetId = animation.triggerTarget || objectId
-      const moveTargetElement = document.getElementById(moveTargetId)
-      const moveTargetObject = objects.value.find((obj) => obj.objectData.uuid === moveTargetId)
-
-      if (!moveTargetElement || !moveTargetObject) return
-
       const animPoints = animation.points
       if (!animPoints || !Array.isArray(animPoints)) return
-
-      const targetElement = moveTargetElement.querySelector('image, text, ellipse')
-      if (!targetElement) return
 
       const getPoints = () => {
         if (animPoints.length === 1) {
           return {
-            startPoint: moveTargetObject.objectData.points,
+            startPoint: targetObject.objectData.points,
             endPoint: animPoints[0],
           }
         }
@@ -157,8 +158,8 @@ const executeAnimation = (objectId, animation) => {
       const { startPoint, endPoint } = getPoints()
 
       if (animPoints.length >= 2) {
-        moveTargetObject.objectData.points = { ...startPoint }
-        updateElementPosition(targetElement, moveTargetObject.objectData)
+        targetObject.objectData.points = { ...startPoint }
+        updateElementPosition(element, targetObject.objectData)
       }
 
       const createLineKeyframes = (start, end) => {
@@ -192,24 +193,45 @@ const executeAnimation = (objectId, animation) => {
           ? createLineKeyframes(startPoint, endPoint)
           : createCurveKeyframes(startPoint, endPoint, animation.actionSetting.curviness || 1)
 
-      moveTargetElement.animate(keyframes, animationConfig)
+      element.animate(keyframes, animationConfig)
 
       break
     }
 
-    case 'scale':
+    case 'scale': {
+      const targetElement = getFirstChildElement(element)
+      if (!targetElement) return
+
       const scale = animation.actionSetting.scaleMagnification
-      element.animate(
+      const anim = targetElement.animate(
         [
           { transformOrigin: getTransformOriginCenter(element), transform: 'scale(1)' },
-          { transformOrigin: getTransformOriginCenter(element), transform: `scale(${scale})` },
+          {
+            transformOrigin: getTransformOriginCenter(element),
+            transform: `scale(${scale})`,
+          },
         ],
         animationConfig
       )
-      break
 
-    case 'rotate':
-      element.animate(
+      // anim.onfinish = () => {
+      //   console.log('scale transform:', targetElement.style.transform)
+      //   console.log('scale transformOrigin:', targetElement.style.transformOrigin)
+      // }
+
+      // targetElement.getAnimations().forEach((anim) => {
+      //   anim.onremove = () => {
+      //     anim.commitStyles()
+      //     anim.cancel()
+      //   }
+      // })
+      break
+    }
+    case 'rotate': {
+      const targetElement = getFirstChildElement(element)
+      if (!targetElement) return
+
+      const anim = targetElement.animate(
         [
           { transformOrigin: getTransformOriginCenter(element), transform: 'rotate(0deg)' },
           {
@@ -219,7 +241,17 @@ const executeAnimation = (objectId, animation) => {
         ],
         animationConfig
       )
+
+      // console.log('targetObject', targetElement.getAnimations())
+
+      // targetElement.getAnimations().forEach((anim) => {
+      //   anim.onremove = () => {
+      //     anim.commitStyles()
+      //     anim.cancel()
+      //   }
+      // })
       break
+    }
 
     case 'opacity':
       element.animate(
