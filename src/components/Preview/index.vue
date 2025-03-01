@@ -67,6 +67,7 @@ const objects = ref([
 ])
 const svgRef = ref(null)
 const elementRefs = ref({})
+const animationStates = ref({})
 
 const setRef = (el, objectId) => {
   if (el) {
@@ -78,11 +79,18 @@ const handleTrigger = (objectId, triggerType, isParent = false) => {
   const targetObject = objects.value.find((obj) => obj.objectData.uuid === objectId)
   if (!targetObject) return
 
+  const isAnimated = animationStates.value[objectId]
+
   // animationData에서 해당 트리거 타입에 맞는 애니메이션 찾기
   const matchingAnimations = targetObject.animationData.find(
     (data) => data.triggerType === triggerType
   )
   if (!matchingAnimations) return
+
+  if (isAnimated === matchingAnimations.animation.length) {
+    resetObjectToOriginal(objectId)
+    animationStates.value[objectId] = 0
+  }
 
   // 동시 실행 여부 확인
   if (matchingAnimations.isSimultaneousness) {
@@ -101,6 +109,23 @@ const handleTrigger = (objectId, triggerType, isParent = false) => {
   if (matchingAnimations.callbackFunction) {
     window[matchingAnimations.callbackFunction]?.()
   }
+
+  animationStates.value[objectId] = matchingAnimations.animation.length
+}
+
+const resetObjectToOriginal = (objectId) => {
+  const element = elementRefs.value[objectId]
+  if (!element) return
+
+  const targetElement = getFirstChildElement(element)
+  if (!targetElement) return
+
+  // 모든 현재 애니메이션 취소
+  targetElement.getAnimations().forEach((anim) => anim.cancel())
+
+  // 변형 스타일 초기화
+  targetElement.style.transform = 'none'
+  targetElement.style.transformOrigin = ''
 }
 
 const getTransformOriginCenter = (element) => {
@@ -214,24 +239,19 @@ const executeAnimation = (objectId, animation) => {
         animationConfig
       )
 
-      // anim.onfinish = () => {
-      //   console.log('scale transform:', targetElement.style.transform)
-      //   console.log('scale transformOrigin:', targetElement.style.transformOrigin)
-      // }
-
-      // targetElement.getAnimations().forEach((anim) => {
-      //   anim.onremove = () => {
-      //     anim.commitStyles()
-      //     anim.cancel()
-      //   }
-      // })
+      targetElement.getAnimations().forEach((anim) => {
+        anim.onremove = () => {
+          anim.commitStyles()
+          anim.cancel()
+        }
+      })
       break
     }
     case 'rotate': {
       const targetElement = getFirstChildElement(element)
       if (!targetElement) return
 
-      const anim = targetElement.animate(
+      targetElement.animate(
         [
           { transformOrigin: getTransformOriginCenter(element), transform: 'rotate(0deg)' },
           {
@@ -242,14 +262,12 @@ const executeAnimation = (objectId, animation) => {
         animationConfig
       )
 
-      // console.log('targetObject', targetElement.getAnimations())
-
-      // targetElement.getAnimations().forEach((anim) => {
-      //   anim.onremove = () => {
-      //     anim.commitStyles()
-      //     anim.cancel()
-      //   }
-      // })
+      targetElement.getAnimations().forEach((anim) => {
+        anim.onremove = () => {
+          anim.commitStyles()
+          anim.cancel()
+        }
+      })
       break
     }
 
